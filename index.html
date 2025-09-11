@@ -470,7 +470,7 @@
 <!-- Info Sheet -->
 <div class="sheet-backdrop" id="infoBackdrop"></div>
 <div class="sheet" id="infoSheet" aria-modal="true" role="dialog" aria-labelledby="infoTitle">
-  <h4 id="infoTitle">App Info</h4>
+  <h4 id="infoTitle">BJJ Submissions Counter – Info</h4>
   <p>This app stores your submissions per belt locally in your browser’s cache (localStorage).  
 Data stays on this device and works offline. It’s not synced anywhere.</p>
 <p>You can also install it as an app:  
@@ -478,11 +478,21 @@ On Android, Chrome may suggest it automatically.
 On iPhone, open Safari’s Share menu → “Add to Home Screen.”</p>
 
   <p>You can export to JSON for backup, and import that JSON file to restore. Reset wipes all counts.</p>
-  <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
-    <button class="reset" id="resetBtn">Reset all data</button>
-    <button class="ghost" id="exportBtn">Export</button>
-    <button class="ghost" id="importBtn">Import</button>
-  </div>
+
+<p style="margin-top:12px;">
+  Grateful for feedback! 💬  
+  <a href="mailto:info@bjjcounter.com?subject=BJJ%20Submissions%20Counter%20Feedback" 
+     style="color: var(--primary-2); text-decoration: underline;">
+    info@bjjcounter.com
+  </a>
+</p>
+
+<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+  <button class="reset" id="resetBtn">Reset all data</button>
+  <button class="ghost" id="exportBtn">Export</button>
+  <button class="ghost" id="importBtn">Import</button>
+</div>
+
 </div>
 
   <!-- Toast -->
