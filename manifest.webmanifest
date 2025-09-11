@@ -1,6 +1,6 @@
 {
-  "name": "BJJ Submissions Tracker",
-  "short_name": "BJJ Tracker",
+  "name": "BJJ Submissions Counter",
+  "short_name": "BJJ Counter",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
