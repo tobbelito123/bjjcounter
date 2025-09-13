@@ -787,7 +787,14 @@ function attachSafeTap(btn, key) {
     openSheet(key); vibrate(8);
   });
 }
-
+// Ensure every .submission has a red swipe background element
+$$(".submission").forEach(btn => {
+  if (!btn.querySelector(".swipe-bg")) {
+    const bg = document.createElement("div");
+    bg.className = "swipe-bg";
+    btn.insertBefore(bg, btn.firstChild); // put it before .content
+  }
+});
 // Attach to all existing hard-coded cards
 $$(".submission").forEach(btn => {
   const key = btn.dataset.submission;
@@ -928,79 +935,87 @@ if (icon) icon.innerHTML = beltSvgFromMeta(key);
   attachSwipeToDelete(card, key);
 }
 
- function attachSwipeToDelete(cardEl, key) {
-  const content = cardEl.querySelector('.content');
-  const CLICK_OPEN_SHEET_DELTA = 14;     // tap threshold (was 8)
-  const DELETE_THRESHOLD = 96;           // px to trigger delete
+function attachSwipeToDelete(cardEl, key) {
+  const content = cardEl.querySelector(".content");
+  const CLICK_OPEN_SHEET_DELTA = 8;   // under this → treat as tap
+  const DELETE_THRESHOLD = 96;        // px to trigger delete
 
-  let startX = 0, startY = 0;
-  let currentX = 0, currentY = 0;
+  let startX = 0, currentX = 0;
   let dragging = false;
+  let activated = false;              // only show red bg after threshold
+
+  function setX(dx) {
+    content.style.transform = `translateX(${dx}px)`;
+    content.style.opacity = `${1 - Math.min(Math.abs(dx) / 220, 0.25)}`;
+  }
+  function reset() {
+    content.style.transform = "";
+    content.style.opacity = "";
+    cardEl.classList.remove("swiping");
+    activated = false;
+  }
 
   function onStart(e) {
-    const touch = e.touches ? e.touches[0] : e;
-    startX = currentX = touch.clientX;
-    startY = currentY = touch.clientY;   // NEW: track Y too
+    const t = e.touches ? e.touches[0] : e;
+    startX = currentX = t.clientX;
     dragging = true;
-    cardEl.classList.add('swiping');
+    activated = false;                // don't show red yet
   }
 
   function onMove(e) {
     if (!dragging) return;
-    const touch = e.touches ? e.touches[0] : e;
-    currentX = touch.clientX;
-    currentY = touch.clientY;            // NEW
-    const dx = Math.min(0, currentX - startX); // only allow swiping left
-    content.style.transform = `translateX(${dx}px)`;
-    content.style.opacity = `${1 - Math.min(Math.abs(dx) / 220, 0.25)}`;
+    const t = e.touches ? e.touches[0] : e;
+    currentX = t.clientX;
+    const dx = Math.min(0, currentX - startX); // only allow left
+
+    // Only activate the red background when we pass a small left swipe
+    if (!activated && dx <= -12) {
+      activated = true;
+      cardEl.classList.add("swiping"); // this reveals .swipe-bg
+    }
+    if (activated) setX(dx);
   }
 
   function onEnd() {
     if (!dragging) return;
     dragging = false;
     const dx = currentX - startX;
-    const dy = currentY - startY;        // NEW
 
-    // Treat as TAP only if movement is tiny in BOTH axes
-    if (Math.abs(dx) < CLICK_OPEN_SHEET_DELTA && Math.abs(dy) < CLICK_OPEN_SHEET_DELTA) {
-      content.style.transform = '';
-      content.style.opacity = '';
-      cardEl.classList.remove('swiping');
+    // Tap (no meaningful move) → open bottom sheet
+    if (Math.abs(dx) < CLICK_OPEN_SHEET_DELTA) {
+      reset();
       openSheet(key);
       vibrate(8);
       return;
     }
 
-    // Strong left swipe → delete flow
+    // Enough left swipe → delete
     if (dx <= -DELETE_THRESHOLD) {
-      const ok = confirm(
-  `Delete "${LABELS[key] || key}"?\n\n` +
-  `This removes it from this device and from future JSON exports. ` +
-  `Any JSON backups you've already exported will not change.`
-);
+      const ok = confirm(`Delete "${LABELS[key] || key}"? This removes it and its counts.`);
       if (ok) {
+        // remove in-memory + persist
         const i = SUBMISSIONS.indexOf(key);
         if (i >= 0) SUBMISSIONS.splice(i, 1);
         delete DATA.submissions[key];
         writeData(DATA);
+        // remove DOM
         cardEl.remove();
-        if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
+        if (!$("#view-stats").hasAttribute("hidden")) buildStats();
         toast(`Deleted ${LABELS[key] || key}`);
         vibrate(20);
         return;
       }
     }
 
-    // Otherwise, snap back
-    content.style.transform = '';
-    content.style.opacity = '';
-    cardEl.classList.remove('swiping');
+    // Snap back
+    reset();
   }
 
-  cardEl.addEventListener('touchstart', onStart, { passive: true });
-  cardEl.addEventListener('touchmove', onMove,  { passive: true });
-  cardEl.addEventListener('touchend', onEnd);
-  cardEl.addEventListener('touchcancel', onEnd);
+  // Touch events
+  cardEl.addEventListener("touchstart", onStart, { passive: true });
+  cardEl.addEventListener("touchmove",  onMove,  { passive: true });
+  cardEl.addEventListener("touchend",   onEnd);
+  cardEl.addEventListener("touchcancel",onEnd);
 }
 
 
