@@ -761,40 +761,48 @@ function beltSvgFromMeta(sub) {
 // Handle submission cards (tap + swipe to delete)
 // Safer tap handler: only open if no scroll/drag happened
 function attachSafeTap(btn, key) {
+  const H_THRESHOLD = 14; // px horizontal
+  const V_THRESHOLD = 14; // px vertical
+
   let startX = 0, startY = 0, moved = false;
 
   btn.addEventListener("touchstart", (e) => {
     const t = e.touches[0];
     startX = t.clientX; startY = t.clientY;
     moved = false;
+    // if swipe handler has marked a gesture, respect it
+    // (set by attachSwipeToDelete)
+    if (btn._swiping) moved = true;
   }, { passive: true });
 
   btn.addEventListener("touchmove", (e) => {
     const t = e.touches[0];
-    if (Math.abs(t.clientY - startY) > 10 || Math.abs(t.clientX - startX) > 10) {
-      moved = true; // treat as scroll/drag, not a tap
+    if (
+      Math.abs(t.clientY - startY) > V_THRESHOLD ||
+      Math.abs(t.clientX - startX) > H_THRESHOLD
+    ) {
+      moved = true;            // treat as scroll/drag, not a tap
+      btn._gestureMoving = true;
     }
   }, { passive: true });
 
   btn.addEventListener("touchend", () => {
-    if (!moved) { openSheet(key); vibrate(8); }
+    // If a swipe/gesture was active, don't treat as tap
+    if (!moved && !btn._gestureMoving && !btn._swiping) {
+      openSheet(key);
+      vibrate(8);
+    }
+    // Clear the gesture marker shortly after end
+    setTimeout(() => { btn._gestureMoving = false; }, 0);
   });
 
   // Desktop / non-touch fallback
-  btn.addEventListener("click", (e) => {
-    // On touch devices, click will fire after touchend too; ignore because touchend already handled
-    if ("ontouchstart" in window) return;
-    openSheet(key); vibrate(8);
+  btn.addEventListener("click", () => {
+    if ("ontouchstart" in window) return; // ignore the synthetic click on touch devices
+    openSheet(key);
+    vibrate(8);
   });
 }
-// Ensure every .submission has a red swipe background element
-$$(".submission").forEach(btn => {
-  if (!btn.querySelector(".swipe-bg")) {
-    const bg = document.createElement("div");
-    bg.className = "swipe-bg";
-    btn.insertBefore(bg, btn.firstChild); // put it before .content
-  }
-});
 // Attach to all existing hard-coded cards
 $$(".submission").forEach(btn => {
   const key = btn.dataset.submission;
@@ -937,12 +945,12 @@ if (icon) icon.innerHTML = beltSvgFromMeta(key);
 
 function attachSwipeToDelete(cardEl, key) {
   const content = cardEl.querySelector(".content");
-  const CLICK_OPEN_SHEET_DELTA = 8;   // under this → treat as tap
+  const CLICK_OPEN_SHEET_DELTA = 10;  // < 10px → tap
   const DELETE_THRESHOLD = 96;        // px to trigger delete
 
   let startX = 0, currentX = 0;
   let dragging = false;
-  let activated = false;              // only show red bg after threshold
+  let activated = false;
 
   function setX(dx) {
     content.style.transform = `translateX(${dx}px)`;
@@ -959,7 +967,10 @@ function attachSwipeToDelete(cardEl, key) {
     const t = e.touches ? e.touches[0] : e;
     startX = currentX = t.clientX;
     dragging = true;
-    activated = false;                // don't show red yet
+    activated = false;
+    // mark that a swipe may be happening so tap handler will ignore
+    cardEl._swiping = true;
+    cardEl._gestureMoving = false;
   }
 
   function onMove(e) {
@@ -968,10 +979,12 @@ function attachSwipeToDelete(cardEl, key) {
     currentX = t.clientX;
     const dx = Math.min(0, currentX - startX); // only allow left
 
-    // Only activate the red background when we pass a small left swipe
+    // any horizontal movement marks the gesture
+    if (Math.abs(dx) > 2) cardEl._gestureMoving = true;
+
     if (!activated && dx <= -12) {
       activated = true;
-      cardEl.classList.add("swiping"); // this reveals .swipe-bg
+      cardEl.classList.add("swiping"); // shows red bg
     }
     if (activated) setX(dx);
   }
@@ -981,24 +994,22 @@ function attachSwipeToDelete(cardEl, key) {
     dragging = false;
     const dx = currentX - startX;
 
-    // Tap (no meaningful move) → open bottom sheet
+    // clear swipe flag; keep _gestureMoving for this tick so tap won't fire
+    cardEl._swiping = false;
+    setTimeout(() => { cardEl._gestureMoving = false; }, 0);
+
     if (Math.abs(dx) < CLICK_OPEN_SHEET_DELTA) {
       reset();
-      openSheet(key);
-      vibrate(8);
-      return;
+      return; // do NOT open here—tap handler will decide
     }
 
-    // Enough left swipe → delete
     if (dx <= -DELETE_THRESHOLD) {
       const ok = confirm(`Delete "${LABELS[key] || key}"? This removes it and its counts.`);
       if (ok) {
-        // remove in-memory + persist
         const i = SUBMISSIONS.indexOf(key);
         if (i >= 0) SUBMISSIONS.splice(i, 1);
         delete DATA.submissions[key];
         writeData(DATA);
-        // remove DOM
         cardEl.remove();
         if (!$("#view-stats").hasAttribute("hidden")) buildStats();
         toast(`Deleted ${LABELS[key] || key}`);
@@ -1007,17 +1018,14 @@ function attachSwipeToDelete(cardEl, key) {
       }
     }
 
-    // Snap back
     reset();
   }
 
-  // Touch events
-  cardEl.addEventListener("touchstart", onStart, { passive: true });
-  cardEl.addEventListener("touchmove",  onMove,  { passive: true });
+  cardEl.addEventListener("touchstart", onStart,  { passive: true });
+  cardEl.addEventListener("touchmove",  onMove,   { passive: true });
   cardEl.addEventListener("touchend",   onEnd);
   cardEl.addEventListener("touchcancel",onEnd);
 }
-
 
 
 // Ensure DATA has a zeroed belt map for a key
