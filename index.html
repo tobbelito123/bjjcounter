@@ -205,6 +205,11 @@
       border: 1px solid rgba(14,165,233,0.3);
     }
     .icon svg { width: 32px; height: 32px; opacity: 0.95; }
+    /* Belt-specific sizing (only applies to our generated belt SVGs) */
+.icon svg[data-belt] {
+  width: 46px;   /* wider */
+  height: 28px;  /* taller */
+}
     .card h3 { margin: 0 0 6px; font-size: 16px; letter-spacing: 0.2px; }
     .muted { color: var(--muted); font-size: 13px; }
     .count {
@@ -631,21 +636,27 @@ function applyProgression(sub, opponentBeltJustLogged /* may be undefined */) {
   writeData(DATA);
 }
 
-// Build belt SVG from meta + total
 function beltSvgFromMeta(sub) {
   const total = totalFor(sub);
   const meta = ensureMeta(sub);
   const rank = meta.currentRank; // 0..4
-  const stripes = Math.min(4, Math.floor((total - meta.lastUpgradeTotal) / 10)); // 0..4
 
-  let svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40'>
-    <rect x='0' y='10' width='120' height='20' fill='${BELT_COLORS[rank]}' stroke='black' stroke-width='2'/>
-    <rect x='120' y='10' width='60' height='20' fill='black' stroke='black' stroke-width='2'/>`;
+  // Stripes since last upgrade (0..4)
+  const stripes = Math.min(4, Math.floor((total - meta.lastUpgradeTotal) / 10));
 
-  const positions = [125, 140, 155, 170]; // left to right
+  // Taller belt: move up (y=6), height=28
+  // Taller stripes: y=8, height=24
+  // We also set data-belt attr so CSS can size these differently
+  let svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='xMidYMid meet' data-belt='1'>
+    <rect x='0'   y='6' width='120' height='28' fill='${BELT_COLORS[rank]}' stroke='black' stroke-width='2'/>
+    <rect x='120' y='6' width='60'  height='28' fill='black' stroke='black' stroke-width='2'/>`;
+
+  // Stripe positions (left → right)
+  const positions = [125, 140, 155, 170];
   for (let i = 0; i < stripes; i++) {
-    svg += `<rect x='${positions[i]}' y='12' width='6' height='16' fill='white'/>`;
+    svg += `<rect x='${positions[i]}' y='8' width='6' height='24' fill='white'/>`;
   }
+
   svg += `</svg>`;
   return svg;
 }
