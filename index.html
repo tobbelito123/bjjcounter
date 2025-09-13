@@ -523,15 +523,16 @@ On iPhone, open Safari’s Share menu → “Add to Home Screen.”</p>
 
     function defaultData() {
   const zero = { white:0, blue:0, purple:0, brown:0, black:0 };
+  const meta = { currentRank: 0, lastUpgradeTotal: 0, maxOpponentRank: 0 }; // 0=white..4=black
   return {
     submissions: {
-      armbar_from_guard: { ...zero },
-      triangle_from_guard: { ...zero },
-      kimura_from_guard: { ...zero },
-      americana_from_side: { ...zero },
-      rear_naked_choke: { ...zero },
-      crosscollar_from_mount: { ...zero },
-      ankle_lock: { ...zero }
+      armbar_from_guard: { ...zero, _meta: { ...meta } },
+      triangle_from_guard: { ...zero, _meta: { ...meta } },
+      kimura_from_guard: { ...zero, _meta: { ...meta } },
+      americana_from_side: { ...zero, _meta: { ...meta } },
+      rear_naked_choke: { ...zero, _meta: { ...meta } },
+      crosscollar_from_mount: { ...zero, _meta: { ...meta } },
+      ankle_lock: { ...zero, _meta: { ...meta } }
     }
   };
 }
@@ -544,10 +545,16 @@ On iPhone, open Safari’s Share menu → “Add to Home Screen.”</p>
         // Ensure all keys exist (future-proof)
         const base = defaultData();
         for (const s of SUBMISSIONS) {
-          parsed.submissions ??= {};
-          parsed.submissions[s] ??= {...base.submissions[s]};
-          for (const b of BELTS) parsed.submissions[s][b] ??= 0;
-        }
+  parsed.submissions ??= {};
+  parsed.submissions[s] ??= { ...base.submissions[s] };
+  for (const b of BELTS) parsed.submissions[s][b] ??= 0;
+  // ensure _meta
+  const m = parsed.submissions[s]._meta ?? (parsed.submissions[s]._meta = { currentRank: 0, lastUpgradeTotal: 0, maxOpponentRank: 0 });
+  // clamp to valid range just in case
+  m.currentRank = Math.max(0, Math.min(4, m.currentRank|0));
+  m.lastUpgradeTotal = Math.max(0, m.lastUpgradeTotal|0);
+  m.maxOpponentRank = Math.max(0, Math.min(4, m.maxOpponentRank|0));
+}
         return parsed;
       } catch {
         return defaultData();
@@ -579,6 +586,69 @@ On iPhone, open Safari’s Share menu → “Add to Home Screen.”</p>
       const o = DATA.submissions[sub];
       return BELTS.reduce((n,b) => n + (o[b]||0), 0);
     }
+    // ------- Belt rank helpers (0=white,1=blue,2=purple,3=brown,4=black) -------
+const BELT_ORDER = ["white","blue","purple","brown","black"];
+const BELT_TO_RANK = { white:0, blue:1, purple:2, brown:3, black:4 };
+const BELT_COLORS = ["#ffffff", "#1e40af", "#6d28d9", "#7c2d12", "#0b0b0b"];
+
+// Ensure _meta exists for a submission
+function ensureMeta(sub) {
+  const s = DATA.submissions[sub];
+  s._meta ??= { currentRank: 0, lastUpgradeTotal: 0, maxOpponentRank: 0 };
+  return s._meta;
+}
+
+/**
+ * Apply progression rules for ONE submission:
+ * - Increase total (already done elsewhere)
+ * - Volume upgrades: every 50 since lastUpgradeTotal -> rank up, reset base
+ * - Opponent upgrade: if clicked belt rank > currentRank -> jump to that rank, reset base
+ * Stripes = floor((total - lastUpgradeTotal)/10), max 4
+ */
+function applyProgression(sub, opponentBeltJustLogged /* may be undefined */) {
+  const total = totalFor(sub);
+  const meta = ensureMeta(sub);
+
+  // 1) Opponent-based upgrade (only if this log has an opponent belt)
+  if (opponentBeltJustLogged) {
+    const oppRank = BELT_TO_RANK[opponentBeltJustLogged];
+    if (oppRank > meta.maxOpponentRank) meta.maxOpponentRank = oppRank;
+    if (oppRank > meta.currentRank) {
+      meta.currentRank = oppRank;            // jump up
+      meta.lastUpgradeTotal = total;         // reset stripes at this total
+    }
+  }
+
+  // 2) Volume-based upgrades (can chain multiple 50-steps)
+  const delta = total - meta.lastUpgradeTotal;
+  const steps = Math.floor(delta / 50);
+  if (steps > 0) {
+    meta.currentRank = Math.min(4, meta.currentRank + steps);
+    meta.lastUpgradeTotal += steps * 50;     // move the base forward
+  }
+
+  // Write back
+  writeData(DATA);
+}
+
+// Build belt SVG from meta + total
+function beltSvgFromMeta(sub) {
+  const total = totalFor(sub);
+  const meta = ensureMeta(sub);
+  const rank = meta.currentRank; // 0..4
+  const stripes = Math.min(4, Math.floor((total - meta.lastUpgradeTotal) / 10)); // 0..4
+
+  let svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40'>
+    <rect x='0' y='10' width='120' height='20' fill='${BELT_COLORS[rank]}' stroke='black' stroke-width='2'/>
+    <rect x='120' y='10' width='60' height='20' fill='black' stroke='black' stroke-width='2'/>`;
+
+  const positions = [125, 140, 155, 170]; // left to right
+  for (let i = 0; i < stripes; i++) {
+    svg += `<rect x='${positions[i]}' y='12' width='6' height='16' fill='white'/>`;
+  }
+  svg += `</svg>`;
+  return svg;
+}
     function sortedSubmissions() {
   // No auto-sort; use SUBMISSIONS as-is.
   return [...SUBMISSIONS];
@@ -602,14 +672,19 @@ On iPhone, open Safari’s Share menu → “Add to Home Screen.”</p>
   const foot = grid.querySelector(".foot");
   const subs = sortedSubmissions();
 
-  subs.forEach((s) => {
-    const el = document.getElementById("count-" + s);
-    if (el) el.textContent = totalFor(s);
+ subs.forEach((s) => {
+  const el = document.getElementById("count-" + s);
+  if (el) el.textContent = totalFor(s);
 
-    // Reorder card in DOM
-    const card = grid.querySelector(`[data-submission="${s}"]`);
-    if (card) grid.insertBefore(card, foot);
-  });
+  // 🔵 Belt icon only for Armbar from guard (trial)
+  if (s === "armbar_from_guard") {
+    const icon = grid.querySelector(`[data-submission="${s}"] .icon`);
+    if (icon) icon.innerHTML = beltSvgFromMeta(s);
+  }
+
+  const card = grid.querySelector(`[data-submission="${s}"]`);
+  if (card) grid.insertBefore(card, foot);
+});
 }
 
 
@@ -716,8 +791,15 @@ $$(".submission").forEach(btn => {
         const belt = b.dataset.belt;
         if (!pendingSubmission) return;
         DATA.submissions[pendingSubmission][belt] += 1;
-        writeData(DATA);
-        refreshCards();
+
+// PROGRESSION: only enable for Armbar from guard (trial)
+if (pendingSubmission === "armbar_from_guard") {
+  applyProgression(pendingSubmission, belt);
+} else {
+  writeData(DATA);
+}
+
+refreshCards();
         // If stats tab is visible, update it too
         if (!$("#view-stats").hasAttribute("hidden")) buildStats();
         toast(`+1 ${LABELS[pendingSubmission]} vs ${belt[0].toUpperCase()+belt.slice(1)} belt`);
