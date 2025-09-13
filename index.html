@@ -684,15 +684,15 @@ function beltSvgFromMeta(sub) {
   const subs = sortedSubmissions();
 
  subs.forEach((s) => {
+  // update count
   const el = document.getElementById("count-" + s);
   if (el) el.textContent = totalFor(s);
 
-  // 🔵 Belt icon only for Armbar from guard (trial)
-  if (s === "armbar_from_guard") {
-    const icon = grid.querySelector(`[data-submission="${s}"] .icon`);
-    if (icon) icon.innerHTML = beltSvgFromMeta(s);
-  }
+  // update belt icon for EVERY card
+  const icon = grid.querySelector(`[data-submission="${s}"] .icon`);
+  if (icon) icon.innerHTML = beltSvgFromMeta(s);
 
+  // keep current DOM order (sorted)
   const card = grid.querySelector(`[data-submission="${s}"]`);
   if (card) grid.insertBefore(card, foot);
 });
@@ -803,19 +803,14 @@ $$(".submission").forEach(btn => {
         if (!pendingSubmission) return;
         DATA.submissions[pendingSubmission][belt] += 1;
 
-// PROGRESSION: only enable for Armbar from guard (trial)
-if (pendingSubmission === "armbar_from_guard") {
-  applyProgression(pendingSubmission, belt);
-} else {
-  writeData(DATA);
-}
+// Apply progression for ANY submission
+applyProgression(pendingSubmission, belt);  // writes to storage inside
 
 refreshCards();
-        // If stats tab is visible, update it too
-        if (!$("#view-stats").hasAttribute("hidden")) buildStats();
-        toast(`+1 ${LABELS[pendingSubmission]} vs ${belt[0].toUpperCase()+belt.slice(1)} belt`);
-        vibrate(12);
-        closeSheet();
+if (!$("#view-stats").hasAttribute("hidden")) buildStats();
+toast(`+1 ${LABELS[pendingSubmission]} vs ${belt[0].toUpperCase()+belt.slice(1)} belt`);
+vibrate(12);
+closeSheet();
       });
     });
 
@@ -907,12 +902,7 @@ function renderCard(key) {
 card.innerHTML = `
   <div class="swipe-bg"></div>
   <div class="content">
-    <div class="icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <circle cx="12" cy="12" r="8" stroke-width="1.5"/>
-        <path d="M8 12h8" stroke-width="1.5"/>
-      </svg>
-    </div>
+    <div class="icon" aria-hidden="true"></div>
     <div>
       <h3>${LABELS[key] || key}</h3>
       <div class="muted">Tap to log vs belt</div>
@@ -931,6 +921,9 @@ card.innerHTML = `
 
 
   grid.insertBefore(card, beforeFoot);
+  // draw belt icon immediately for the new card
+const icon = card.querySelector('.icon');
+if (icon) icon.innerHTML = beltSvgFromMeta(key);
   attachSafeTap(card, key);
   attachSwipeToDelete(card, key);
 }
