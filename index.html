@@ -761,53 +761,51 @@ function beltSvgFromMeta(sub) {
 // Handle submission cards (tap + swipe to delete)
 // Safer tap handler: only open if no scroll/drag happened
 function attachSafeTap(btn, key) {
-  const H_THRESHOLD = 14; // px horizontal
-  const V_THRESHOLD = 14; // px vertical
-
+  const H = 14; // horizontal tolerance (px)
+  const V = 14; // vertical tolerance (px)
   let startX = 0, startY = 0, moved = false;
 
   btn.addEventListener("touchstart", (e) => {
     const t = e.touches[0];
-    startX = t.clientX; startY = t.clientY;
+    startX = t.clientX;
+    startY = t.clientY;
     moved = false;
-    // if swipe handler has marked a gesture, respect it
-    // (set by attachSwipeToDelete)
-    if (btn._swiping) moved = true;
+    // do NOT check btn._swiping here — swipe handler may not have run yet
   }, { passive: true });
 
   btn.addEventListener("touchmove", (e) => {
     const t = e.touches[0];
-    if (
-      Math.abs(t.clientY - startY) > V_THRESHOLD ||
-      Math.abs(t.clientX - startX) > H_THRESHOLD
-    ) {
-      moved = true;            // treat as scroll/drag, not a tap
-      btn._gestureMoving = true;
+    if (Math.abs(t.clientY - startY) > V || Math.abs(t.clientX - startX) > H) {
+      moved = true;                 // scrolling/dragging → not a tap
+      btn._gestureMoving = true;    // let others know a gesture happened
     }
   }, { passive: true });
 
   btn.addEventListener("touchend", () => {
-    // If a swipe/gesture was active, don't treat as tap
-    if (!moved && !btn._gestureMoving && !btn._swiping) {
+    // Open only if truly a tap and no swipe was in progress
+    if (!moved && !btn._gestureMoving && !btn._swiping && !btn.classList.contains("swiping")) {
+      btn._fromTouch = true;        // avoid synthetic click (iOS)
       openSheet(key);
       vibrate(8);
+      setTimeout(() => { btn._fromTouch = false; }, 0);
     }
-    // Clear the gesture marker shortly after end
     setTimeout(() => { btn._gestureMoving = false; }, 0);
   });
 
-  // Desktop / non-touch fallback
+  // Click fallback (desktop / odd cases). Ignore synthetic click after touch.
   btn.addEventListener("click", () => {
-    if ("ontouchstart" in window) return; // ignore the synthetic click on touch devices
+    if (btn._fromTouch) return;
+    if (btn._swiping || btn._gestureMoving || btn.classList.contains("swiping")) return;
     openSheet(key);
     vibrate(8);
   });
 }
 // Attach to all existing hard-coded cards
+// Attach to all existing hard-coded cards  (SWIPE FIRST, then TAP)
 $$(".submission").forEach(btn => {
   const key = btn.dataset.submission;
-  attachSafeTap(btn, key);
   attachSwipeToDelete(btn, key);
+  attachSafeTap(btn, key);
 });
 
 
@@ -939,8 +937,8 @@ card.innerHTML = `
   // draw belt icon immediately for the new card
 const icon = card.querySelector('.icon');
 if (icon) icon.innerHTML = beltSvgFromMeta(key);
-  attachSafeTap(card, key);
   attachSwipeToDelete(card, key);
+attachSafeTap(card, key);
 }
 
 function attachSwipeToDelete(cardEl, key) {
