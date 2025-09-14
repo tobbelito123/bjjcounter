@@ -1,9 +1,11 @@
 {
+  "id": "./",
   "name": "BJJ Submissions Counter",
   "short_name": "BJJ Counter",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#0b1020",
   "theme_color": "#0ea5e9",
   "icons": [
