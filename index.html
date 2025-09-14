@@ -101,6 +101,34 @@
       font-size: 13px;
     }
 
+    /* Install banner */
+.install-banner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--card-2);
+  border: 1px solid rgba(148,163,184,0.15);
+  box-shadow: var(--shadow);
+  font-size: 14px;
+}
+.install-banner strong { font-weight: 800; }
+.install-actions { display: flex; gap: 8px; }
+.install-btn, .dismiss-btn {
+  appearance: none; border: 0; cursor: pointer;
+  padding: 10px 12px; border-radius: 10px; font-weight: 700;
+}
+.install-btn {
+  background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18));
+  box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35);
+  color: var(--fg);
+}
+.dismiss-btn {
+  background: transparent; border: 1px solid rgba(148,163,184,0.25); color: var(--muted);
+}
+
     /* --- Tabs --- */
 
     /* --- Tabs --- */
@@ -324,6 +352,18 @@
 
       </div>
     </header>
+
+    <!-- Install / Add to Home Screen banner (auto-hidden when installed) -->
+<div id="installBanner" class="install-banner" hidden>
+  <div id="installText">
+    <strong>Install this app</strong><br>
+    Get 1-tap access and offline support.
+  </div>
+  <div class="install-actions">
+    <button id="installDo" class="install-btn">Install</button>
+    <button id="installDismiss" class="dismiss-btn">Dismiss</button>
+  </div>
+</div>
 
     <nav class="tabs" role="tablist" aria-label="Views">
       <button class="tab active" data-tab="log" role="tab" aria-selected="true">Log</button>
@@ -1088,7 +1128,86 @@ infoBackdrop.addEventListener("click", () => {
   infoSheet.classList.remove("open");
   infoBackdrop.classList.remove("open");
 });
+// ------- Install / A2HS banner logic -------
+(function () {
+  const banner = document.getElementById("installBanner");
+  const txt = document.getElementById("installText");
+  const btnInstall = document.getElementById("installDo");
+  const btnDismiss = document.getElementById("installDismiss");
 
+  // If already running as installed (standalone), never show
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if (isStandalone) return;
+
+  // Respect user dismissal
+  const DISMISS_KEY = "install_hint_dismissed";
+  if (localStorage.getItem(DISMISS_KEY) === "1") return;
+
+  const ua = navigator.userAgent;
+  const isiOS = /iPhone|iPad|iPod/i.test(ua);
+  const isAndroid = /Android/i.test(ua);
+
+  let deferredPrompt = null;
+
+  // Android: capture the PWA prompt event
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Only show banner if user hasn't dismissed
+    showAndroidBanner();
+  });
+
+  // iOS: no beforeinstallprompt; show explicit instructions
+  if (isiOS) {
+    showIOSBanner();
+  }
+
+  // If the app gets installed, hide the banner forever
+  window.addEventListener("appinstalled", () => {
+    localStorage.setItem(DISMISS_KEY, "1");
+    hideBanner();
+  });
+
+  btnDismiss?.addEventListener("click", () => {
+    localStorage.setItem(DISMISS_KEY, "1");
+    hideBanner();
+  });
+
+  btnInstall?.addEventListener("click", async () => {
+    if (!deferredPrompt) return; // safety
+    deferredPrompt.prompt();
+    try {
+      const choice = await deferredPrompt.userChoice;
+      if (choice.outcome === "accepted") {
+        localStorage.setItem(DISMISS_KEY, "1");
+        hideBanner();
+      }
+    } finally {
+      deferredPrompt = null; // can only be used once
+    }
+  });
+
+  function showAndroidBanner() {
+    if (localStorage.getItem(DISMISS_KEY) === "1") return;
+    txt.innerHTML = `<strong>Install this app</strong><br>Tap <em>Install</em> for 1-tap access and offline use.`;
+    btnInstall.style.display = "inline-block";
+    banner.hidden = false;
+  }
+
+  function showIOSBanner() {
+    if (localStorage.getItem(DISMISS_KEY) === "1") return;
+    // iOS: guide to Add to Home Screen (Safari/Chrome share sheet)
+    txt.innerHTML = `<strong>Add to Home Screen</strong><br>
+      Tap the <span style="border:1px solid rgba(148,163,184,0.35); padding:0 6px; border-radius:6px;">Share</span> button → <em>Add to Home Screen</em>.`;
+    // No real "Install" button on iOS
+    btnInstall.style.display = "none";
+    banner.hidden = false;
+  }
+
+  function hideBanner() {
+    banner.hidden = true;
+  }
+})();
 
     
   </script>
