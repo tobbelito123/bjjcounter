@@ -12,11 +12,61 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script>
   (function () {
-    const canonicalHost = 'www.bjjcounter.com';
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-    // Only enforce host in browser (not inside the installed app)
-    if (location.hostname !== canonicalHost && !isStandalone) {
-      location.replace(`https://${canonicalHost}${location.pathname}${location.search}${location.hash}`);
+    const KEY = "bjj-submissions-v1";
+    const apex = "bjjcounter.com";
+    const canonical = "www.bjjcounter.com";
+    const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+
+    function setCookie(name, value, seconds) {
+      document.cookie =
+        name + "=" + encodeURIComponent(value) +
+        "; Max-Age=" + seconds +
+        "; Path=/" +
+        "; Domain=.bjjcounter.com" +   // share across apex and www
+        "; SameSite=Lax; Secure";
+    }
+
+    // If we are on the APEX (no www) in a browser tab, stash data in a cookie, then hop to www
+    if (location.hostname === apex && !isStandalone) {
+      try {
+        const data = localStorage.getItem(KEY);
+        if (data) setCookie("bjj_migrate_v1", data, 300); // 5 minutes is plenty
+      } catch {}
+      // carry a tiny hint so www knows to import (not strictly required)
+      location.replace("https://" + canonical + location.pathname + location.search + location.hash);
+      return;
+    }
+  })();
+</script>
+
+  <script>
+  (function () {
+    const KEY = "bjj-submissions-v1";
+
+    function readCookie(name) {
+      const m = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/[-./\\^$*+?()[\]{}|]/g, '\\$&') + "=([^;]*)"));
+      return m ? decodeURIComponent(m[1]) : null;
+    }
+    function delCookie(name) {
+      document.cookie = name + "=; Max-Age=0; Path=/; Domain=.bjjcounter.com; SameSite=Lax; Secure";
+    }
+
+    // Only import if localStorage is empty on www
+    if (location.hostname === "www.bjjcounter.com") {
+      try {
+        const have = localStorage.getItem(KEY);
+        if (!have) {
+          const payload = readCookie("bjj_migrate_v1");
+          if (payload) {
+            localStorage.setItem(KEY, payload);
+            delCookie("bjj_migrate_v1");
+            // Optional: small toast could say “Data imported from bjjcounter.com”
+          }
+        } else {
+          // If we already have data on www, clear any stray cookie
+          delCookie("bjj_migrate_v1");
+        }
+      } catch {}
     }
   })();
 </script>
