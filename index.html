@@ -5,10 +5,19 @@
   <title>BJJ Submissions Counter</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#0ea5e9">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-
+<script>
+  (function () {
+    const canonicalHost = 'www.bjjcounter.com';
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    // Only enforce host in browser (not inside the installed app)
+    if (location.hostname !== canonicalHost && !isStandalone) {
+      location.replace(`https://${canonicalHost}${location.pathname}${location.search}${location.hash}`);
+    }
+  })();
+</script>
   <script>
   if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
     // Not a mobile device → redirect to desktop page
