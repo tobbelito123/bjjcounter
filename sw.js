@@ -1,42 +1,77 @@
 // sw.js
-const CACHE = "bjj-counter-v3";
+const CACHE = "bjj-counter-v4"; // bump on each deploy
 const ASSETS = [
-  "./",
-  "./index.html",
-  "./manifest.webmanifest",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "/",                       // root
+  "/index.html",
+  "/manifest.webmanifest",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png"
 ];
 
 // Install: cache core assets
-self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE).then((c) => c.addAll(ASSETS))
+  );
   self.skipWaiting();
 });
 
 // Activate: cleanup old caches
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
     )
   );
   self.clients.claim();
 });
 
-// Fetch: cache-first
-self.addEventListener("fetch", (e) => {
-  const req = e.request;
-  e.respondWith(
-    caches.match(req).then(cached => cached ||
-      fetch(req).then(res => {
-        // Optionally cache new GET requests:
-        if (req.method === "GET" && res.ok && new URL(req.url).origin === location.origin) {
+// Fetch
+self.addEventListener("fetch", (event) => {
+  const req = event.request;
+
+  // 1) For top-level navigations, try network → cache → offline shell
+  if (req.mode === "navigate") {
+    event.respondWith((async () => {
+      try {
+        const fresh = await fetch(req);
+        // Optionally cache the HTML for faster next load
+        const copy = fresh.clone();
+        if (fresh.ok) {
+          caches.open(CACHE).then((c) => c.put("/", copy)); // keep the shell fresh
+        }
+        return fresh;
+      } catch {
+        // offline: serve cached shell if we have it
+        const cached = await caches.match("/");
+        return cached || new Response("Offline", { status: 503, statusText: "Offline" });
+      }
+    })());
+    return;
+  }
+
+  // 2) For same-origin GETs (assets), use cache-first, then network
+  if (req.method === "GET" && new URL(req.url).origin === self.location.origin) {
+    event.respondWith((async () => {
+      const cached = await caches.match(req);
+      if (cached) return cached;
+
+      try {
+        const res = await fetch(req);
+        // cache only successful, non-opaque responses
+        if (res && res.ok && res.type !== "opaque") {
           const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(req, copy));
+          caches.open(CACHE).then((c) => c.put(req, copy));
         }
         return res;
-      }).catch(() => caches.match("./index.html"))
-    )
-  );
+      } catch {
+        // no cache, no network → let it fail
+        return new Response("", { status: 504, statusText: "Gateway Timeout" });
+      }
+    })());
+    return;
+  }
+
+  // 3) Everything else: just pass through
+  // (cross-origin analytics, POSTs, etc.)
 });
