@@ -618,8 +618,24 @@ On iPhone, open Safari’s Share menu → “Add to Home Screen.”</p>
     }
 
     function writeData(data) {
-      localStorage.setItem(KEY, JSON.stringify(data));
-    }
+  const json = JSON.stringify(data);
+  localStorage.setItem(KEY, json);
+
+  // Also set a short-lived cookie for cross-context (browser → PWA) migration.
+  // ~10 minutes should be enough to "Add to Home Screen" and open once.
+  try {
+    const payload = btoa(unescape(encodeURIComponent(json)));
+    document.cookie = `bjj_migrate=${payload}; Max-Age=600; Path=/; Secure; SameSite=Lax`;
+  } catch {}
+}
+
+    function getCookie(name) {
+  const m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&') + '=([^;]*)'));
+  return m ? decodeURIComponent(m[1]) : null;
+}
+function deleteCookie(name) {
+  document.cookie = `${name}=; Max-Age=0; Path=/; Secure; SameSite=Lax`;
+}
 
     // ------- UI helpers -------
     const $ = sel => document.querySelector(sel);
@@ -636,6 +652,41 @@ On iPhone, open Safari’s Share menu → “Add to Home Screen.”</p>
     // ------- State -------
     let DATA = readData();
     let pendingSubmission = null;
+    // One-time migration: if running as installed app and storage looks "fresh/empty",
+// try to import from the browser via the bjj_migrate cookie.
+(function runOneTimeMigration() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+  // Helper: decide if current DATA is essentially "default/empty"
+  function looksDefault(d) {
+    if (!d || !d.submissions) return true;
+    let total = 0;
+    for (const k of Object.keys(d.submissions)) {
+      const v = d.submissions[k];
+      total += (v.white|0) + (v.blue|0) + (v.purple|0) + (v.brown|0) + (v.black|0);
+    }
+    return total === 0; // no counts logged yet
+  }
+
+  if (!isStandalone) return;                 // only import inside the installed app
+  if (!looksDefault(DATA)) return;           // don't overwrite existing app data
+
+  const raw = getCookie('bjj_migrate');
+  if (!raw) return;
+
+  try {
+    const json = decodeURIComponent(escape(atob(raw)));
+    const obj = JSON.parse(json);
+    if (obj && obj.submissions) {
+      DATA = obj;
+      writeData(DATA);                       // persists to app's localStorage and refreshes cookie (ok)
+      deleteCookie('bjj_migrate');           // prevent re-import
+    }
+  } catch {
+    // ignore decoding errors
+    deleteCookie('bjj_migrate');
+  }
+})();
 
     // Update counts on cards
     function totalFor(sub) {
