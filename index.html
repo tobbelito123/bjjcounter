@@ -479,30 +479,44 @@
     let pendingSubmission = null;
 
     // One-time browser -> PWA migration
-    (function runOneTimeMigration() {
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-      function looksDefault(d) {
-        if (!d || !d.submissions) return true;
-        let total = 0;
-        for (const k of Object.keys(d.submissions)) {
-          const v = d.submissions[k];
-          total += (v.white|0)+(v.blue|0)+(v.purple|0)+(v.brown|0)+(v.black|0);
-        }
-        return total === 0;
+   
+  // One-time browser -> PWA migration (only when app launches the very first time)
+  (function runOneTimeMigration() {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+    // ✅ Guard: if the storage key already exists (e.g., after Reset wrote defaults),
+    // bail out so we never re-import stale cookie data.
+    try {
+      if (localStorage.getItem(KEY) != null) return;
+    } catch {}
+
+    function looksDefault(d) {
+      if (!d || !d.submissions) return true;
+      let total = 0;
+      for (const k of Object.keys(d.submissions)) {
+        const v = d.submissions[k];
+        total += (v.white|0) + (v.blue|0) + (v.purple|0) + (v.brown|0) + (v.black|0);
       }
-      if (!isStandalone) return;
-      if (!looksDefault(DATA)) return;
-      const json = getCookie('bjj_migrate');
-      if (!json) return;
-      try {
-        const obj = JSON.parse(json);
-        if (obj && obj.submissions) {
-          DATA = obj;
-          writeData(DATA);
-          deleteCookie('bjj_migrate');
-        }
-      } catch { deleteCookie('bjj_migrate'); }
-    })();
+      return total === 0;
+    }
+
+    if (!isStandalone) return;              // only inside installed app
+    if (!looksDefault(DATA)) return;        // don't overwrite non-empty app data
+
+    const json = getCookie('bjj_migrate');
+    if (!json) return;
+
+    try {
+      const obj = JSON.parse(json);
+      if (obj && obj.submissions) {
+        DATA = obj;
+        writeData(DATA);                    // persist into app localStorage
+        deleteCookie('bjj_migrate');        // prevent importing again
+      }
+    } catch {
+      deleteCookie('bjj_migrate');          // bad cookie → just clear it
+    }
+  })();
 
     function totalFor(sub) {
       const o = DATA.submissions[sub];
@@ -663,13 +677,24 @@
       else { $("#view-log").hidden=true; $("#view-stats").hidden=false; buildStats(); }
     }));
 
-    $("#resetBtn").addEventListener("click",()=>{
-      if (confirm("Reset all counts? This cannot be undone.")){
-        DATA=defaultData(); writeData(DATA); refreshCards();
-        if (!$("#view-stats").hasAttribute("hidden")) buildStats();
-        toast("All data reset"); vibrate(20);
-      }
-    });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    if (confirm("Reset all counts? This cannot be undone.")) {
+      // Write fresh defaults to localStorage
+      DATA = defaultData();
+      writeData(DATA);
+
+      // ✅ Also remove any pending migration cookie so old data can't come back
+      deleteCookie('bjj_migrate');
+
+      // Refresh UI
+      refreshCards();
+      if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
+      toast("All data reset");
+      vibrate(20);
+    }
+  });
+
 
     $("#exportBtn").addEventListener("click",()=>{
       const blob=new Blob([JSON.stringify(DATA,null,2)],{type:"application/json"});
