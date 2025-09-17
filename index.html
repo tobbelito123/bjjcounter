@@ -245,6 +245,17 @@
     .dot.brown { background: #7c2d12; }
     .dot.black { background: #0b0b0b; outline: 1px solid #e5e7eb; }
 
+    <!-- Total block -->
+<button class="card submission" data-submission="__total" aria-label="Total of all moves">
+  <div class="content">
+    <div class="icon" aria-hidden="true"></div>
+    <div>
+      <h3>Total</h3>
+      <div class="muted">All submissions combined</div>
+    </div>
+    <div class="count" id="count-__total">0</div>
+  </div>
+</button>
     .foot { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin-top: 2px; color: var(--muted); font-size: 12px; }
     .reset { background: transparent; border: 1px solid rgba(239,68,68,0.35); color: #fecaca; padding: 8px 10px; border-radius: 10px; font-size: 12px; }
 
@@ -523,6 +534,22 @@
       return BELTS.reduce((n,b) => n + (o[b]||0), 0);
     }
 
+    // Compute grand total across all submissions
+function totalAll() {
+  let sum = 0;
+  for (const s of Object.keys(DATA.submissions)) {
+    const v = DATA.submissions[s];
+    sum += (v.white|0)+(v.blue|0)+(v.purple|0)+(v.brown|0)+(v.black|0);
+  }
+  return sum;
+}
+
+// Belt rank for total: +1 rank every 100 moves, capped at black
+function totalRank() {
+  const t = totalAll();
+  return Math.min(4, Math.floor(t / 100));
+}
+
     const BELT_TO_RANK = { white:0, blue:1, purple:2, brown:3, black:4 };
     const BELT_COLORS = ["#ffffff","#1e40af","#6d28d9","#7c2d12","#0b0b0b"];
 
@@ -589,6 +616,19 @@
         const card=grid.querySelector(`[data-submission="${s}"]`);
         if (card) grid.insertBefore(card,foot);
       });
+      // Update the Total block
+const totalEl = document.getElementById("count-__total");
+if (totalEl) totalEl.textContent = totalAll();
+const totalIcon = document.querySelector('[data-submission="__total"] .icon');
+if (totalIcon) {
+  const rank = totalRank();
+  const color = BELT_COLORS[rank];
+  let svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='xMidYMid meet' data-belt='1'>
+    <rect x='0' y='6' width='120' height='28' fill='${color}' stroke='black' stroke-width='2'/>
+    <rect x='120' y='6' width='60' height='28' fill='black' stroke='black' stroke-width='2'/>
+  </svg>`;
+  totalIcon.innerHTML = svg;
+}
     }
 
     function buildStats(){
