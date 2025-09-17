@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Privacy Policy • BJJ Submissions Counter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <meta name="description" content="Privacy Policy for BJJ Submissions Counter — a fast, offline-first Brazilian Jiu-Jitsu submissions tracker PWA. No accounts. No analytics. Your data stays on your device." />
+  <link rel="canonical" href="https://www.bjjcounter.com/privacy.html" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      -webkit-font-smoothing: antialiased;
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-tap-highlight-color: transparent;
+    }
+    :root{
+      --bg:#0b1020; --card:#121830; --card-2:#0f1428; --fg:#eaf1ff; --muted:#b7c4e1;
+      --primary:#0ea5e9; --primary-2:#22d3ee; --ring:rgba(34,211,238,.35); --shadow:0 10px 30px rgba(2,6,23,.4);
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f6f8ff; --card:#ffffff; --card-2:#f2f5ff; --fg:#0b1020; --muted:#475569; --shadow:0 8px 24px rgba(2,6,23,.08); }
+    }
+    .wrap{
+      max-width: 720px; margin: 0 auto; min-height: 100%;
+      display: grid; grid-template-rows: auto 1fr auto;
+      padding: 16px clamp(12px,4vw,20px) calc(16px + env(safe-area-inset-bottom)); gap: 14px;
+    }
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 12px; background:linear-gradient(180deg, rgba(34,211,238,.06), transparent);
+      border-radius:16px;
+    }
+    .title{ font-weight:800; letter-spacing:.3px; font-size:20px; display:flex; align-items:center; gap:10px; }
+    .title .dot{ width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(40% 40% at 30% 30%, var(--primary-2), var(--primary));
+      box-shadow:0 0 18px var(--ring);
+    }
+    .actions { display:flex; gap:8px; align-items:center; }
+    .ghost { background:transparent; border:1px solid rgba(148,163,184,.25); color:var(--muted);
+      padding:8px 10px; border-radius:10px; font-size:13px; text-decoration:none;
+    }
+    main{ display:grid; gap:12px; }
+    .card{
+      background:var(--card); border-radius:16px; padding:16px; box-shadow:var(--shadow);
+      border:1px solid rgba(148,163,184,.12);
+    }
+    h1{ font-size:22px; margin:0 0 6px; }
+    h2{ font-size:16px; margin:10px 0 6px; }
+    p{ margin:8px 0; line-height:1.5; color:var(--fg); }
+    .muted{ color:var(--muted); }
+    ul{ margin:8px 0 8px 18px; }
+    footer{ color:var(--muted); font-size:12px; display:flex; justify-content:space-between; align-items:center; }
+    a{ color:var(--primary-2); text-decoration:underline; }
+    .tagline{ color:var(--muted); font-size:13px; }
+  </style>
+
+  <!-- Structured data to help SEO -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"BJJ Submissions Counter",
+    "url":"https://www.bjjcounter.com/",
+    "applicationCategory":"SportsApplication",
+    "operatingSystem":"Web",
+    "about":"Brazilian Jiu-Jitsu submissions tracker that works offline. No login. Data stays on your device.",
+    "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+    "privacyPolicy":"https://www.bjjcounter.com/privacy.html"
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title"><span class="dot"></span> BJJ Submissions Counter</div>
+      <div class="actions">
+        <a class="ghost" href="/">← Back to app</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h1>Privacy Policy</h1>
+        <p class="tagline">BJJ Submissions Counter is a fast, offline-first Brazilian Jiu-Jitsu (BJJ) submissions tracker. No accounts, no tracking, no ads.</p>
+
+        <h2>What we collect</h2>
+        <p><strong>Nothing.</strong> We do not collect, store, or transmit any personal data to our servers. There are no analytics, no third-party trackers, and no ads.</p>
+
+        <h2>Where your data lives</h2>
+        <p>Your submission counts are saved locally on your device using <code>localStorage</code>. This means:</p>
+        <ul>
+          <li>Your data never leaves your device.</li>
+          <li>The app works offline (ideal for training mats and gyms).</li>
+          <li>Deleting your browser/app data erases your counts.</li>
+        </ul>
+
+        <h2>Cookies</h2>
+        <p>We set one short-lived, first-party cookie named <code>bjj_migrate</code> (expires within minutes) only to help you import your existing data the first time you “Install to Home Screen” or move between <code>bjjcounter.com</code> and <code>www.bjjcounter.com</code>. It does not track you and is deleted after import.</p>
+
+        <h2>Service Worker & Caching</h2>
+        <p>Our service worker caches core files so the PWA loads quickly and works offline. This cache does not collect personal information.</p>
+
+        <h2>Export / Import / Reset</h2>
+        <ul>
+          <li><strong>Export:</strong> You can download your data as a JSON file.</li>
+          <li><strong>Import:</strong> You can restore from a previously saved JSON file.</li>
+          <li><strong>Reset:</strong> You can wipe all counts at any time from the Info sheet.</li>
+        </ul>
+
+        <h2>Contact</h2>
+        <p>Questions or feedback? Email <a href="mailto:info@bjjcounter.com">info@bjjcounter.com</a>.</p>
+
+        <h2>Updates to this policy</h2>
+        <p>We may update this page as the product evolves. When changes are significant, we’ll update the “Last updated” date below.</p>
+
+        <p class="muted">Last updated: 2025-09-17</p>
+      </section>
+
+      <section class="card">
+        <h2>Why athletes like this app</h2>
+        <p class="muted">Brazilian Jiu-Jitsu practitioners use BJJ Submissions Counter to quickly log armbars, triangles, kimuras, chokes, and more during training — with instant stats by belt. It’s private, fast, and works offline on iPhone and Android.</p>
+      </section>
+    </main>
+
+    <footer>
+      <span>© BJJ Submissions Counter</span>
+      <a href="/">Open the app</a>
+    </footer>
+  </div>
+</body>
+</html>
