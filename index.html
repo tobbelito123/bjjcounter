@@ -288,90 +288,9 @@
     <main>
       <!-- Log view -->
       <section id="view-log" class="grid" role="tabpanel" aria-labelledby="tab-log">
-        <!-- Hardcoded cards -->
-        <button class="card submission" data-submission="armbar_from_guard" aria-label="Log Armbar from guard">
-          <div class="content">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12c2-2 6-6 9-6 5 0 7 6 7 6s-2 6-7 6c-3 0-7-4-9-6z" stroke-width="1.5"/><path d="M9 10l6 4" stroke-width="1.5"/></svg>
-            </div>
-            <div><h3>Armbar from guard</h3><div class="muted">Tap to log vs belt</div></div>
-            <div class="count" id="count-armbar_from_guard">0</div>
-          </div>
-        </button>
+  <div class="foot"></div>
+</section>
 
-        <button class="card submission" data-submission="triangle_from_guard" aria-label="Log Triangle from guard">
-          <div class="content">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 4l8 14H4L12 4z" stroke-width="1.5"/></svg>
-            </div>
-            <div><h3>Triangle from guard</h3><div class="muted">Tap to log vs belt</div></div>
-            <div class="count" id="count-triangle_from_guard">0</div>
-          </div>
-        </button>
-
-        <button class="card submission" data-submission="kimura_from_guard" aria-label="Log Kimura from guard">
-          <div class="content">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12c2-3 5-5 7-5 3 0 5 2 7 5" stroke-width="1.5"/><path d="M9 13l6-2" stroke-width="1.5"/></svg>
-            </div>
-            <div><h3>Kimura from guard</h3><div class="muted">Tap to log vs belt</div></div>
-            <div class="count" id="count-kimura_from_guard">0</div>
-          </div>
-        </button>
-
-        <button class="card submission" data-submission="americana_from_side" aria-label="Log Americana from side">
-          <div class="content">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="5" y="6" width="14" height="12" rx="3" stroke-width="1.5"/><path d="M9 12h6" stroke-width="1.5"/></svg>
-            </div>
-            <div><h3>Americana from side</h3><div class="muted">Tap to log vs belt</div></div>
-            <div class="count" id="count-americana_from_side">0</div>
-          </div>
-        </button>
-
-        <button class="card submission" data-submission="rear_naked_choke" aria-label="Log Rear naked choke">
-          <div class="content">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="7" r="3" stroke-width="1.5"/><path d="M7 21c0-3.5 2.5-6 5-6s5 2.5 5 6" stroke-width="1.5"/></svg>
-            </div>
-            <div><h3>Rear naked choke</h3><div class="muted">Tap to log vs belt</div></div>
-            <div class="count" id="count-rear_naked_choke">0</div>
-          </div>
-        </button>
-
-        <button class="card submission" data-submission="crosscollar_from_mount" aria-label="Log Crosscollar from mount">
-          <div class="content">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6l12 12M18 6L6 18" stroke-width="1.5"/></svg>
-            </div>
-            <div><h3>Crosscollar from mount</h3><div class="muted">Tap to log vs belt</div></div>
-            <div class="count" id="count-crosscollar_from_mount">0</div>
-          </div>
-        </button>
-
-        <button class="card submission" data-submission="ankle_lock" aria-label="Log Ankle lock">
-          <div class="content">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 15c2 1 4 2 6 2 3 0 4-2 4-4" stroke-width="1.5"/><path d="M7 18c2 2 5 3 8 3" stroke-width="1.5"/></svg>
-            </div>
-            <div><h3>Ankle lock</h3><div class="muted">Tap to log vs belt</div></div>
-            <div class="count" id="count-ankle_lock">0</div>
-          </div>
-        </button>
-
-        <div class="foot"></div>
-        <!-- TOTAL (read-only summary) -->
-<button class="card submission" data-submission="__total" aria-label="Total of all moves" id="totalCard" tabindex="-1">
-  <div class="content">
-    <div class="icon" aria-hidden="true"></div>
-    <div>
-      <h3>Total</h3>
-      <div class="muted">All submissions combined</div>
-    </div>
-    <div class="count" id="count-__total">0</div>
-  </div>
-</button>
-      </section>
 
       <!-- Stats view -->
       <section id="view-stats" hidden role="tabpanel" aria-labelledby="tab-stats">
@@ -420,33 +339,73 @@
   <div class="toast" id="toast">Saved</div>
 
   <script>
-    // ------- Storage & Data -------
-    const KEY = "bjj-submissions-v1";
-    const SUBMISSIONS = ["armbar_from_guard","triangle_from_guard","kimura_from_guard","americana_from_side","rear_naked_choke","crosscollar_from_mount","ankle_lock"];
-    const LABELS = {
-      armbar_from_guard: "Armbar from guard",
-      triangle_from_guard: "Triangle from guard",
-      kimura_from_guard: "Kimura from guard",
-      americana_from_side: "Americana from side",
-      rear_naked_choke: "Rear naked choke",
-      crosscollar_from_mount: "Crosscollar from mount",
-      ankle_lock: "Ankle lock"
-    };
-    const BELTS = ["white","blue","purple","brown","black"];
+  // ------- Storage & Data -------
+  const KEY = "bjj-submissions-v1";
+
+  // Exact initial order you requested
+  const SUBMISSIONS = [
+    "armbar_from_mount",
+    "americana_from_mount",
+    "ezekiel_choke_from_mount",
+    "triangle_from_mount",
+    "crosscollar_choke_from_mount",
+    "armtriangle_from_mount",
+    "armbar_from_guard",
+    "triangle_from_guard",
+    "kimura_from_guard",
+    "omoplata_from_guard",
+    "cross_collar_choke_from_guard",
+    "baseballchoke_from_guard",
+    "americana_from_side",
+    "papercut_choke_from_side",
+    "baseballchoke_from_side",
+    "kimura_from_northsouth",
+    "scissorchoke_from_northsouth",
+    "rear_naked_choke",
+    "bow_and_arrow_choke",
+    "armbar_from_back",
+    "triangle_from_back",
+    "straight_ankle_lock"
+  ];
+
+  const LABELS = {
+    armbar_from_mount: "Armbar from mount",
+    americana_from_mount: "Americana from mount",
+    ezekiel_choke_from_mount: "Ezekiel choke from mount",
+    triangle_from_mount: "Triangle from mount",
+    crosscollar_choke_from_mount: "Crosscollar choke from mount",
+    armtriangle_from_mount: "Armtriangle from mount",
+    armbar_from_guard: "Armbar from guard",
+    triangle_from_guard: "Triangle from guard",
+    kimura_from_guard: "Kimura from guard",
+    omoplata_from_guard: "Omoplata from guard",
+    cross_collar_choke_from_guard: "Cross-collar choke from guard",
+    baseballchoke_from_guard: "Baseballchoke from guard",
+    americana_from_side: "Americana from side",
+    papercut_choke_from_side: "Papercut choke from side",
+    baseballchoke_from_side: "Baseballchoke from side",
+    kimura_from_northsouth: "Kimura from northsouth",
+    scissorchoke_from_northsouth: "Scissorchoke from northsouth",
+    rear_naked_choke: "Rear naked choke",
+    bow_and_arrow_choke: "Bow and arrow choke",
+    armbar_from_back: "Armbar from back",
+    triangle_from_back: "Triangle from back",
+    straight_ankle_lock: "Straight ankle lock"
+  };
+
+  const BELTS = ["white","blue","purple","brown","black"];
+
 
     function defaultData() {
-      const zero = { white:0, blue:0, purple:0, brown:0, black:0 };
-      const meta = { currentRank: 0, lastUpgradeTotal: 0, maxOpponentRank: 0 };
-      return { submissions: {
-        armbar_from_guard: { ...zero, _meta: { ...meta } },
-        triangle_from_guard: { ...zero, _meta: { ...meta } },
-        kimura_from_guard: { ...zero, _meta: { ...meta } },
-        americana_from_side: { ...zero, _meta: { ...meta } },
-        rear_naked_choke: { ...zero, _meta: { ...meta } },
-        crosscollar_from_mount: { ...zero, _meta: { ...meta } },
-        ankle_lock: { ...zero, _meta: { ...meta } }
-      }};
-    }
+  const zero = { white:0, blue:0, purple:0, brown:0, black:0 };
+  const meta = { currentRank: 0, lastUpgradeTotal: 0, maxOpponentRank: 0 };
+  const obj = { submissions: {} };
+  for (const key of SUBMISSIONS) {
+    obj.submissions[key] = { ...zero, _meta: { ...meta } };
+  }
+  return obj;
+}
+
 
     function readData() {
       try {
