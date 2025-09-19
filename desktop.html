@@ -3,23 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <title>BJJ Submissions Counter — Desktop</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0ea5e9" />
-  <meta name="description" content="BJJ Submissions Counter is a fast, offline-first Brazilian Jiu-Jitsu submissions tracker. Best experienced on mobile as a PWA." />
-  <link rel="manifest" href="/manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
   <link rel="canonical" href="https://www.bjjcounter.com/desktop.html" />
+
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      -webkit-font-smoothing: antialiased;
-      color: var(--fg);
-      background: var(--bg);
-      -webkit-tap-highlight-color: transparent;
-    }
+    /* ------- Theme (same as app) ------- */
     :root{
       --bg:#0b1020; --card:#121830; --card-2:#0f1428; --fg:#eaf1ff; --muted:#b7c4e1;
       --primary:#0ea5e9; --primary-2:#22d3ee; --ring:rgba(34,211,238,.35); --shadow:0 10px 30px rgba(2,6,23,.4);
@@ -27,74 +16,123 @@
     @media (prefers-color-scheme: light){
       :root{ --bg:#f6f8ff; --card:#ffffff; --card-2:#f2f5ff; --fg:#0b1020; --muted:#475569; --shadow:0 8px 24px rgba(2,6,23,.08); }
     }
+
+    /* ------- Base ------- */
+    *,*::before,*::after{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing: antialiased; background:var(--bg); color:var(--fg);
+    }
+    a{ color:var(--primary-2); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+
+    /* ------- Layout ------- */
     .wrap{
-      max-width: 720px; margin: 0 auto; min-height: 100%;
-      display: grid; grid-template-rows: auto 1fr auto;
-      padding: 16px clamp(12px,4vw,20px) calc(16px + env(safe-area-inset-bottom)); gap: 14px;
+      min-height:100%;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px clamp(20px,4vw,40px) 40px;
+      display:grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 22px;
     }
     header{
       display:flex; align-items:center; justify-content:space-between;
-      padding:10px 12px; background:linear-gradient(180deg, rgba(34,211,238,.06), transparent);
-      border-radius:16px;
+      background: linear-gradient(180deg, rgba(34,211,238,0.06), transparent);
+      border-radius: 18px; padding: 14px 16px;
     }
-    .title{ font-weight:800; letter-spacing:.3px; font-size:20px; display:flex; align-items:center; gap:10px; }
-    .title .dot{ width:10px; height:10px; border-radius:50%;
+    .title{
+      display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.3px; font-size:22px;
+    }
+    .title .dot{
+      width:12px; height:12px; border-radius:50%;
       background: radial-gradient(40% 40% at 30% 30%, var(--primary-2), var(--primary));
-      box-shadow:0 0 18px var(--ring);
+      box-shadow: 0 0 18px var(--ring);
     }
-    .actions { display:flex; gap:8px; align-items:center; }
-    .ghost { background:transparent; border:1px solid rgba(148,163,184,.25); color:var(--muted);
-      padding:8px 10px; border-radius:10px; font-size:13px; text-decoration:none;
+    .ghost{
+      background:transparent; border:1px solid rgba(148,163,184,.25);
+      color:var(--muted); padding:8px 12px; border-radius:10px; font-size:13px;
     }
-    main{ display:grid; gap:12px; }
-    .card{
-      background:var(--card); border-radius:16px; padding:16px; box-shadow:var(--shadow);
-      border:1px solid rgba(148,163,184,.12);
+
+    /* ------- Hero ------- */
+    .hero{
+      display:grid; grid-template-columns: 1.1fr .9fr; gap: 26px;
+      align-items:center;
+      background: var(--card);
+      border: 1px solid rgba(148,163,184,.12);
+      border-radius: 18px;
+      padding: clamp(18px, 3.2vw, 28px);
+      box-shadow: var(--shadow);
     }
-    h1{ font-size:22px; margin:0 0 8px; }
-    p{ margin:8px 0; line-height:1.5; }
-    ul{ margin:8px 0 8px 18px; }
-    .cta-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .primary {
-      background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18));
-      box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35);
-      color: var(--fg);
-      padding: 10px 12px; border-radius: 10px; font-weight: 700; text-decoration: none;
-      border: 0;
+    .hero h1{
+      margin:0 0 8px; font-size: clamp(24px, 3.2vw, 36px); letter-spacing:.2px;
     }
-    footer{ color:var(--muted); font-size:12px; display:flex; justify-content:space-between; align-items:center; }
-    a{ color:var(--primary-2); text-decoration:underline; }
+    .hero p{ margin:0 0 14px; color:var(--muted); line-height:1.5; }
+    .badges{ display:flex; gap:10px; flex-wrap:wrap; }
+    .badge{ background:var(--card-2); border:1px solid rgba(148,163,184,.16); color:var(--fg); padding:8px 10px; border-radius:10px; font-weight:700; font-size:12px; }
+
+    /* Screenshot card */
+    .shot{
+      background: linear-gradient(180deg, rgba(34,211,238,.06), rgba(14,165,233,.08));
+      border: 1px solid rgba(14,165,233,.25);
+      border-radius: 16px;
+      padding: 14px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .shot img{
+      display:block; width:100%; height:auto; max-width: 440px; border-radius: 14px;
+      box-shadow: 0 12px 30px rgba(2,6,23,.5);
+    }
+
+    /* ------- Footer ------- */
+    footer{
+      display:flex; align-items:center; justify-content:space-between; gap:16px; color:var(--muted); font-size:12px;
+    }
+    .tiny{ font-size:12px; color:var(--muted); }
+
+    @media (max-width: 880px){
+      .hero{ grid-template-columns: 1fr; }
+      .shot{ order:-1; }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <div class="title"><span class="dot"></span> BJJ Submissions Counter</div>
-      <div class="actions">
-        <a class="ghost" href="/privacy.html">Privacy</a>
-        <a class="ghost" href="/">Open app</a>
-      </div>
+      <a class="ghost" href="/">Open the mobile app</a>
     </header>
 
-    <main>
-      <section class="card">
-        <h1>Best on mobile</h1>
-        <p>BJJ Submissions Counter is designed for quick logging during training and works great as a mobile Progressive Web App (PWA).</p>
-        <ul>
-          <li>Open this site on your iPhone or Android device.</li>
-          <li>Add it to your Home Screen for 1-tap access and offline use.</li>
-          <li>All data stays on your device; no accounts, no tracking.</li>
-        </ul>
-        <div class="cta-row">
-          <a class="primary" href="/">Open the app</a>
-          <a class="ghost" href="/privacy.html">Privacy policy</a>
+    <section class="hero">
+      <div>
+        <h1>Log your BJJ submissions, fast ⚡️</h1>
+        <p>
+          Track which techniques you finish and against which belt level. Works offline, saves to your device,
+          and installs to your home screen for 1-tap access.
+        </p>
+        <div class="badges">
+          <div class="badge">Offline-first</div>
+          <div class="badge">No account</div>
+          <div class="badge">Privacy-friendly</div>
+          <div class="badge">iOS &amp; Android</div>
         </div>
-      </section>
-    </main>
+      </div>
+
+      <!-- Screenshot: replace src if your path/name differs -->
+      <div class="shot">
+        <img src="screenshot.png" alt="BJJ Submissions Counter app screenshot" loading="eager" />
+      </div>
+    </section>
 
     <footer>
-      <span>© BJJ Submissions Counter</span>
-      <a href="/privacy.html">Privacy</a>
+      <div class="tiny">
+        Tip: open this site on your phone to use the app.
+      </div>
+      <!-- Small privacy note/link, as requested -->
+      <div class="tiny">
+        Privacy: we don’t collect personal data. <a href="/privacy.html">Read policy</a>.
+      </div>
     </footer>
   </div>
 </body>
