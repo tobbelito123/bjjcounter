@@ -175,7 +175,7 @@
     background: var(--card); border-radius: 16px; padding: 16px; box-shadow: var(--shadow);
     border: 1px solid rgba(148,163,184,0.12);
   }
-  .submission .content { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 12px; }
+  .card .content { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 12px; }
   .submission { position: relative; overflow: hidden; touch-action: pan-y; }
   .submission .swipe-bg { position: absolute; inset: 0; background: #ef4444; pointer-events: none; opacity: 0; transition: opacity .15s; }
   .submission .swipe-bg::after {
@@ -183,7 +183,7 @@
     color: white; font-weight: 700; font-size: 14px; letter-spacing: 0.5px;
   }
   .submission.swiping .swipe-bg { opacity: 0.9; }
-  .submission .content { position: relative; transition: transform .15s ease, opacity .15s ease; will-change: transform; }
+  .card .content { position: relative; transition: transform .15s ease, opacity .15s ease; will-change: transform; }
 
   .icon {
     width: 60px; height: 60px; border-radius: 16px; display: grid; place-items: center;
@@ -286,8 +286,10 @@
     </nav>
 
     <main>
+
 <section id="view-log" class="grid" role="tabpanel" aria-labelledby="tab-log">
-  <button class="card submission" data-submission="__total" aria-label="Total of all moves">
+  <!-- Total (pinned at bottom, not a 'submission') -->
+  <button class="card total" data-submission="__total" aria-label="Total of all moves">
     <div class="content">
       <div class="icon" aria-hidden="true"></div>
       <div>
@@ -297,22 +299,9 @@
       <div class="count" id="count-__total">0</div>
     </div>
   </button>
-  <!-- Total (pinned at bottom, not a 'submission') -->
-<button class="card total" data-submission="__total" aria-label="Total of all moves">
-  <div class="content">
-    <div class="icon" aria-hidden="true"></div>
-    <div>
-      <h3>Total</h3>
-      <div class="muted">All submissions combined</div>
-    </div>
-    <div class="count" id="count-__total">0</div>
-  </div>
-</button>
 
-<div class="foot"></div>
+  <div class="foot"></div>
 </section>
-</section>
-
 
       <!-- Stats view -->
       <section id="view-stats" hidden role="tabpanel" aria-labelledby="tab-stats">
