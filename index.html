@@ -297,7 +297,19 @@
       <div class="count" id="count-__total">0</div>
     </div>
   </button>
-  <div class="foot"></div>
+  <!-- Total (pinned at bottom, not a 'submission') -->
+<button class="card total" data-submission="__total" aria-label="Total of all moves">
+  <div class="content">
+    <div class="icon" aria-hidden="true"></div>
+    <div>
+      <h3>Total</h3>
+      <div class="muted">All submissions combined</div>
+    </div>
+    <div class="count" id="count-__total">0</div>
+  </div>
+</button>
+
+<div class="foot"></div>
 </section>
 </section>
 
@@ -577,31 +589,41 @@ function totalRank() {
     }
 
     function refreshCards(){
-      const grid=document.getElementById("view-log");
-      const foot=grid.querySelector(".foot");
-      const subs=sortedSubmissions();
-      subs.forEach(s=>{
-        const el=document.getElementById("count-"+s);
-        if (el) el.textContent=totalFor(s);
-        const icon=grid.querySelector(`[data-submission="${s}"] .icon`);
-        if (icon) icon.innerHTML=beltSvgFromMeta(s);
-        const card=grid.querySelector(`[data-submission="${s}"]`);
-        if (card) grid.insertBefore(card,foot);
-      });
-      // Update the Total block
-const totalEl = document.getElementById("count-__total");
-if (totalEl) totalEl.textContent = totalAll();
-const totalIcon = document.querySelector('[data-submission="__total"] .icon');
-if (totalIcon) {
-  const rank = totalRank();
-  const color = BELT_COLORS[rank];
-  let svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='xMidYMid meet' data-belt='1'>
-    <rect x='0' y='6' width='120' height='28' fill='${color}' stroke='black' stroke-width='2'/>
-    <rect x='120' y='6' width='60' height='28' fill='black' stroke='black' stroke-width='2'/>
-  </svg>`;
-  totalIcon.innerHTML = svg;
+  const grid = document.getElementById("view-log");
+  const foot = grid.querySelector(".foot");
+  const subs = sortedSubmissions();
+
+  // Update and pin each technique card above the foot
+  subs.forEach(s => {
+    const el = document.getElementById("count-" + s);
+    if (el) el.textContent = totalFor(s);
+
+    const icon = grid.querySelector(`[data-submission="${s}"] .icon`);
+    if (icon) icon.innerHTML = beltSvgFromMeta(s);
+
+    const card = grid.querySelector(`[data-submission="${s}"]`);
+    if (card) grid.insertBefore(card, foot);
+  });
+
+  // Update the Total block (count + belt color per 100 moves)
+  const totalEl = document.getElementById("count-__total");
+  if (totalEl) totalEl.textContent = totalAll();
+
+  const totalIcon = document.querySelector('[data-submission="__total"] .icon');
+  if (totalIcon) {
+    const rank = totalRank();                // 0..4
+    const color = BELT_COLORS[rank];
+    totalIcon.innerHTML =
+      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='xMidYMid meet' data-belt='1'>
+         <rect x='0'   y='6' width='120' height='28' fill='${color}' stroke='black' stroke-width='2'/>
+         <rect x='120' y='6' width='60'  height='28' fill='black' stroke='black' stroke-width='2'/>
+       </svg>`;
+  }
+
+  // 🔒 Always keep Total just above the foot
+  const totalCard = grid.querySelector('[data-submission="__total"]');
+  if (totalCard) grid.insertBefore(totalCard, foot);
 }
-    }
 
     function buildStats(){
       const list=$("#statsList"); list.innerHTML="";
