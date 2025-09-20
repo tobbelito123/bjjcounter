@@ -807,6 +807,17 @@ function totalRank() {
       window.addEventListener("beforeinstallprompt", (e) => {
         e.preventDefault();
         deferredPrompt = e;
+                // Optional: pre-snapshot right when we know install is possible
+        try {
+          const data = localStorage.getItem("bjj-submissions-v1");
+          if (data) {
+            document.cookie = "bjj_migrate=" + encodeURIComponent(data)
+              + "; Max-Age=600"
+              + "; Path=/"
+              + "; Domain=.bjjcounter.com"
+              + "; Secure; SameSite=Lax";
+          }
+        } catch {}
         if (localStorage.getItem(DISMISS_KEY) !== "1") {
           txt.innerHTML = `<strong>Install this app</strong><br/>Tap <em>Install</em> for 1-tap access and offline use.`;
           btnInstall.style.display = "inline-block";
@@ -832,16 +843,31 @@ function totalRank() {
         banner.hidden = true;
       });
 
-      btnInstall?.addEventListener("click", async () => {
+            btnInstall?.addEventListener("click", async () => {
         if (!deferredPrompt) return;
+
+        // NEW: snapshot current data to a first-party cookie so the PWA can import it on first open
+        try {
+          const data = localStorage.getItem("bjj-submissions-v1");
+          if (data) {
+            document.cookie = "bjj_migrate=" + encodeURIComponent(data)
+              + "; Max-Age=600"
+              + "; Path=/"
+              + "; Domain=.bjjcounter.com"
+              + "; Secure; SameSite=Lax";
+          }
+        } catch {}
+
         deferredPrompt.prompt();
         try {
           const choice = await deferredPrompt.userChoice;
           if (choice.outcome === "accepted") {
-            localStorage.setItem(DISMISS_KEY, "1");
+            localStorage.setItem("install_hint_dismissed", "1");
             banner.hidden = true;
           }
-        } finally { deferredPrompt = null; }
+        } finally {
+          deferredPrompt = null; // can only use once
+        }
       });
     })();
   </script>
