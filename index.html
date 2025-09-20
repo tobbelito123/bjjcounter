@@ -470,10 +470,21 @@
 
     // ✅ Guard: if the storage key already exists (e.g., after Reset wrote defaults),
     // bail out so we never re-import stale cookie data.
-    try {
-      if (localStorage.getItem(KEY) != null) return;
-    } catch {}
-
+    // Guard: only skip import if there is already non-empty data
+try {
+  const existing = localStorage.getItem(KEY);
+  if (existing) {
+    const parsed = JSON.parse(existing);
+    let total = 0;
+    if (parsed?.submissions) {
+      for (const k of Object.keys(parsed.submissions)) {
+        const v = parsed.submissions[k];
+        total += (v.white|0)+(v.blue|0)+(v.purple|0)+(v.brown|0)+(v.black|0);
+      }
+    }
+    if (total > 0) return; // already have data, do not overwrite
+  }
+} catch {}
     function looksDefault(d) {
       if (!d || !d.submissions) return true;
       let total = 0;
