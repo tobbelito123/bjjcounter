@@ -460,58 +460,52 @@
     function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1200); }
 
     let DATA = readData();
+    // Keep a fresh 10-min cookie snapshot available while in browser (not standalone).
+(function seedBridgeCookie() {
+  const IS_STANDALONE = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (IS_STANDALONE) return;
+  try {
+    const json = localStorage.getItem(KEY) || JSON.stringify(DATA);
+    document.cookie = "bjj_migrate=" + encodeURIComponent(json)
+      + "; Max-Age=600"
+      + "; Path=/"
+      + "; Domain=.bjjcounter.com"
+      + "; Secure; SameSite=Lax";
+  } catch {}
+})();
     let pendingSubmission = null;
 
-    // One-time browser -> PWA migration
-   
-  // One-time browser -> PWA migration (only when app launches the very first time)
-  (function runOneTimeMigration() {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+(function runOneTimeMigration() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
-    // ✅ Guard: if the storage key already exists (e.g., after Reset wrote defaults),
-    // bail out so we never re-import stale cookie data.
-    // Guard: only skip import if there is already non-empty data
-try {
-  const existing = localStorage.getItem(KEY);
-  if (existing) {
-    const parsed = JSON.parse(existing);
+  function looksDefault(d) {
+    if (!d || !d.submissions) return true;
     let total = 0;
-    if (parsed?.submissions) {
-      for (const k of Object.keys(parsed.submissions)) {
-        const v = parsed.submissions[k];
-        total += (v.white|0)+(v.blue|0)+(v.purple|0)+(v.brown|0)+(v.black|0);
-      }
+    for (const k of Object.keys(d.submissions)) {
+      const v = d.submissions[k];
+      total += (v.white|0) + (v.blue|0) + (v.purple|0) + (v.brown|0) + (v.black|0);
     }
-    if (total > 0) return; // already have data, do not overwrite
+    return total === 0;
   }
-} catch {}
-    function looksDefault(d) {
-      if (!d || !d.submissions) return true;
-      let total = 0;
-      for (const k of Object.keys(d.submissions)) {
-        const v = d.submissions[k];
-        total += (v.white|0) + (v.blue|0) + (v.purple|0) + (v.brown|0) + (v.black|0);
-      }
-      return total === 0;
+
+  if (!isStandalone) return;           // only inside installed app
+  if (!looksDefault(DATA)) return;     // don't overwrite real data
+
+  const json = getCookie('bjj_migrate');
+  if (!json) return;
+
+  try {
+    const obj = JSON.parse(json);
+    if (obj && obj.submissions) {
+      DATA = obj;
+ writeData(DATA);
+refreshCards();                        // <- add this
+deleteCookie('bjj_migrate');
     }
-
-    if (!isStandalone) return;              // only inside installed app
-    if (!looksDefault(DATA)) return;        // don't overwrite non-empty app data
-
-    const json = getCookie('bjj_migrate');
-    if (!json) return;
-
-    try {
-      const obj = JSON.parse(json);
-      if (obj && obj.submissions) {
-        DATA = obj;
-        writeData(DATA);                    // persist into app localStorage
-        deleteCookie('bjj_migrate');        // prevent importing again
-      }
-    } catch {
-      deleteCookie('bjj_migrate');          // bad cookie → just clear it
-    }
-  })();
+  } catch {
+    deleteCookie('bjj_migrate');       // bad cookie → clear it
+  }
+})();
 
     function totalFor(sub) {
       const o = DATA.submissions[sub];
