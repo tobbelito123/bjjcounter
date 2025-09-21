@@ -297,7 +297,13 @@
 
   <script>
     // ------- Storage & Data -------
-    const KEY = "bjj-submissions-v1";
+  
+// ------- Storage & Data -------
+const KEY = "bjj-submissions-v1";
+
+/* (NEW) Shared cache keys used to migrate local data from Safari → PWA */
+const MIGRATION_CACHE = "bjj-migrate-v1";
+const MIGRATION_URL   = "/__bjj_migrate__";
 
     // Exact initial order you requested
     const SUBMISSIONS = [
@@ -383,9 +389,28 @@
       } catch { return defaultData(); }
     }
 
-    function writeData(data) {
-      localStorage.setItem(KEY, JSON.stringify(data));
-    }
+function writeData(data) {
+  // Persist to localStorage (current context)
+  localStorage.setItem(KEY, JSON.stringify(data));
+  // Also mirror to Cache Storage so the installed app can import it
+  saveMigrationMirror(data);
+}
+
+/* (NEW) Save a copy of the data into Cache Storage under a stable URL */
+function saveMigrationMirror(data){
+  try {
+    if (!("caches" in window)) return;
+    caches.open(MIGRATION_CACHE).then(cache => {
+      const res = new Response(JSON.stringify(data), {
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store"
+        }
+      });
+      cache.put(MIGRATION_URL, res).catch(()=>{});
+    }).catch(()=>{});
+  } catch {}
+}
 
     const $  = sel => document.querySelector(sel);
     const $$ = sel => Array.from(document.querySelectorAll(sel));
@@ -395,6 +420,31 @@
     let DATA = readData();
     let pendingSubmission = null;
 
+    /* (NEW) If localStorage is empty (typical on first launch of the PWA on iOS),
+   try to pull a previously mirrored copy from Cache Storage and adopt it. */
+(async function migrateFromCacheIfNeeded(){
+  try {
+    const hasLocal = !!localStorage.getItem(KEY);
+    if (hasLocal) return; // Nothing to migrate
+
+    if (!("caches" in window)) return;
+    const cache = await caches.open(MIGRATION_CACHE);
+    const res   = await cache.match(MIGRATION_URL);
+    if (!res) return;
+
+    const obj = await res.json();
+    if (obj && obj.submissions) {
+      DATA = obj;
+      writeData(DATA);     // re-save (and re-mirror) in the new context
+      refreshCards();
+      if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
+      toast("Imported your previous data");
+      vibrate(12);
+    }
+  } catch {
+    /* no-op */
+  }
+})();
     function totalFor(sub) {
       const o = DATA.submissions[sub];
       return BELTS.reduce((n,b) => n + (o[b]||0), 0);
@@ -659,7 +709,8 @@
     refreshCards();
     document.getElementById("addBtn").addEventListener("click", addSubmissionFlow);
     document.getElementById("sortBtn").addEventListener("click", sortNow);
-
+// (NEW) Make sure a migration mirror exists on first load in Safari
+saveMigrationMirror(DATA);
     // Install / A2HS banner (no cookie/cache logic)
     (function () {
       const banner = document.getElementById("installBanner");
