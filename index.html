@@ -867,16 +867,20 @@ function totalRank() {
         e.preventDefault();
         deferredPrompt = e;
                 // Optional: pre-snapshot right when we know install is possible
-        try {
-          const data = localStorage.getItem("bjj-submissions-v1");
-          if (data) {
-            document.cookie = "bjj_migrate=" + encodeURIComponent(data)
-              + "; Max-Age=600"
-              + "; Path=/"
-              + "; Domain=.bjjcounter.com"
-              + "; Secure; SameSite=Lax";
-          }
-        } catch {}
+        // Optional: pre-snapshot right when we know install is possible
+try {
+  const data = localStorage.getItem("bjj-submissions-v1");
+  if (data) {
+    document.cookie = "bjj_migrate=" + encodeURIComponent(data)
+      + "; Max-Age=600; Path=/; Domain=.bjjcounter.com; Secure; SameSite=Lax";
+    if ('caches' in window) {
+      const cache = await caches.open('bjj-bridge');
+      await cache.put('/seed.json', new Response(data, {
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
+      }));
+    }
+  }
+} catch {}
         if (localStorage.getItem(DISMISS_KEY) !== "1") {
           txt.innerHTML = `<strong>Install this app</strong><br/>Tap <em>Install</em> for 1-tap access and offline use.`;
           btnInstall.style.display = "inline-block";
