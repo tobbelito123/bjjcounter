@@ -460,6 +460,36 @@
     function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1200); }
 
     let DATA = readData();
+  
+// Keep a fresh 10-min cookie snapshot available while in browser (not standalone).
+(function seedBridgeCookie() {
+  const IS_STANDALONE = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (IS_STANDALONE) return;
+  try {
+    const json = localStorage.getItem(KEY) || JSON.stringify(DATA);
+    document.cookie = "bjj_migrate=" + encodeURIComponent(json)
+      + "; Max-Age=600"
+      + "; Path=/"
+      + "; Domain=.bjjcounter.com"
+      + "; Secure; SameSite=Lax";
+  } catch {}
+})();
+
+// Also seed a SW cache snapshot so the installed PWA can import even if cookies are isolated.
+(async function seedBridgeCache() {
+  const IS_STANDALONE = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (IS_STANDALONE) return;
+  if (!('caches' in window)) return;
+  try {
+    const json = localStorage.getItem(KEY) || JSON.stringify(DATA);
+    const cache = await caches.open('bjj-bridge');
+    // Create/overwrite a synthetic response at a known URL
+    await cache.put('/seed.json', new Response(json, {
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
+    }));
+  } catch {}
+})();
+  
     // Keep a fresh 10-min cookie snapshot available while in browser (not standalone).
 (function seedBridgeCookie() {
   const IS_STANDALONE = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
@@ -475,8 +505,9 @@
 })();
     let pendingSubmission = null;
 
+
 (function runOneTimeMigration() {
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
 
   function looksDefault(d) {
     if (!d || !d.submissions) return true;
@@ -488,24 +519,47 @@
     return total === 0;
   }
 
-  if (!isStandalone) return;           // only inside installed app
+  if (!isStandalone) return;           // only inside installed PWA
   if (!looksDefault(DATA)) return;     // don't overwrite real data
 
-  const json = getCookie('bjj_migrate');
-  if (!json) return;
-
+  // 1) Try cookie bridge first
+  let payload = null;
   try {
-    const obj = JSON.parse(json);
-    if (obj && obj.submissions) {
-      DATA = obj;
- writeData(DATA);
-refreshCards();                        // <- add this
-deleteCookie('bjj_migrate');
+    const json = getCookie('bjj_migrate');
+    if (json) payload = JSON.parse(json);
+  } catch {}
+
+  // 2) Fallback: try SW cache bridge at /seed.json
+  const tryCache = async () => {
+    if (payload || !('caches' in window)) return null;
+    try {
+      const cache = await caches.open('bjj-bridge');
+      const res = await cache.match('/seed.json');
+      if (!res) return null;
+      const txt = await res.text();
+      return JSON.parse(txt);
+    } catch { return null; }
+  };
+
+  (async () => {
+    if (!payload) payload = await tryCache();
+
+    if (payload && payload.submissions) {
+      DATA = payload;
+      writeData(DATA);
+      refreshCards();
+      // clean both bridges so we don't re-import again
+      try { deleteCookie('bjj_migrate'); } catch {}
+      try {
+        if ('caches' in window) {
+          const cache = await caches.open('bjj-bridge');
+          await cache.delete('/seed.json');
+        }
+      } catch {}
     }
-  } catch {
-    deleteCookie('bjj_migrate');       // bad cookie → clear it
-  }
+  })();
 })();
+
 
     function totalFor(sub) {
       const o = DATA.submissions[sub];
