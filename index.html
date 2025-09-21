@@ -11,251 +11,199 @@
   <link rel="canonical" href="https://www.bjjcounter.com/" />
   <link rel="apple-touch-icon" href="/icons/icon-192.png" />
 
-  <!-- Host alignment + first-run migration from apex -> www (browser only) -->
-  <script>
-    (function () {
-      const KEY = "bjj-submissions-v1";
-      const apex = "bjjcounter.com";
-      const canonical = "www.bjjcounter.com";
-      const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-
-      function setCookie(name, value, seconds) {
-        document.cookie =
-          name + "=" + encodeURIComponent(value) +
-          "; Max-Age=" + seconds +
-          "; Path=/" +
-          "; Domain=.bjjcounter.com" +
-          "; SameSite=Lax; Secure";
-      }
-      function getCookie(name) {
-        const m = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/[-./\\^$*+?()[\]{}|]/g, '\\$&') + "=([^;]*)"));
-        return m ? decodeURIComponent(m[1]) : null;
-      }
-      function delCookie(name) {
-        document.cookie = name + "=; Max-Age=0; Path=/; Domain=.bjjcounter.com; SameSite=Lax; Secure";
-      }
-
-      // If on apex in a browser tab, stash data then redirect to www
-      if (location.hostname === apex && !isStandalone) {
-        try {
-          const data = localStorage.getItem(KEY);
-          if (data) setCookie("bjj_migrate", data, 600); // 10min
-        } catch {}
-        location.replace("https://" + canonical + location.pathname + location.search + location.hash);
-        return;
-      }
-
-      // If we just arrived on www (browser) and have no data yet, import once from cookie
-      if (location.hostname === canonical && !isStandalone) {
-        try {
-          const have = localStorage.getItem(KEY);
-          if (!have) {
-            const payload = getCookie("bjj_migrate");
-            if (payload) {
-              localStorage.setItem(KEY, payload);
-              delCookie("bjj_migrate");
-            }
-          } else {
-            delCookie("bjj_migrate");
-          }
-        } catch {}
-      }
-    })();
-  </script>
-
   <!-- If not a mobile device, bounce to desktop page -->
   <script>
     if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       window.location.href = "desktop.html";
     }
   </script>
-<style>
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { height: 100%; }
-  body {
-    margin: 0;
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
-    -webkit-font-smoothing: antialiased;
-    color: var(--fg);
-    background: var(--bg);
-    -webkit-tap-highlight-color: transparent;
-  }
-  [hidden] { display: none !important; }
-
-  :root {
-    --bg: #0b1020;
-    --card: #121830;
-    --card-2: #0f1428;
-    --fg: #eaf1ff;
-    --muted: #b7c4e1;
-    --primary: #0ea5e9;
-    --primary-2: #22d3ee;
-    --ring: rgba(34, 211, 238, 0.35);
-    --shadow: 0 10px 30px rgba(2, 6, 23, 0.4);
-    --ok: #10b981;
-    --warn: #f59e0b;
-    --danger: #ef4444;
-
-    --white: #ffffff;
-    --blue: #1e40af;
-    --purple: #6d28d9;
-    --brown: #7c2d12;
-    --black: #0b0b0b;
-  }
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg: #f6f8ff;
-      --card: #ffffff;
-      --card-2: #f2f5ff;
-      --fg: #0b1020;
-      --muted: #475569;
-      --shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      -webkit-font-smoothing: antialiased;
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-tap-highlight-color: transparent;
     }
-  }
+    [hidden] { display: none !important; }
 
-  .wrap {
-    max-width: 720px;
-    margin: 0 auto;
-    min-height: 100%;
-    display: grid;
-    grid-template-rows: auto auto 1fr;
-    padding: 16px clamp(12px, 4vw, 20px) calc(16px + env(safe-area-inset-bottom));
-    gap: 14px;
-  }
-  .submission { touch-action: pan-y; }
-  header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 12px;
-    background: linear-gradient(180deg, rgba(34,211,238,0.06), transparent);
-    border-radius: 16px;
-  }
-  .title { font-weight: 800; letter-spacing: 0.3px; font-size: 20px; display: flex; align-items: center; gap: 10px; }
-  .title .dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    background: radial-gradient(40% 40% at 30% 30%, var(--primary-2), var(--primary));
-    box-shadow: 0 0 18px var(--ring);
-  }
-  .actions { display: flex; gap: 8px; align-items: center; }
-  .ghost {
-    background: transparent; border: 1px solid rgba(148,163,184,0.25);
-    color: var(--muted); padding: 8px 10px; border-radius: 10px; font-size: 13px;
-  }
+    :root {
+      --bg: #0b1020;
+      --card: #121830;
+      --card-2: #0f1428;
+      --fg: #eaf1ff;
+      --muted: #b7c4e1;
+      --primary: #0ea5e9;
+      --primary-2: #22d3ee;
+      --ring: rgba(34, 211, 238, 0.35);
+      --shadow: 0 10px 30px rgba(2, 6, 23, 0.4);
+      --ok: #10b981;
+      --warn: #f59e0b;
+      --danger: #ef4444;
 
-  /* Install banner */
-  .install-banner {
-    display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px;
-    padding: 10px 12px; border-radius: 14px; background: var(--card-2);
-    border: 1px solid rgba(148,163,184,0.15); box-shadow: var(--shadow); font-size: 14px;
-  }
-  .install-banner strong { font-weight: 800; }
-  .install-actions { display: flex; gap: 8px; }
-  .install-btn, .dismiss-btn { appearance: none; border: 0; cursor: pointer; padding: 10px 12px; border-radius: 10px; font-weight: 700; }
-  .install-btn { background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18)); box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35); color: var(--fg); }
-  .dismiss-btn { background: transparent; border: 1px solid rgba(148,163,184,0.25); color: var(--muted); }
+      --white: #ffffff;
+      --blue: #1e40af;
+      --purple: #6d28d9;
+      --brown: #7c2d12;
+      --black: #0b0b0b;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f6f8ff;
+        --card: #ffffff;
+        --card-2: #f2f5ff;
+        --fg: #0b1020;
+        --muted: #475569;
+        --shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
+      }
+    }
 
-  .tabs {
-    display: grid; grid-template-columns: 1fr 1fr; background: var(--card-2);
-    border-radius: 14px; padding: 6px; box-shadow: var(--shadow);
-    border: 1px solid rgba(148,163,184,0.15);
-  }
-  .tab {
-    appearance: none; border: 0; background: transparent; color: var(--muted);
-    padding: 16px 24px; border-radius: 12px; font-weight: 700; font-size: 18px; cursor: pointer; transition: all .2s;
-  }
-  .tab.active {
-    color: var(--fg);
-    background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18));
-    box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35), 0 8px 20px rgba(2, 6, 23, 0.22);
-    transform: scale(1.03);
-  }
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      min-height: 100%;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      padding: 16px clamp(12px, 4vw, 20px) calc(16px + env(safe-area-inset-bottom));
+      gap: 14px;
+    }
+    .submission { touch-action: pan-y; }
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 12px;
+      background: linear-gradient(180deg, rgba(34,211,238,0.06), transparent);
+      border-radius: 16px;
+    }
+    .title { font-weight: 800; letter-spacing: 0.3px; font-size: 20px; display: flex; align-items: center; gap: 10px; }
+    .title .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: radial-gradient(40% 40% at 30% 30%, var(--primary-2), var(--primary));
+      box-shadow: 0 0 18px var(--ring);
+    }
+    .actions { display: flex; gap: 8px; align-items: center; }
+    .ghost {
+      background: transparent; border: 1px solid rgba(148,163,184,0.25);
+      color: var(--muted); padding: 8px 10px; border-radius: 10px; font-size: 13px;
+    }
 
-  main { display: grid; gap: 14px; }
-  .grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
-  .card {
-    background: var(--card); border-radius: 16px; padding: 16px; box-shadow: var(--shadow);
-    border: 1px solid rgba(148,163,184,0.12);
-  }
-  .card .content { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 12px; }
-  .submission { position: relative; overflow: hidden; touch-action: pan-y; }
-  .submission .swipe-bg { position: absolute; inset: 0; background: #ef4444; pointer-events: none; opacity: 0; transition: opacity .15s; }
-  .submission .swipe-bg::after {
-    content: "Delete"; position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
-    color: white; font-weight: 700; font-size: 14px; letter-spacing: 0.5px;
-  }
-  .submission.swiping .swipe-bg { opacity: 0.9; }
-  .card .content { position: relative; transition: transform .15s ease, opacity .15s ease; will-change: transform; }
+    /* Install banner */
+    .install-banner {
+      display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 14px; background: var(--card-2);
+      border: 1px solid rgba(148,163,184,0.15); box-shadow: var(--shadow); font-size: 14px;
+    }
+    .install-banner strong { font-weight: 800; }
+    .install-actions { display: flex; gap: 8px; }
+    .install-btn, .dismiss-btn { appearance: none; border: 0; cursor: pointer; padding: 10px 12px; border-radius: 10px; font-weight: 700; }
+    .install-btn { background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18)); box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35); color: var(--fg); }
+    .dismiss-btn { background: transparent; border: 1px solid rgba(148,163,184,0.25); color: var(--muted); }
 
-  .icon {
-    width: 60px; height: 60px; border-radius: 16px; display: grid; place-items: center;
-    background: radial-gradient(60% 60% at 35% 30%, rgba(34,211,238,0.4), rgba(14,165,233,0.15));
-    border: 1px solid rgba(14,165,233,0.3);
-  }
-  .icon svg { width: 32px; height: 32px; opacity: 0.95; }
-  .icon svg[data-belt] { width: 56px; height: 36px; }
+    .tabs {
+      display: grid; grid-template-columns: 1fr 1fr; background: var(--card-2);
+      border-radius: 14px; padding: 6px; box-shadow: var(--shadow);
+      border: 1px solid rgba(148,163,184,0.15);
+    }
+    .tab {
+      appearance: none; border: 0; background: transparent; color: var(--muted);
+      padding: 16px 24px; border-radius: 12px; font-weight: 700; font-size: 18px; cursor: pointer; transition: all .2s;
+    }
+    .tab.active {
+      color: var(--fg);
+      background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18));
+      box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35), 0 8px 20px rgba(2, 6, 23, 0.22);
+      transform: scale(1.03);
+    }
 
-  .card h3 { margin: 0 0 6px; font-size: 16px; letter-spacing: 0.2px; }
-  .muted { color: var(--muted); font-size: 13px; }
-  .count {
-    font-weight: 800; font-size: 20px; letter-spacing: 0.3px; padding: 6px 10px; border-radius: 10px; min-width: 44px; text-align: center;
-    background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18)); border: 1px solid rgba(14,165,233,0.35);
-  }
+    main { display: grid; gap: 14px; }
+    .grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
+    .card {
+      background: var(--card); border-radius: 16px; padding: 16px; box-shadow: var(--shadow);
+      border: 1px solid rgba(148,163,184,0.12);
+    }
+    .card .content { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 12px; }
+    .submission { position: relative; overflow: hidden; touch-action: pan-y; }
+    .submission .swipe-bg { position: absolute; inset: 0; background: #ef4444; pointer-events: none; opacity: 0; transition: opacity .15s; }
+    .submission .swipe-bg::after {
+      content: "Delete"; position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+      color: white; font-weight: 700; font-size: 14px; letter-spacing: 0.5px;
+    }
+    .submission.swiping .swipe-bg { opacity: 0.9; }
+    .card .content { position: relative; transition: transform .15s ease, opacity .15s ease; will-change: transform; }
 
-  .sheet-backdrop { position: fixed; inset: 0; background: rgba(2,6,23,0.4); opacity: 0; pointer-events: none; transition: opacity .2s; }
-  .sheet {
-    position: fixed; left: 0; right: 0; bottom: 0; transform: translateY(100%); transition: transform .3s;
-    background: var(--card); border-top-left-radius: 16px; border-top-right-radius: 16px;
-    box-shadow: 0 -10px 30px rgba(2,6,23,0.4); border-top: 1px solid rgba(148,163,184,0.18);
-    padding: 14px 14px calc(14px + env(safe-area-inset-bottom));
-  }
-  .sheet.open { transform: translateY(0); }
-  .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
-  .sheet h4 { margin: 4px 2px 10px; font-size: 15px; }
+    .icon {
+      width: 60px; height: 60px; border-radius: 16px; display: grid; place-items: center;
+      background: radial-gradient(60% 60% at 35% 30%, rgba(34,211,238,0.4), rgba(14,165,233,0.15));
+      border: 1px solid rgba(14,165,233,0.3);
+    }
+    .icon svg { width: 32px; height: 32px; opacity: 0.95; }
+    .icon svg[data-belt] { width: 56px; height: 36px; }
 
-  .belts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-  .belt {
-    appearance: none; border: 0; border-radius: 12px; padding: 12px 8px;
-    background: var(--card-2); color: var(--fg); font-weight: 700; font-size: 12px; letter-spacing: 0.2px;
-    border: 1px solid rgba(148,163,184,0.16);
-  }
-  .belt .swatch { display: block; height: 16px; border-radius: 6px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.2); }
-  .belt[data-belt="white"] .swatch { background: var(--white); }
-  .belt[data-belt="blue"] .swatch { background: var(--blue); }
-  .belt[data-belt="purple"] .swatch { background: var(--purple); }
-  .belt[data-belt="brown"] .swatch { background: var(--brown); }
-  .belt[data-belt="black"] .swatch { background: var(--black); }
+    .card h3 { margin: 0 0 6px; font-size: 16px; letter-spacing: 0.2px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .count {
+      font-weight: 800; font-size: 20px; letter-spacing: 0.3px; padding: 6px 10px; border-radius: 10px; min-width: 44px; text-align: center;
+      background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18)); border: 1px solid rgba(14,165,233,0.35);
+    }
 
-  .stat-card { padding: 16px; background: var(--card); border-radius: 16px; box-shadow: var(--shadow); border: 1px solid rgba(148,163,184,0.12); }
-  .stat-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-  .stat-head h3 { margin: 0; font-size: 15px; }
-  .stat-head .total { font-weight: 800; }
-  .bar { height: 12px; border-radius: 10px; display: grid; grid-auto-flow: column; overflow: hidden; margin-top: 10px; outline: 1px solid rgba(148,163,184,0.18); }
-  .seg { height: 100%; }
-  .seg.white { background: linear-gradient(180deg, #fff, #e5e7eb); }
-  .seg.blue { background: linear-gradient(180deg, #3b82f6, #1e40af); }
-  .seg.purple { background: linear-gradient(180deg, #a78bfa, #6d28d9); }
-  .seg.brown { background: linear-gradient(180deg, #b45309, #7c2d12); }
-  .seg.black { background: linear-gradient(180deg, #111827, #0b0b0b); }
-  .legend { margin-top: 10px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; font-size: 12px; color: var(--muted); }
-  .chip { display: flex; gap: 6px; align-items: center; }
-  .dot { width: 10px; height: 10px; border-radius: 999px; }
-  .dot.white { background: #fff; outline: 1px solid #cbd5e1; }
-  .dot.blue { background: #1e40af; }
-  .dot.purple { background: #6d28d9; }
-  .dot.brown { background: #7c2d12; }
-  .dot.black { background: #0b0b0b; outline: 1px solid #e5e7eb; }
+    .sheet-backdrop { position: fixed; inset: 0; background: rgba(2,6,23,0.4); opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .sheet {
+      position: fixed; left: 0; right: 0; bottom: 0; transform: translateY(100%); transition: transform .3s;
+      background: var(--card); border-top-left-radius: 16px; border-top-right-radius: 16px;
+      box-shadow: 0 -10px 30px rgba(2,6,23,0.4); border-top: 1px solid rgba(148,163,184,0.18);
+      padding: 14px 14px calc(14px + env(safe-area-inset-bottom));
+    }
+    .sheet.open { transform: translateY(0); }
+    .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+    .sheet h4 { margin: 4px 2px 10px; font-size: 15px; }
 
-  .foot { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin-top: 2px; color: var(--muted); font-size: 12px; }
-  .reset { background: transparent; border: 1px solid rgba(239,68,68,0.35); color: #fecaca; padding: 8px 10px; border-radius: 10px; font-size: 12px; }
+    .belts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    .belt {
+      appearance: none; border: 0; border-radius: 12px; padding: 12px 8px;
+      background: var(--card-2); color: var(--fg); font-weight: 700; font-size: 12px; letter-spacing: 0.2px;
+      border: 1px solid rgba(148,163,184,0.16);
+    }
+    .belt .swatch { display: block; height: 16px; border-radius: 6px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.2); }
+    .belt[data-belt="white"] .swatch { background: var(--white); }
+    .belt[data-belt="blue"] .swatch { background: var(--blue); }
+    .belt[data-belt="purple"] .swatch { background: var(--purple); }
+    .belt[data-belt="brown"] .swatch { background: var(--brown); }
+    .belt[data-belt="black"] .swatch { background: var(--black); }
 
-  .toast {
-    position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom));
-    transform: translateX(-50%) translateY(16px);
-    background: rgba(15, 23, 42, 0.9); color: #e2f7f6; padding: 10px 14px; border-radius: 12px;
-    border: 1px solid rgba(34,211,238,0.35); box-shadow: var(--shadow);
-    opacity: 0; transition: opacity .2s, transform .2s; font-size: 13px; pointer-events: none;
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-</style>
+    .stat-card { padding: 16px; background: var(--card); border-radius: 16px; box-shadow: var(--shadow); border: 1px solid rgba(148,163,184,0.12); }
+    .stat-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    .stat-head h3 { margin: 0; font-size: 15px; }
+    .stat-head .total { font-weight: 800; }
+    .bar { height: 12px; border-radius: 10px; display: grid; grid-auto-flow: column; overflow: hidden; margin-top: 10px; outline: 1px solid rgba(148,163,184,0.18); }
+    .seg { height: 100%; }
+    .seg.white { background: linear-gradient(180deg, #fff, #e5e7eb); }
+    .seg.blue { background: linear-gradient(180deg, #3b82f6, #1e40af); }
+    .seg.purple { background: linear-gradient(180deg, #a78bfa, #6d28d9); }
+    .seg.brown { background: linear-gradient(180deg, #b45309, #7c2d12); }
+    .seg.black { background: linear-gradient(180deg, #111827, #0b0b0b); }
+    .legend { margin-top: 10px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; font-size: 12px; color: var(--muted); }
+    .chip { display: flex; gap: 6px; align-items: center; }
+    .dot { width: 10px; height: 10px; border-radius: 999px; }
+    .dot.white { background: #fff; outline: 1px solid #cbd5e1; }
+    .dot.blue { background: #1e40af; }
+    .dot.purple { background: #6d28d9; }
+    .dot.brown { background: #7c2d12; }
+    .dot.black { background: #0b0b0b; outline: 1px solid #e5e7eb; }
+
+    .foot { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin-top: 2px; color: var(--muted); font-size: 12px; }
+    .reset { background: transparent; border: 1px solid rgba(239,68,68,0.35); color: #fecaca; padding: 8px 10px; border-radius: 10px; font-size: 12px; }
+
+    .toast {
+      position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom));
+      transform: translateX(-50%) translateY(16px);
+      background: rgba(15, 23, 42, 0.9); color: #e2f7f6; padding: 10px 14px; border-radius: 12px;
+      border: 1px solid rgba(34,211,238,0.35); box-shadow: var(--shadow);
+      opacity: 0; transition: opacity .2s, transform .2s; font-size: 13px; pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
 </head>
 <body>
   <div class="wrap">
@@ -272,7 +220,7 @@
     <div id="installBanner" class="install-banner" hidden>
       <div id="installText">
         <strong>Install this app</strong><br/>
-        Get 1-tap access and offline support.
+        Tap Install for 1-tap access and offline use.
       </div>
       <div class="install-actions">
         <button id="installDo" class="install-btn">Install</button>
@@ -286,22 +234,20 @@
     </nav>
 
     <main>
-
-<section id="view-log" class="grid" role="tabpanel" aria-labelledby="tab-log">
-  <!-- Total (pinned at bottom, not a 'submission') -->
-  <button class="card total" data-submission="__total" aria-label="Total of all moves">
-    <div class="content">
-      <div class="icon" aria-hidden="true"></div>
-      <div>
-        <h3>Total</h3>
-        <div class="muted">All submissions combined</div>
-      </div>
-      <div class="count" id="count-__total">0</div>
-    </div>
-  </button>
-
-  <div class="foot"></div>
-</section>
+      <section id="view-log" class="grid" role="tabpanel" aria-labelledby="tab-log">
+        <!-- Total (pinned at bottom, not a 'submission') -->
+        <button class="card total" data-submission="__total" aria-label="Total of all moves">
+          <div class="content">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <h3>Total</h3>
+              <div class="muted">All submissions combined</div>
+            </div>
+            <div class="count" id="count-__total">0</div>
+          </div>
+        </button>
+        <div class="foot"></div>
+      </section>
 
       <!-- Stats view -->
       <section id="view-stats" hidden role="tabpanel" aria-labelledby="tab-stats">
@@ -336,8 +282,8 @@
       <a href="mailto:info@bjjcounter.com?subject=BJJ%20Submissions%20Counter%20Feedback" style="color: var(--primary-2); text-decoration: underline;">info@bjjcounter.com</a>
     </p>
     <p style="margin-top:12px; font-size:12px; color:var(--muted);">
-  View our <a href="/privacy.html" style="color: var(--primary-2); text-decoration: underline;">Privacy Policy</a>.
-</p>
+      View our <a href="/privacy.html" style="color: var(--primary-2); text-decoration: underline;">Privacy Policy</a>.
+    </p>
 
     <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
       <button class="reset" id="resetBtn">Reset all data</button>
@@ -350,73 +296,73 @@
   <div class="toast" id="toast">Saved</div>
 
   <script>
-  // ------- Storage & Data -------
-  const KEY = "bjj-submissions-v1";
+    // ------- Storage & Data -------
+    const KEY = "bjj-submissions-v1";
 
-  // Exact initial order you requested
-  const SUBMISSIONS = [
-    "armbar_from_mount",
-    "americana_from_mount",
-    "ezekiel_choke_from_mount",
-    "triangle_from_mount",
-    "crosscollar_choke_from_mount",
-    "armtriangle_from_mount",
-    "armbar_from_guard",
-    "triangle_from_guard",
-    "kimura_from_guard",
-    "omoplata_from_guard",
-    "cross_collar_choke_from_guard",
-    "baseballchoke_from_guard",
-    "americana_from_side",
-    "papercut_choke_from_side",
-    "baseballchoke_from_side",
-    "kimura_from_northsouth",
-    "scissorchoke_from_northsouth",
-    "rear_naked_choke",
-    "bow_and_arrow_choke",
-    "armbar_from_back",
-    "triangle_from_back",
-    "straight_ankle_lock"
-  ];
+    // Exact initial order you requested
+    const SUBMISSIONS = [
+      "armbar_from_mount",
+      "americana_from_mount",
+      "ezekiel_choke_from_mount",
+      "triangle_from_mount",
+      "crosscollar_choke_from_mount",
+      "armtriangle_from_mount",
+      "armbar_from_guard",
+      "triangle_from_guard",
+      "kimura_from_guard",
+      "omoplata_from_guard",
+      "cross_collar_choke_from_guard",
+      "baseballchoke_from_guard",
+      "americana_from_side",
+      "papercut_choke_from_side",
+      "baseballchoke_from_side",
+      "kimura_from_northsouth",
+      "scissorchoke_from_northsouth",
+      "rear_naked_choke",
+      "bow_and_arrow_choke",
+      "armbar_from_back",
+      "triangle_from_back",
+      "straight_ankle_lock"
+    ];
 
-  const LABELS = {
-    armbar_from_mount: "Armbar from mount",
-    americana_from_mount: "Americana from mount",
-    ezekiel_choke_from_mount: "Ezekiel choke from mount",
-    triangle_from_mount: "Triangle from mount",
-    crosscollar_choke_from_mount: "Crosscollar choke from mount",
-    armtriangle_from_mount: "Armtriangle from mount",
-    armbar_from_guard: "Armbar from guard",
-    triangle_from_guard: "Triangle from guard",
-    kimura_from_guard: "Kimura from guard",
-    omoplata_from_guard: "Omoplata from guard",
-    cross_collar_choke_from_guard: "Cross-collar choke from guard",
-    baseballchoke_from_guard: "Baseballchoke from guard",
-    americana_from_side: "Americana from side",
-    papercut_choke_from_side: "Papercut choke from side",
-    baseballchoke_from_side: "Baseballchoke from side",
-    kimura_from_northsouth: "Kimura from northsouth",
-    scissorchoke_from_northsouth: "Scissorchoke from northsouth",
-    rear_naked_choke: "Rear naked choke",
-    bow_and_arrow_choke: "Bow and arrow choke",
-    armbar_from_back: "Armbar from back",
-    triangle_from_back: "Triangle from back",
-    straight_ankle_lock: "Straight ankle lock"
-  };
+    const LABELS = {
+      armbar_from_mount: "Armbar from mount",
+      americana_from_mount: "Americana from mount",
+      ezekiel_choke_from_mount: "Ezekiel choke from mount",
+      triangle_from_mount: "Triangle from mount",
+      crosscollar_choke_from_mount: "Crosscollar choke from mount",
+      armtriangle_from_mount: "Armtriangle from mount",
+      armbar_from_guard: "Armbar from guard",
+      triangle_from_guard: "Triangle from guard",
+      kimura_from_guard: "Kimura from guard",
+      omoplata_from_guard: "Omoplata from guard",
+      cross_collar_choke_from_guard: "Cross-collar choke from guard",
+      baseballchoke_from_guard: "Baseballchoke from guard",
+      americana_from_side: "Americana from side",
+      papercut_choke_from_side: "Papercut choke from side",
+      baseballchoke_from_side: "Baseballchoke from side",
+      kimura_from_northsouth: "Kimura from northsouth",
+      scissorchoke_from_northsouth: "Scissorchoke from northsouth",
+      rear_naked_choke: "Rear naked choke",
+      bow_and_arrow_choke: "Bow and arrow choke",
+      armbar_from_back: "Armbar from back",
+      triangle_from_back: "Triangle from back",
+      straight_ankle_lock: "Straight ankle lock"
+    };
 
-  const BELTS = ["white","blue","purple","brown","black"];
-
+    const BELTS = ["white","blue","purple","brown","black"];
+    const BELT_TO_RANK = { white:0, blue:1, purple:2, brown:3, black:4 };
+    const BELT_COLORS = ["#ffffff","#1e40af","#6d28d9","#7c2d12","#0b0b0b"];
 
     function defaultData() {
-  const zero = { white:0, blue:0, purple:0, brown:0, black:0 };
-  const meta = { currentRank: 0, lastUpgradeTotal: 0, maxOpponentRank: 0 };
-  const obj = { submissions: {} };
-  for (const key of SUBMISSIONS) {
-    obj.submissions[key] = { ...zero, _meta: { ...meta } };
-  }
-  return obj;
-}
-
+      const zero = { white:0, blue:0, purple:0, brown:0, black:0 };
+      const meta = { currentRank: 0, lastUpgradeTotal: 0, maxOpponentRank: 0 };
+      const obj = { submissions: {} };
+      for (const key of SUBMISSIONS) {
+        obj.submissions[key] = { ...zero, _meta: { ...meta } };
+      }
+      return obj;
+    }
 
     function readData() {
       try {
@@ -438,152 +384,33 @@
     }
 
     function writeData(data) {
-      const json = JSON.stringify(data);
-      localStorage.setItem(KEY, json);
-      // Also set short-lived cookie to enable browser -> PWA import on first open
-      try {
-        document.cookie = `bjj_migrate=${encodeURIComponent(json)}; Max-Age=600; Path=/; Domain=.bjjcounter.com; Secure; SameSite=Lax`;
-      } catch {}
+      localStorage.setItem(KEY, JSON.stringify(data));
     }
 
-    function getCookie(name) {
-      const m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[-[\]{}()*+?.,\\^$|#\\s]/g, '\\\\$&') + '=([^;]*)'));
-      return m ? decodeURIComponent(m[1]) : null;
-    }
-    function deleteCookie(name) {
-      document.cookie = `${name}=; Max-Age=0; Path=/; Domain=.bjjcounter.com; Secure; SameSite=Lax`;
-    }
-
-    const $ = sel => document.querySelector(sel);
+    const $  = sel => document.querySelector(sel);
     const $$ = sel => Array.from(document.querySelectorAll(sel));
     function vibrate(ms=12){ if (navigator.vibrate) try { navigator.vibrate(ms); } catch {} }
     function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1200); }
 
     let DATA = readData();
-  
-// Keep a fresh 10-min cookie snapshot available while in browser (not standalone).
-(function seedBridgeCookie() {
-  const IS_STANDALONE = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-  if (IS_STANDALONE) return;
-  try {
-    const json = localStorage.getItem(KEY) || JSON.stringify(DATA);
-    document.cookie = "bjj_migrate=" + encodeURIComponent(json)
-      + "; Max-Age=600"
-      + "; Path=/"
-      + "; Domain=.bjjcounter.com"
-      + "; Secure; SameSite=Lax";
-  } catch {}
-})();
-
-// Also seed a SW cache snapshot so the installed PWA can import even if cookies are isolated.
-(async function seedBridgeCache() {
-  const IS_STANDALONE = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-  if (IS_STANDALONE) return;
-  if (!('caches' in window)) return;
-  try {
-    const json = localStorage.getItem(KEY) || JSON.stringify(DATA);
-    const cache = await caches.open('bjj-bridge');
-    // Create/overwrite a synthetic response at a known URL
-    await cache.put('/seed.json', new Response(json, {
-      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
-    }));
-  } catch {}
-})();
-  
-    // Keep a fresh 10-min cookie snapshot available while in browser (not standalone).
-(function seedBridgeCookie() {
-  const IS_STANDALONE = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-  if (IS_STANDALONE) return;
-  try {
-    const json = localStorage.getItem(KEY) || JSON.stringify(DATA);
-    document.cookie = "bjj_migrate=" + encodeURIComponent(json)
-      + "; Max-Age=600"
-      + "; Path=/"
-      + "; Domain=.bjjcounter.com"
-      + "; Secure; SameSite=Lax";
-  } catch {}
-})();
     let pendingSubmission = null;
-
-
-(function runOneTimeMigration() {
-  const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-
-  function looksDefault(d) {
-    if (!d || !d.submissions) return true;
-    let total = 0;
-    for (const k of Object.keys(d.submissions)) {
-      const v = d.submissions[k];
-      total += (v.white|0) + (v.blue|0) + (v.purple|0) + (v.brown|0) + (v.black|0);
-    }
-    return total === 0;
-  }
-
-  if (!isStandalone) return;           // only inside installed PWA
-  if (!looksDefault(DATA)) return;     // don't overwrite real data
-
-  // 1) Try cookie bridge first
-  let payload = null;
-  try {
-    const json = getCookie('bjj_migrate');
-    if (json) payload = JSON.parse(json);
-  } catch {}
-
-  // 2) Fallback: try SW cache bridge at /seed.json
-  const tryCache = async () => {
-    if (payload || !('caches' in window)) return null;
-    try {
-      const cache = await caches.open('bjj-bridge');
-      const res = await cache.match('/seed.json');
-      if (!res) return null;
-      const txt = await res.text();
-      return JSON.parse(txt);
-    } catch { return null; }
-  };
-
-  (async () => {
-    if (!payload) payload = await tryCache();
-
-    if (payload && payload.submissions) {
-      DATA = payload;
-      writeData(DATA);
-      refreshCards();
-      // clean both bridges so we don't re-import again
-      try { deleteCookie('bjj_migrate'); } catch {}
-      try {
-        if ('caches' in window) {
-          const cache = await caches.open('bjj-bridge');
-          await cache.delete('/seed.json');
-        }
-      } catch {}
-    }
-  })();
-})();
-
 
     function totalFor(sub) {
       const o = DATA.submissions[sub];
       return BELTS.reduce((n,b) => n + (o[b]||0), 0);
     }
-
-    // Compute grand total across all submissions
-function totalAll() {
-  let sum = 0;
-  for (const s of Object.keys(DATA.submissions)) {
-    const v = DATA.submissions[s];
-    sum += (v.white|0)+(v.blue|0)+(v.purple|0)+(v.brown|0)+(v.black|0);
-  }
-  return sum;
-}
-
-// Belt rank for total: +1 rank every 100 moves, capped at black
-function totalRank() {
-  const t = totalAll();
-  return Math.min(4, Math.floor(t / 100));
-}
-
-    const BELT_TO_RANK = { white:0, blue:1, purple:2, brown:3, black:4 };
-    const BELT_COLORS = ["#ffffff","#1e40af","#6d28d9","#7c2d12","#0b0b0b"];
+    function totalAll() {
+      let sum = 0;
+      for (const s of Object.keys(DATA.submissions)) {
+        const v = DATA.submissions[s];
+        sum += (v.white|0)+(v.blue|0)+(v.purple|0)+(v.brown|0)+(v.black|0);
+      }
+      return sum;
+    }
+    // Belt rank for total: +1 rank every 100 moves, capped at black
+    function totalRank() {
+      return Math.min(4, Math.floor(totalAll() / 100));
+    }
 
     function ensureMeta(sub) {
       const s = DATA.submissions[sub];
@@ -637,41 +464,41 @@ function totalRank() {
     }
 
     function refreshCards(){
-  const grid = document.getElementById("view-log");
-  const foot = grid.querySelector(".foot");
-  const subs = sortedSubmissions();
+      const grid = document.getElementById("view-log");
+      const foot = grid.querySelector(".foot");
+      const subs = sortedSubmissions();
 
-  // Update and pin each technique card above the foot
-  subs.forEach(s => {
-    const el = document.getElementById("count-" + s);
-    if (el) el.textContent = totalFor(s);
+      // Update and pin each technique card above the foot
+      subs.forEach(s => {
+        const el = document.getElementById("count-" + s);
+        if (el) el.textContent = totalFor(s);
 
-    const icon = grid.querySelector(`[data-submission="${s}"] .icon`);
-    if (icon) icon.innerHTML = beltSvgFromMeta(s);
+        const icon = grid.querySelector(`[data-submission="${s}"] .icon`);
+        if (icon) icon.innerHTML = beltSvgFromMeta(s);
 
-    const card = grid.querySelector(`[data-submission="${s}"]`);
-    if (card) grid.insertBefore(card, foot);
-  });
+        const card = grid.querySelector(`[data-submission="${s}"]`);
+        if (card) grid.insertBefore(card, foot);
+      });
 
-  // Update the Total block (count + belt color per 100 moves)
-  const totalEl = document.getElementById("count-__total");
-  if (totalEl) totalEl.textContent = totalAll();
+      // Update the Total block (count + belt color per 100 moves)
+      const totalEl = document.getElementById("count-__total");
+      if (totalEl) totalEl.textContent = totalAll();
 
-  const totalIcon = document.querySelector('[data-submission="__total"] .icon');
-  if (totalIcon) {
-    const rank = totalRank();                // 0..4
-    const color = BELT_COLORS[rank];
-    totalIcon.innerHTML =
-      `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='xMidYMid meet' data-belt='1'>
-         <rect x='0'   y='6' width='120' height='28' fill='${color}' stroke='black' stroke-width='2'/>
-         <rect x='120' y='6' width='60'  height='28' fill='black' stroke='black' stroke-width='2'/>
-       </svg>`;
-  }
+      const totalIcon = document.querySelector('[data-submission="__total"] .icon');
+      if (totalIcon) {
+        const rank = totalRank();                // 0..4
+        const color = BELT_COLORS[rank];
+        totalIcon.innerHTML =
+          `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='xMidYMid meet' data-belt='1'>
+             <rect x='0'   y='6' width='120' height='28' fill='${color}' stroke='black' stroke-width='2'/>
+             <rect x='120' y='6' width='60'  height='28' fill='black' stroke='black' stroke-width='2'/>
+           </svg>`;
+      }
 
-  // 🔒 Always keep Total just above the foot
-  const totalCard = grid.querySelector('[data-submission="__total"]');
-  if (totalCard) grid.insertBefore(totalCard, foot);
-}
+      // 🔒 Always keep Total just above the foot
+      const totalCard = grid.querySelector('[data-submission="__total"]');
+      if (totalCard) grid.insertBefore(totalCard, foot);
+    }
 
     function buildStats(){
       const list=$("#statsList"); list.innerHTML="";
@@ -734,15 +561,14 @@ function totalRank() {
       cardEl.addEventListener("touchcancel",onEnd);
     }
 
-  // (keep the rest of your code as-is)
-  $$(".submission").forEach(btn => {
-    const key = btn.dataset.submission;
-    if (key === "__total") return; // ⛔ skip Total: no logging, no swipe
-    attachSwipeToDelete(btn, key);
-    attachSafeTap(btn, key);
-  });
+    // Hook up existing (future) submission cards
+    $$(".submission").forEach(btn => {
+      const key = btn.dataset.submission;
+      if (key === "__total") return; // skip Total
+      attachSwipeToDelete(btn, key);
+      attachSafeTap(btn, key);
+    });
 
-    
     $$(".belt").forEach(b=>{
       b.addEventListener("click",()=>{
         const belt=b.dataset.belt;
@@ -766,24 +592,16 @@ function totalRank() {
       else { $("#view-log").hidden=true; $("#view-stats").hidden=false; buildStats(); }
     }));
 
-
-  document.getElementById("resetBtn").addEventListener("click", () => {
-    if (confirm("Reset all counts? This cannot be undone.")) {
-      // Write fresh defaults to localStorage
-      DATA = defaultData();
-      writeData(DATA);
-
-      // ✅ Also remove any pending migration cookie so old data can't come back
-      deleteCookie('bjj_migrate');
-
-      // Refresh UI
-      refreshCards();
-      if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
-      toast("All data reset");
-      vibrate(20);
-    }
-  });
-
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if (confirm("Reset all counts? This cannot be undone.")) {
+        DATA = defaultData();
+        writeData(DATA);
+        refreshCards();
+        if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
+        toast("All data reset");
+        vibrate(20);
+      }
+    });
 
     $("#exportBtn").addEventListener("click",()=>{
       const blob=new Blob([JSON.stringify(DATA,null,2)],{type:"application/json"});
@@ -807,7 +625,7 @@ function totalRank() {
     });
 
     function slugify(label){ return label.toLowerCase().replace(/[^\w\s-]/g,"").trim().replace(/\s+/g,"_"); }
-    function ensureZeroed(key){ const zero={white:0,blue:0,purple:0,brown:0,black:0}; if(!DATA.submissions[key]) DATA.submissions[key]={...zero}; }
+    function ensureZeroed(key){ const zero={white:0,blue:0,purple:0,brown:0,black:0}; if(!DATA.submissions[key]) DATA.submissions[key]={...zero, _meta:{currentRank:0,lastUpgradeTotal:0,maxOpponentRank:0}}; }
 
     function renderCard(key){
       if (document.getElementById("count-"+key)) return;
@@ -836,18 +654,13 @@ function totalRank() {
       toast(`Added "${name}"`); vibrate(12);
     }
 
+    // Initial render
     SUBMISSIONS.forEach((key)=>{ if(!document.getElementById("count-"+key)){ ensureZeroed(key); renderCard(key);} });
     refreshCards();
     document.getElementById("addBtn").addEventListener("click", addSubmissionFlow);
     document.getElementById("sortBtn").addEventListener("click", sortNow);
 
-    // Info sheet
-    const infoSheet=document.getElementById("infoSheet");
-    const infoBackdrop=document.getElementById("infoBackdrop");
-    document.getElementById("infoBtn").addEventListener("click",()=>{ infoSheet.classList.add("open"); infoBackdrop.classList.add("open"); });
-    infoBackdrop.addEventListener("click",()=>{ infoSheet.classList.remove("open"); infoBackdrop.classList.remove("open"); });
-
-    // Install / A2HS banner
+    // Install / A2HS banner (no cookie/cache logic)
     (function () {
       const banner = document.getElementById("installBanner");
       const txt = document.getElementById("installText");
@@ -866,24 +679,8 @@ function totalRank() {
       window.addEventListener("beforeinstallprompt", (e) => {
         e.preventDefault();
         deferredPrompt = e;
-                // Optional: pre-snapshot right when we know install is possible
-        // Optional: pre-snapshot right when we know install is possible
-try {
-  const data = localStorage.getItem("bjj-submissions-v1");
-  if (data) {
-    document.cookie = "bjj_migrate=" + encodeURIComponent(data)
-      + "; Max-Age=600; Path=/; Domain=.bjjcounter.com; Secure; SameSite=Lax";
-    if ('caches' in window) {
-      const cache = await caches.open('bjj-bridge');
-      await cache.put('/seed.json', new Response(data, {
-        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
-      }));
-    }
-  }
-} catch {}
         if (localStorage.getItem(DISMISS_KEY) !== "1") {
           txt.innerHTML = `<strong>Install this app</strong><br/>Tap <em>Install</em> for 1-tap access and offline use.`;
-          btnInstall.style.display = "inline-block";
           banner.hidden = false;
         }
       });
@@ -891,8 +688,8 @@ try {
       if (isiOS) {
         if (localStorage.getItem(DISMISS_KEY) !== "1") {
           txt.innerHTML = `<strong>Add to Home Screen</strong><br/>Tap the <span style="border:1px solid rgba(148,163,184,0.35); padding:0 6px; border-radius:6px;">Share</span> button → <em>Add to Home Screen</em>.`;
-          btnInstall.style.display = "none";
           banner.hidden = false;
+          btnInstall.style.display = "none";
         }
       }
 
@@ -906,21 +703,8 @@ try {
         banner.hidden = true;
       });
 
-            btnInstall?.addEventListener("click", async () => {
+      btnInstall?.addEventListener("click", async () => {
         if (!deferredPrompt) return;
-
-        // NEW: snapshot current data to a first-party cookie so the PWA can import it on first open
-        try {
-          const data = localStorage.getItem("bjj-submissions-v1");
-          if (data) {
-            document.cookie = "bjj_migrate=" + encodeURIComponent(data)
-              + "; Max-Age=600"
-              + "; Path=/"
-              + "; Domain=.bjjcounter.com"
-              + "; Secure; SameSite=Lax";
-          }
-        } catch {}
-
         deferredPrompt.prompt();
         try {
           const choice = await deferredPrompt.userChoice;
@@ -929,7 +713,7 @@ try {
             banner.hidden = true;
           }
         } finally {
-          deferredPrompt = null; // can only use once
+          deferredPrompt = null;
         }
       });
     })();
