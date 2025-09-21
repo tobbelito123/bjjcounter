@@ -304,7 +304,52 @@ const KEY = "bjj-submissions-v1";
 /* (NEW) Shared cache keys used to migrate local data from Safari → PWA */
 const MIGRATION_CACHE = "bjj-migrate-v1";
 const MIGRATION_URL   = "/__bjj_migrate__";
+/* (NEW) Cookie-based fallback (chunked) for one-time migration */
+const MIG_COOKIE_PREFIX = "bjj_mig_";
+const MIG_COOKIE_MAX = 8; // up to 8 chunks (~32KB total, safe margin)
 
+function setCookie(name, value, days=180) {
+  try {
+    const exp = new Date(Date.now() + days*864e5).toUTCString();
+    document.cookie = `${name}=${value}; expires=${exp}; path=/; SameSite=Lax`;
+  } catch {}
+}
+function getCookie(name) {
+  const m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()[]\\/+^])/g,'\\$1') + '=([^;]*)'));
+  return m ? m[1] : null;
+}
+function delCookie(name) { setCookie(name, "", -1); }
+
+function writeMigrationCookie(obj) {
+  try {
+    const raw = JSON.stringify(obj);
+    const enc = encodeURIComponent(raw);
+    const CHUNK = 3800; // stay below 4KB per cookie incl. name/attrs
+    const parts = Math.ceil(enc.length / CHUNK);
+    for (let i=0;i<MIG_COOKIE_MAX;i++) delCookie(MIG_COOKIE_PREFIX+i);
+    if (parts > MIG_COOKIE_MAX) return; // too big, skip cookie fallback
+    for (let i=0;i<parts;i++) {
+      const slice = enc.slice(i*CHUNK, (i+1)*CHUNK);
+      setCookie(MIG_COOKIE_PREFIX + i, slice);
+    }
+  } catch {}
+}
+function readMigrationCookie() {
+  try {
+    let buf = "";
+    for (let i=0;i<MIG_COOKIE_MAX;i++) {
+      const part = getCookie(MIG_COOKIE_PREFIX + i);
+      if (!part) break;
+      buf += part;
+    }
+    if (!buf) return null;
+    const dec = decodeURIComponent(buf);
+    return JSON.parse(dec);
+  } catch { return null; }
+}
+function clearMigrationCookie() {
+  for (let i=0;i<MIG_COOKIE_MAX;i++) delCookie(MIG_COOKIE_PREFIX + i);
+}
     // Exact initial order you requested
     const SUBMISSIONS = [
       "armbar_from_mount",
@@ -396,22 +441,21 @@ function writeData(data) {
   saveMigrationMirror(data);
 }
 
-/* (NEW) Save a copy of the data into Cache Storage under a stable URL */
 function saveMigrationMirror(data){
   try {
-    if (!("caches" in window)) return;
-    caches.open(MIGRATION_CACHE).then(cache => {
-      const res = new Response(JSON.stringify(data), {
-        headers: {
-          "Content-Type": "application/json",
-          "Cache-Control": "no-store"
-        }
-      });
-      cache.put(MIGRATION_URL, res).catch(()=>{});
-    }).catch(()=>{});
+    // Cache Storage mirror (best path when iOS shares it)
+    if ("caches" in window) {
+      caches.open(MIGRATION_CACHE).then(cache => {
+        const res = new Response(JSON.stringify(data), {
+          headers: { "Content-Type": "application/json", "Cache-Control": "no-store" }
+        });
+        cache.put(MIGRATION_URL, res).catch(()=>{});
+      }).catch(()=>{});
+    }
   } catch {}
+  // (NEW) Cookie fallback mirror (chunked)
+  writeMigrationCookie(data);
 }
-
     const $  = sel => document.querySelector(sel);
     const $$ = sel => Array.from(document.querySelectorAll(sel));
     function vibrate(ms=12){ if (navigator.vibrate) try { navigator.vibrate(ms); } catch {} }
@@ -428,14 +472,29 @@ function saveMigrationMirror(data){
     if (hasLocal) return; // Nothing to migrate
 
     if (!("caches" in window)) return;
+  let obj = null;
+
+// Try Cache Storage first
+try {
+  if ("caches" in window) {
     const cache = await caches.open(MIGRATION_CACHE);
     const res   = await cache.match(MIGRATION_URL);
-    if (!res) return;
+    if (res) obj = await res.json();
+  }
+} catch {}
 
-    const obj = await res.json();
+// Fallback to cookie if cache failed/missing
+if (!obj) {
+  obj = readMigrationCookie();
+  // Optional: if still null, we’ll just exit below
+}
+if (!obj) return;
     if (obj && obj.submissions) {
       DATA = obj;
       writeData(DATA);     // re-save (and re-mirror) in the new context
+     // Clean up migration artifacts so it can't re-import
+try { if ("caches" in window) { const c = await caches.open(MIGRATION_CACHE); await c.delete(MIGRATION_URL); } } catch {}
+clearMigrationCookie();
       refreshCards();
       if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
       toast("Imported your previous data");
@@ -707,6 +766,10 @@ function saveMigrationMirror(data){
     // Initial render
     SUBMISSIONS.forEach((key)=>{ if(!document.getElementById("count-"+key)){ ensureZeroed(key); renderCard(key);} });
     refreshCards();
+    // (NEW) Warn if not on canonical host to avoid cross-origin installs
+if (location.hostname !== "www.bjjcounter.com") {
+  toast("Tip: install from www.bjjcounter.com to carry data into the app");
+}
     document.getElementById("addBtn").addEventListener("click", addSubmissionFlow);
     document.getElementById("sortBtn").addEventListener("click", sortNow);
 // (NEW) Make sure a migration mirror exists on first load in Safari
