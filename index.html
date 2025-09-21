@@ -491,15 +491,20 @@ if (!obj) {
 }
 if (!obj) return;
     if (obj && obj.submissions) {
-      DATA = obj;
-      writeData(DATA);     // re-save (and re-mirror) in the new context
-     // Clean up migration artifacts so it can't re-import
+     DATA = obj;
+writeData(DATA);     // re-save (and re-mirror) in the new context
+
+// Clean up migration artifacts so it can't re-import
 try { if ("caches" in window) { const c = await caches.open(MIGRATION_CACHE); await c.delete(MIGRATION_URL); } } catch {}
 clearMigrationCookie();
-      refreshCards();
-      if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
-      toast("Imported your previous data");
-      vibrate(12);
+
+// NEW: show what we actually imported
+const importedTotal = totalAllFrom(obj);
+
+refreshCards();
+if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
+toast(`Imported your previous data (total: ${importedTotal})`);
+vibrate(12); 
     }
   } catch {
     /* no-op */
@@ -517,6 +522,18 @@ clearMigrationCookie();
       }
       return sum;
     }
+    function totalAllFrom(obj){
+  try{
+    if (!obj || !obj.submissions) return 0;
+    const belts = ["white","blue","purple","brown","black"];
+    let n = 0;
+    for (const k of Object.keys(obj.submissions)) {
+      const v = obj.submissions[k] || {};
+      for (const b of belts) n += (v[b] | 0);
+    }
+    return n;
+  } catch { return 0; }
+}
     // Belt rank for total: +1 rank every 100 moves, capped at black
     function totalRank() {
       return Math.min(4, Math.floor(totalAll() / 100));
@@ -685,6 +702,7 @@ clearMigrationCookie();
         if (!pendingSubmission) return;
         DATA.submissions[pendingSubmission][belt]+=1;
         applyProgression(pendingSubmission,belt);
+        saveMigrationMirror(DATA);
         refreshCards();
         if (!$("#view-stats").hasAttribute("hidden")) buildStats();
         toast(`+1 ${LABELS[pendingSubmission]} vs ${belt[0].toUpperCase()+belt.slice(1)} belt`);
