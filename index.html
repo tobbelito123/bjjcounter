@@ -679,7 +679,16 @@
     function openSheet(sub){ pendingSubmission=sub; $("#sheetTitle").textContent=`Who did you hit ${LABELS[sub]} against?`; sheet.classList.add("open"); backdrop.classList.add("open"); }
     function closeSheet(){ sheet.classList.remove("open"); backdrop.classList.remove("open"); setTimeout(()=>{pendingSubmission=null;},150); }
     backdrop.addEventListener("click", closeSheet);
+// --- Info sheet wiring (open via ℹ️ button, close by tapping backdrop) ---
+const infoSheet   = $("#infoSheet");
+const infoBackdrop= $("#infoBackdrop");
+const infoBtn     = $("#infoBtn");
 
+function openInfo(){ infoSheet.classList.add("open"); infoBackdrop.classList.add("open"); }
+function closeInfo(){ infoSheet.classList.remove("open"); infoBackdrop.classList.remove("open"); }
+
+infoBtn?.addEventListener("click", openInfo);
+infoBackdrop?.addEventListener("click", closeInfo);
     function attachSafeTap(btn,key){
       const H=14,V=14;
       let startX=0,startY=0,moved=false;
