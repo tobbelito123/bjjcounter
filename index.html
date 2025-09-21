@@ -818,6 +818,19 @@ infoBackdrop?.addEventListener("click", closeInfo);
     // Initial render
     SUBMISSIONS.forEach((key)=>{ if(!document.getElementById("count-"+key)){ ensureZeroed(key); renderCard(key);} });
     refreshCards();
+    // --- Header actions (Add / Sort) ---
+const addBtn  = document.getElementById("addBtn");
+const sortBtn = document.getElementById("sortBtn");
+
+// Use pointerup (works great on iOS) + click fallback
+function bindTap(el, fn){
+  if (!el) return;
+  el.addEventListener("pointerup", fn);
+  el.addEventListener("click", fn);
+}
+
+bindTap(addBtn,  addSubmissionFlow);
+bindTap(sortBtn, sortNow);
 
     // Install / A2HS banner
     (function () {
