@@ -315,7 +315,8 @@ function setCookie(name, value, days=180) {
   } catch {}
 }
 function getCookie(name) {
-  const m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()[]\\/+^])/g,'\\$1') + '=([^;]*)'));
+  const safe = name.replace(/([.*+?^${}()|[\]\\])/g, '\\$1');
+  const m = document.cookie.match(new RegExp('(?:^|; )' + safe + '=([^;]*)'));
   return m ? m[1] : null;
 }
 function delCookie(name) { setCookie(name, "", -1); }
@@ -471,7 +472,7 @@ function saveMigrationMirror(data){
     const hasLocal = !!localStorage.getItem(KEY);
     if (hasLocal) return; // Nothing to migrate
 
-    if (!("caches" in window)) return;
+    
   let obj = null;
 
 // Try Cache Storage first
