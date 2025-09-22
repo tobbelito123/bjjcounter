@@ -532,35 +532,41 @@ function defaultData() {
         if (!obj || !obj.submissions) return;
 
         // Adopt and persist
-        DATA = obj;
-        // Ensure runtime knows about custom keys and labels
+       DATA = obj;
+
+// Ensure runtime knows about custom keys and labels
 if (DATA.labels) {
   for (const k of Object.keys(DATA.labels)) {
     if (!SUBMISSIONS.includes(k)) SUBMISSIONS.push(k);
     LABELS[k] = DATA.labels[k] || LABELS[k] || k;
   }
 } else {
-  // Fallback: derive names from keys if older data has no labels
   for (const k of Object.keys(DATA.submissions)) {
     if (!SUBMISSIONS.includes(k)) SUBMISSIONS.push(k);
     LABELS[k] = LABELS[k] || k;
   }
 }
-        writeData(DATA);
 
-        // Cleanup: cache, cookie, and hash
-        try { if ("caches" in window) { const c = await caches.open(MIGRATION_CACHE); await c.delete(MIGRATION_URL); } } catch {}
-        clearMigrationCookie();
-        if (location.hash.includes('m=')) {
-          history.replaceState(null, '', location.pathname + location.search);
-        }
+writeData(DATA);
 
-        // Refresh UI and confirm
-        const importedTotal = totalAllFrom(obj);
-        refreshCards();
-        if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
-        toast(`Imported your previous data (total: ${importedTotal})`);
-        vibrate(12);
+// Cleanup: cache, cookie, and hash
+try { if ("caches" in window) { const c = await caches.open(MIGRATION_CACHE); await c.delete(MIGRATION_URL); } } catch {}
+clearMigrationCookie();
+if (location.hash.includes('m=')) {
+  history.replaceState(null, '', location.pathname + location.search);
+}
+
+// NEW: make sure cards exist for custom keys
+SUBMISSIONS.forEach(k => {
+  ensureZeroed(k);
+  if (!document.getElementById("count-" + k)) renderCard(k);
+});
+
+const importedTotal = totalAllFrom(obj);
+refreshCards();
+if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
+toast(`Imported your previous data (total: ${importedTotal})`);
+vibrate(12);
       } catch {}
     })();
 
@@ -822,7 +828,15 @@ if (DATA.labels) {
     LABELS[k] = LABELS[k] || k;
   }
 }
-          writeData(DATA); refreshCards(); if(!$("#view-stats").hasAttribute("hidden")) buildStats(); toast("Import successful"); vibrate(16);
+          
+          // Ensure UI has cards for all imported keys
+SUBMISSIONS.forEach(k => {
+  ensureZeroed(k);
+  if (!document.getElementById("count-" + k)) renderCard(k);
+});
+          writeData(DATA); 
+          
+          refreshCards(); if(!$("#view-stats").hasAttribute("hidden")) buildStats(); toast("Import successful"); vibrate(16);
         }catch{ alert("Could not import that file."); } };
         reader.readAsText(file);
       };
