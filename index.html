@@ -420,34 +420,52 @@
     const BELT_TO_RANK = { white:0, blue:1, purple:2, brown:3, black:4 };
     const BELT_COLORS = ["#ffffff","#1e40af","#6d28d9","#7c2d12","#0b0b0b"];
 
-    function defaultData() {
-      const zero = { white:0, blue:0, purple:0, brown:0, black:0 };
-      const meta = { currentRank: 0, lastUpgradeTotal: 0, maxOpponentRank: 0 };
-      const obj = { submissions: {} };
-      for (const key of SUBMISSIONS) {
-        obj.submissions[key] = { ...zero, _meta: { ...meta } };
-      }
-      return obj;
+function defaultData() {
+  const zero = { white:0, blue:0, purple:0, brown:0, black:0 };
+  const meta = { currentRank: 0, lastUpgradeTotal: 0, maxOpponentRank: 0 };
+  const obj = { submissions: {}, labels: {} }; // NEW: labels bag
+  for (const key of SUBMISSIONS) {
+    obj.submissions[key] = { ...zero, _meta: { ...meta } };
+    obj.labels[key] = LABELS[key]; // NEW
+  }
+  return obj;
+}
+
+   function readData() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return defaultData();
+    const parsed = JSON.parse(raw);
+    const base = defaultData();
+
+    // Ensure structure
+    parsed.submissions ??= {};
+    parsed.labels ??= {};
+
+    // Seed labels for built-ins
+    for (const s of SUBMISSIONS) {
+      parsed.submissions[s] ??= { ...base.submissions[s] };
+      parsed.labels[s] ??= LABELS[s];
     }
 
-    function readData() {
-      try {
-        const raw = localStorage.getItem(KEY);
-        if (!raw) return defaultData();
-        const parsed = JSON.parse(raw);
-        const base = defaultData();
-        for (const s of SUBMISSIONS) {
-          parsed.submissions ??= {};
-          parsed.submissions[s] ??= { ...base.submissions[s] };
-          for (const b of BELTS) parsed.submissions[s][b] ??= 0;
-          const m = parsed.submissions[s]._meta ?? (parsed.submissions[s]._meta = { currentRank: 0, lastUpgradeTotal: 0, maxOpponentRank: 0 });
-          m.currentRank = Math.max(0, Math.min(4, m.currentRank|0));
-          m.lastUpgradeTotal = Math.max(0, m.lastUpgradeTotal|0);
-          m.maxOpponentRank = Math.max(0, Math.min(4, m.maxOpponentRank|0));
-        }
-        return parsed;
-      } catch { return defaultData(); }
+    // Normalize counts/meta
+    for (const s of Object.keys(parsed.submissions)) {
+      for (const b of BELTS) parsed.submissions[s][b] ??= 0;
+      const m = parsed.submissions[s]._meta ?? (parsed.submissions[s]._meta = { currentRank: 0, lastUpgradeTotal: 0, maxOpponentRank: 0 });
+      m.currentRank = Math.max(0, Math.min(4, m.currentRank|0));
+      m.lastUpgradeTotal = Math.max(0, m.lastUpgradeTotal|0);
+      m.maxOpponentRank = Math.max(0, Math.min(4, m.maxOpponentRank|0));
     }
+
+    // 🔑 Rehydrate runtime arrays/maps for any custom keys saved earlier
+    for (const k of Object.keys(parsed.submissions)) {
+      if (!SUBMISSIONS.includes(k)) SUBMISSIONS.push(k);
+      if (!LABELS[k]) LABELS[k] = parsed.labels[k] || k;
+    }
+
+    return parsed;
+  } catch { return defaultData(); }
+}
 
     function writeData(data) {
       // Persist to localStorage (current context)
@@ -515,6 +533,19 @@
 
         // Adopt and persist
         DATA = obj;
+        // Ensure runtime knows about custom keys and labels
+if (DATA.labels) {
+  for (const k of Object.keys(DATA.labels)) {
+    if (!SUBMISSIONS.includes(k)) SUBMISSIONS.push(k);
+    LABELS[k] = DATA.labels[k] || LABELS[k] || k;
+  }
+} else {
+  // Fallback: derive names from keys if older data has no labels
+  for (const k of Object.keys(DATA.submissions)) {
+    if (!SUBMISSIONS.includes(k)) SUBMISSIONS.push(k);
+    LABELS[k] = LABELS[k] || k;
+  }
+}
         writeData(DATA);
 
         // Cleanup: cache, cookie, and hash
@@ -778,7 +809,20 @@ infoBackdrop?.addEventListener("click", closeInfo);
         reader.onload=()=>{ try{
           const obj=JSON.parse(String(reader.result));
           if(!obj?.submissions) throw new Error("Invalid file");
-          DATA=obj; writeData(DATA); refreshCards(); if(!$("#view-stats").hasAttribute("hidden")) buildStats(); toast("Import successful"); vibrate(16);
+          DATA=obj; 
+          // Rehydrate runtime with custom keys from the imported file
+if (DATA.labels) {
+  for (const k of Object.keys(DATA.labels)) {
+    if (!SUBMISSIONS.includes(k)) SUBMISSIONS.push(k);
+    LABELS[k] = DATA.labels[k] || LABELS[k] || k;
+  }
+} else {
+  for (const k of Object.keys(DATA.submissions || {})) {
+    if (!SUBMISSIONS.includes(k)) SUBMISSIONS.push(k);
+    LABELS[k] = LABELS[k] || k;
+  }
+}
+          writeData(DATA); refreshCards(); if(!$("#view-stats").hasAttribute("hidden")) buildStats(); toast("Import successful"); vibrate(16);
         }catch{ alert("Could not import that file."); } };
         reader.readAsText(file);
       };
@@ -810,8 +854,10 @@ infoBackdrop?.addEventListener("click", closeInfo);
       if(!name) return;
       let key=slugify(name); if(!key) return alert("That name doesn’t produce a valid key.");
       let base=key,i=2; while(SUBMISSIONS.includes(key)) key=`${base}_${i++}`;
-      SUBMISSIONS.push(key); LABELS[key]=name; ensureZeroed(key);
-      writeData(DATA); renderCard(key); refreshCards(); if(!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
+   SUBMISSIONS.push(key); LABELS[key]=name; ensureZeroed(key);
+DATA.labels ??= {};              // NEW
+DATA.labels[key] = name;         // NEW
+writeData(DATA); renderCard(key); refreshCards(); if(!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
       toast(`Added "${name}"`); vibrate(12);
     }
 
