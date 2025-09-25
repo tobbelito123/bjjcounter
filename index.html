@@ -457,22 +457,40 @@ function defaultData() {
       m.maxOpponentRank = Math.max(0, Math.min(4, m.maxOpponentRank|0));
     }
 
-    // 🔑 Rehydrate runtime arrays/maps for any custom keys saved earlier
-    for (const k of Object.keys(parsed.submissions)) {
-      if (!SUBMISSIONS.includes(k)) SUBMISSIONS.push(k);
-      if (!LABELS[k]) LABELS[k] = parsed.labels[k] || k;
+  // 🔑 Restore order if saved
+if (parsed.order && Array.isArray(parsed.order)) {
+  SUBMISSIONS.length = 0;
+  parsed.order.forEach(k => {
+    if (parsed.submissions[k]) {
+      SUBMISSIONS.push(k);
+      LABELS[k] = parsed.labels[k] || LABELS[k] || k;
     }
+  });
+  // Safety: add any keys not in order
+  for (const k of Object.keys(parsed.submissions)) {
+    if (!SUBMISSIONS.includes(k)) {
+      SUBMISSIONS.push(k);
+      LABELS[k] = parsed.labels[k] || k;
+    }
+  }
+} else {
+  for (const k of Object.keys(parsed.submissions)) {
+    if (!SUBMISSIONS.includes(k)) SUBMISSIONS.push(k);
+    if (!LABELS[k]) LABELS[k] = parsed.labels[k] || k;
+  }
+}
 
     return parsed;
   } catch { return defaultData(); }
 }
 
     function writeData(data) {
-      // Persist to localStorage (current context)
-      localStorage.setItem(KEY, JSON.stringify(data));
-      // Also mirror to Cache Storage and cookie so the installed app can import it
-      saveMigrationMirror(data);
-    }
+  // NEW: persist current order of SUBMISSIONS
+  data.order = [...SUBMISSIONS];
+
+  localStorage.setItem(KEY, JSON.stringify(data));
+  saveMigrationMirror(data);
+}
 
     function saveMigrationMirror(data){
       try {
@@ -642,13 +660,17 @@ vibrate(12);
 
     function sortedSubmissions(){ return [...SUBMISSIONS]; }
 
-    function sortNow(){
-      const sorted=[...SUBMISSIONS].sort((a,b)=>totalFor(b)-totalFor(a));
-      SUBMISSIONS.length=0; SUBMISSIONS.push(...sorted);
-      refreshCards();
-      if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
-      toast("Sorted by total hits");
-    }
+   function sortNow(){
+  const sorted=[...SUBMISSIONS].sort((a,b)=>totalFor(b)-totalFor(a));
+  SUBMISSIONS.length=0; SUBMISSIONS.push(...sorted);
+
+  DATA.order = [...SUBMISSIONS]; // NEW
+  writeData(DATA);
+
+  refreshCards();
+  if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
+  toast("Sorted by total hits");
+}
 
     function refreshCards(){
       const grid = document.getElementById("view-log");
