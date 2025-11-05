@@ -669,7 +669,7 @@ vibrate(12);
         }
       }
       const delta = total - meta.lastUpgradeTotal;
-      const steps = Math.floor(delta / 50);
+      const steps = Math.floor(delta / 20);
       if (steps > 0) {
         meta.currentRank = Math.min(4, meta.currentRank + steps);
         meta.lastUpgradeTotal += steps * 50;
@@ -681,7 +681,7 @@ vibrate(12);
       const total = totalFor(sub);
       const meta = ensureMeta(sub);
       const rank = meta.currentRank;
-      const stripes = Math.min(4, Math.floor((total - meta.lastUpgradeTotal) / 10));
+      const stripes = Math.min(4, Math.floor((total - meta.lastUpgradeTotal) / 5));
       let svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='xMidYMid meet' data-belt='1'>
         <rect x='0' y='6' width='120' height='28' fill='${BELT_COLORS[rank]}' stroke='black' stroke-width='2'/>
         <rect x='120' y='6' width='60' height='28' fill='black' stroke='black' stroke-width='2'/>`;
