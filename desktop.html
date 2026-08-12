@@ -101,7 +101,7 @@
   <div class="wrap">
     <header>
       <div class="title"><span class="dot"></span> BJJ Submissions Counter</div>
-      <a class="ghost" href="/">Open the mobile app</a>
+      <button class="ghost" id="copyLinkBtn" type="button">Copy link for your phone</button>
     </header>
 
     <section class="hero">
@@ -135,5 +135,19 @@
       </div>
     </footer>
   </div>
+
+  <script>
+    const copyBtn = document.getElementById('copyLinkBtn');
+    copyBtn?.addEventListener('click', async () => {
+      const original = copyBtn.textContent;
+      try {
+        await navigator.clipboard.writeText('https://www.bjjcounter.com/');
+        copyBtn.textContent = 'Copied! Text it to your phone';
+      } catch {
+        copyBtn.textContent = 'Copy failed, visit bjjcounter.com';
+      }
+      setTimeout(() => { copyBtn.textContent = original; }, 2200);
+    });
+  </script>
 </body>
 </html>

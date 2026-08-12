@@ -1,21 +1,131 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IBJJF Rules Study Guide – Master BJJ Points & Penalties</title>
-    <meta name="description" content="Learn how to effectively study and memorize IBJJF rules, points, and penalties using active recall and practice quizzes.">
+  <meta charset="utf-8" />
+  <title>IBJJF Rules Study Guide – Master BJJ Points &amp; Penalties</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <meta name="description" content="Learn how to effectively study and memorize IBJJF rules, points, and penalties using active recall and practice quizzes." />
+  <link rel="canonical" href="https://www.bjjcounter.com/bjj-rules-study-guide.html" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <meta property="og:title" content="IBJJF Rules Study Guide – Master BJJ Points &amp; Penalties" />
+  <meta property="og:description" content="Learn how to effectively study and memorize IBJJF rules, points, and penalties using active recall and practice quizzes." />
+  <meta property="og:url" content="https://www.bjjcounter.com/bjj-rules-study-guide.html" />
+  <meta property="og:image" content="https://www.bjjcounter.com/icons/icon-192.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      -webkit-font-smoothing: antialiased;
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-tap-highlight-color: transparent;
+    }
+    :root{
+      --bg:#0b1020; --card:#121830; --card-2:#0f1428; --fg:#eaf1ff; --muted:#b7c4e1;
+      --primary:#0ea5e9; --primary-2:#22d3ee; --ring:rgba(34,211,238,.35); --shadow:0 10px 30px rgba(2,6,23,.4);
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f6f8ff; --card:#ffffff; --card-2:#f2f5ff; --fg:#0b1020; --muted:#475569; --shadow:0 8px 24px rgba(2,6,23,.08); }
+    }
+    .wrap{
+      max-width: 720px; margin: 0 auto; min-height: 100%;
+      display: grid; grid-template-rows: auto 1fr auto;
+      padding: 16px clamp(12px,4vw,20px) calc(16px + env(safe-area-inset-bottom)); gap: 14px;
+    }
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 12px; background:linear-gradient(180deg, rgba(34,211,238,.06), transparent);
+      border-radius:16px;
+    }
+    .title{ font-weight:800; letter-spacing:.3px; font-size:20px; display:flex; align-items:center; gap:10px; }
+    .title .dot{ width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(40% 40% at 30% 30%, var(--primary-2), var(--primary));
+      box-shadow:0 0 18px var(--ring);
+    }
+    .actions { display:flex; gap:8px; align-items:center; }
+    .ghost { background:transparent; border:1px solid rgba(148,163,184,.25); color:var(--muted);
+      padding:8px 10px; border-radius:10px; font-size:13px; text-decoration:none;
+    }
+    main{ display:grid; gap:12px; }
+    .card{
+      background:var(--card); border-radius:16px; padding:16px; box-shadow:var(--shadow);
+      border:1px solid rgba(148,163,184,.12);
+    }
+    h1{ font-size:22px; margin:0 0 6px; }
+    h2{ font-size:16px; margin:10px 0 6px; }
+    p{ margin:8px 0; line-height:1.5; color:var(--fg); }
+    .muted{ color:var(--muted); }
+    ul{ margin:8px 0 8px 18px; }
+    footer{ color:var(--muted); font-size:12px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    a{ color:var(--primary-2); text-decoration:underline; }
+    .tagline{ color:var(--muted); font-size:13px; }
+    .cta{
+      display:block; text-align:center; margin-top:6px; padding:12px 14px; border-radius:12px;
+      background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18));
+      box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35); color:var(--fg); font-weight:800; text-decoration:none;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"IBJJF Rules Study Guide: Master Points & Penalties",
+    "about":"How to study and memorize IBJJF competition rules, points, and penalties",
+    "datePublished":"2026-06-08",
+    "dateModified":"2026-08-12",
+    "publisher":{"@type":"Organization","name":"BJJ Submissions Counter","url":"https://www.bjjcounter.com/"}
+  }
+  </script>
 </head>
 <body>
+  <div class="wrap">
+    <header>
+      <div class="title"><span class="dot"></span> BJJ Submissions Counter</div>
+      <div class="actions">
+        <a class="ghost" href="/">← Back to app</a>
+      </div>
+    </header>
+
     <main>
-        <h1>IBJJF Rules Study Guide: Master Points & Penalties</h1>
-        <p>Passing a BJJ referee course or fully understanding the IBJJF point system requires memorizing strict rules, weight classes, and illegal moves for every belt level.</p>
-        
+      <section class="card">
+        <h1>IBJJF Rules Study Guide: Master Points &amp; Penalties</h1>
+        <p class="tagline">Passing a BJJ referee course or fully understanding the IBJJF point system requires memorizing strict rules, weight classes, and illegal moves for every belt level.</p>
+
         <h2>Use Active Recall for Rulebooks</h2>
         <p>Instead of just reading the PDF rulebook over and over, testing yourself is the fastest way to learn. Forcing your brain to recall points and illegal positions builds permanent knowledge.</p>
-        
+
         <h2>Automate Your BJJ Studies with AI</h2>
-        <p>To speed up your prep, you can easily <a href="https://www.swipesmrt.com" target="_blank">generate interactive practice quizzes from your BJJ rulebooks or notes on SwipeSmrt</a>. Simply upload the rulebook PDF or a photo of your study material to test your knowledge instantly before your next tournament.</p>
+        <p>To speed up your prep, you can easily <a href="https://www.swipesmrt.com" target="_blank" rel="noopener">generate interactive practice quizzes from your BJJ rulebooks or notes on SwipeSmrt</a>. Simply upload the rulebook PDF or a photo of your study material to test your knowledge instantly before your next tournament.</p>
+      </section>
+
+      <section class="card">
+        <h2>While you're learning the rules, start tracking your reps</h2>
+        <p class="muted">Knowing the ruleset is half the game. The other half is mat time. <a href="/">BJJ Submissions Counter</a> logs which submissions you're actually landing and against which belt, so you can watch your game develop in real time. It's free, there's no account to make, and it works offline.</p>
+        <a class="cta" href="/">Open BJJ Submissions Counter →</a>
+      </section>
+
+      <section class="card">
+        <h2>More guides</h2>
+        <ul style="margin:8px 0 0 18px; line-height:1.9;">
+          <li><a href="/bjj-glossary.html">BJJ Glossary: Terms &amp; Lingo Explained</a></li>
+          <li><a href="/how-to-memorize-bjj-techniques.html">How to Memorize BJJ Techniques Faster</a></li>
+          <li><a href="/bjj-counter-vs-mattime.html">BJJ Submissions Counter vs MatTime</a></li>
+        </ul>
+      </section>
     </main>
+
+    <footer>
+      <span>© BJJ Submissions Counter · Last updated 2026-08-12</span>
+      <a href="/">Open the app</a>
+    </footer>
+  </div>
 </body>
 </html>

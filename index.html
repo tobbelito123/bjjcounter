@@ -131,6 +131,8 @@
       color: white; font-weight: 700; font-size: 14px; letter-spacing: 0.5px;
     }
     .submission.swiping .swipe-bg { opacity: 0.9; }
+    .submission.armed .swipe-bg { opacity: 1; background: #b91c1c; }
+    .submission.armed .swipe-bg::after { transform: translateY(-50%) scale(1.12); }
     .card .content { position: relative; transition: transform .15s ease, opacity .15s ease; will-change: transform; }
 
     .icon {
@@ -158,6 +160,12 @@
     .sheet.open { transform: translateY(0); }
     .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
     .sheet h4 { margin: 4px 2px 10px; font-size: 15px; }
+    .text-input {
+      width: 100%; box-sizing: border-box; font: inherit; color: var(--fg);
+      background: var(--card-2); border: 1px solid rgba(148,163,184,0.25); border-radius: 12px;
+      padding: 12px 14px; font-size: 16px;
+    }
+    .text-input:focus { outline: 2px solid var(--ring); border-color: var(--primary); }
 
     .belts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
     .belt {
@@ -325,14 +333,25 @@
     </div>
   </div>
 
-  <!-- Delete confirmation Sheet -->
-  <div class="sheet-backdrop" id="deleteBackdrop"></div>
-  <div class="sheet" id="deleteSheet" aria-modal="true" role="dialog" aria-labelledby="deleteTitle">
-    <h4 id="deleteTitle">Delete this submission?</h4>
-    <p class="muted" id="deleteBody">This removes it and its counts.</p>
+  <!-- Generic confirm Sheet (delete, reset, ...) -->
+  <div class="sheet-backdrop" id="confirmBackdrop"></div>
+  <div class="sheet" id="confirmSheet" aria-modal="true" role="dialog" aria-labelledby="confirmTitle">
+    <h4 id="confirmTitle">Are you sure?</h4>
+    <p class="muted" id="confirmBody"></p>
     <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
-      <button class="reset" id="deleteConfirmBtn">Delete</button>
-      <button class="ghost" id="deleteCancelBtn">Cancel</button>
+      <button class="reset" id="confirmActionBtn">Confirm</button>
+      <button class="ghost" id="confirmCancelBtn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Add submission Sheet -->
+  <div class="sheet-backdrop" id="addBackdrop"></div>
+  <div class="sheet" id="addSheet" aria-modal="true" role="dialog" aria-labelledby="addTitle">
+    <h4 id="addTitle">Add a submission</h4>
+    <input class="text-input" id="addNameInput" type="text" placeholder="e.g., Triangle" maxlength="60" autocomplete="off" />
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+      <button class="install-btn" id="addConfirmBtn">Add</button>
+      <button class="ghost" id="addCancelBtn">Cancel</button>
     </div>
   </div>
 
@@ -783,35 +802,80 @@ vibrate(12);
     function closeSheet(){ sheet.classList.remove("open"); backdrop.classList.remove("open"); setTimeout(()=>{pendingSubmission=null;},150); }
     backdrop.addEventListener("click", closeSheet);
 
-    // --- Delete confirmation sheet (replaces blocking confirm() so it can't race touch/click handling) ---
-    const deleteSheet=$("#deleteSheet"); const deleteBackdrop=$("#deleteBackdrop");
-    let pendingDelete=null; // { key, cardEl }
+    // --- Generic confirm sheet (replaces blocking confirm() so it can't race touch/click handling) ---
+    const confirmSheet=$("#confirmSheet"); const confirmBackdrop=$("#confirmBackdrop");
+    let pendingConfirm=null; // { onConfirm, onCancel }
     function snapBack(cardEl){ const content=cardEl.querySelector(".content"); content.style.transform=""; content.style.opacity=""; cardEl.classList.remove("swiping"); }
-    function openDeleteConfirm(key,cardEl){
-      pendingDelete={key,cardEl};
-      $("#deleteBody").textContent=`Delete "${LABELS[key]||key}"? This removes it and its counts.`;
-      deleteSheet.classList.add("open"); deleteBackdrop.classList.add("open");
+    function openConfirm({title, body, actionLabel="Confirm", onConfirm, onCancel}){
+      pendingConfirm={onConfirm,onCancel};
+      $("#confirmTitle").textContent=title;
+      $("#confirmBody").textContent=body;
+      $("#confirmActionBtn").textContent=actionLabel;
+      confirmSheet.classList.add("open"); confirmBackdrop.classList.add("open");
     }
-    function closeDeleteConfirm(cancelled){
-      deleteSheet.classList.remove("open"); deleteBackdrop.classList.remove("open");
-      if (cancelled && pendingDelete) snapBack(pendingDelete.cardEl);
-      pendingDelete=null;
+    function closeConfirm(cancelled){
+      confirmSheet.classList.remove("open"); confirmBackdrop.classList.remove("open");
+      if (cancelled && pendingConfirm?.onCancel) pendingConfirm.onCancel();
+      pendingConfirm=null;
     }
-    deleteBackdrop.addEventListener("click", () => closeDeleteConfirm(true));
-    $("#deleteCancelBtn").addEventListener("click", () => closeDeleteConfirm(true));
-    $("#deleteConfirmBtn").addEventListener("click", () => {
-      if (!pendingDelete) return;
-      const { key, cardEl } = pendingDelete;
-      const i=SUBMISSIONS.indexOf(key); if(i>=0) SUBMISSIONS.splice(i,1);
-      delete DATA.submissions[key];
-      writeData(DATA);
-      cardEl.remove();
-      if (!$("#view-stats").hasAttribute("hidden")) buildStats();
-      toast(`Deleted ${LABELS[key]||key}`);
-      vibrate(20);
-      deleteSheet.classList.remove("open"); deleteBackdrop.classList.remove("open");
-      pendingDelete=null;
+    confirmBackdrop.addEventListener("click", () => closeConfirm(true));
+    $("#confirmCancelBtn").addEventListener("click", () => closeConfirm(true));
+    $("#confirmActionBtn").addEventListener("click", () => {
+      if (!pendingConfirm) return;
+      const { onConfirm } = pendingConfirm;
+      confirmSheet.classList.remove("open"); confirmBackdrop.classList.remove("open");
+      pendingConfirm=null;
+      onConfirm?.();
     });
+
+    function openDeleteConfirm(key,cardEl){
+      openConfirm({
+        title: "Delete this submission?",
+        body: `Delete "${LABELS[key]||key}"? This removes it and its counts.`,
+        actionLabel: "Delete",
+        onCancel: () => snapBack(cardEl),
+        onConfirm: () => {
+          const i=SUBMISSIONS.indexOf(key); if(i>=0) SUBMISSIONS.splice(i,1);
+          const removed = DATA.submissions[key];
+          delete DATA.submissions[key];
+          writeData(DATA);
+          cardEl.remove();
+          if (!$("#view-stats").hasAttribute("hidden")) buildStats();
+          vibrate(20);
+          offerUndo(key, removed, cardEl.nextSibling);
+        }
+      });
+    }
+
+    // --- Undo for delete: keep the removed data around briefly so a swipe-delete can be reversed ---
+    let undoTimer=null;
+    function offerUndo(key, removedData, beforeEl){
+      clearTimeout(undoTimer);
+      const t=$("#toast");
+      t.innerHTML = `Deleted ${LABELS[key]||key} <button id="undoBtn" style="margin-left:8px;background:transparent;border:0;color:var(--primary-2);font-weight:800;text-decoration:underline;cursor:pointer;">Undo</button>`;
+      t.classList.add("show");
+      const undoBtn=$("#undoBtn");
+      undoBtn.addEventListener("click", () => {
+        clearTimeout(undoTimer);
+        t.classList.remove("show");
+        if (!SUBMISSIONS.includes(key)) SUBMISSIONS.push(key);
+        DATA.submissions[key]=removedData;
+        DATA.labels ??= {}; DATA.labels[key]=LABELS[key]||key;
+        writeData(DATA);
+        if (beforeEl && beforeEl.parentNode) {
+          const grid=document.getElementById("view-log");
+          renderCard(key);
+          const card=grid.querySelector(`[data-submission="${key}"]`);
+          if (card) grid.insertBefore(card, beforeEl);
+        } else {
+          renderCard(key);
+        }
+        refreshCards();
+        if (!$("#view-stats").hasAttribute("hidden")) buildStats();
+        vibrate(12);
+      }, { once:true });
+      undoTimer=setTimeout(()=>{ t.classList.remove("show"); t.textContent="Saved"; },5000);
+    }
 // --- Info sheet wiring (open via ℹ️ button, close by tapping backdrop) ---
 const infoSheet   = $("#infoSheet");
 const infoBackdrop= $("#infoBackdrop");
@@ -834,11 +898,18 @@ infoBackdrop?.addEventListener("click", closeInfo);
     function attachSwipeToDelete(cardEl,key){
       const content=cardEl.querySelector(".content");
       const CLICK_OPEN_SHEET_DELTA=10, DELETE_THRESHOLD=96;
-      let startX=0,currentX=0,dragging=false,activated=false;
+      let startX=0,currentX=0,dragging=false,activated=false,committed=false;
       function setX(dx){ content.style.transform=`translateX(${dx}px)`; content.style.opacity=`${1-Math.min(Math.abs(dx)/220,0.25)}`; }
-      function reset(){ content.style.transform=""; content.style.opacity=""; cardEl.classList.remove("swiping"); activated=false; }
-      function onStart(e){ const t=e.touches?e.touches[0]:e; startX=currentX=t.clientX; dragging=true; activated=false; cardEl._swiping=true; cardEl._gestureMoving=false; }
-      function onMove(e){ if(!dragging) return; const t=e.touches?e.touches[0]:e; currentX=t.clientX; const dx=Math.min(0,currentX-startX); if(Math.abs(dx)>2) cardEl._gestureMoving=true; if(!activated && dx<=-12){ activated=true; cardEl.classList.add("swiping"); } if(activated) setX(dx); }
+      function reset(){ content.style.transform=""; content.style.opacity=""; cardEl.classList.remove("swiping","armed"); activated=false; committed=false; }
+      function onStart(e){ const t=e.touches?e.touches[0]:e; startX=currentX=t.clientX; dragging=true; activated=false; committed=false; cardEl._swiping=true; cardEl._gestureMoving=false; }
+      function onMove(e){ if(!dragging) return; const t=e.touches?e.touches[0]:e; currentX=t.clientX; const dx=Math.min(0,currentX-startX); if(Math.abs(dx)>2) cardEl._gestureMoving=true; if(!activated && dx<=-12){ activated=true; cardEl.classList.add("swiping"); }
+        if(activated){
+          setX(dx);
+          // Tactile "point of no return" feedback right as the swipe crosses the delete threshold
+          if(!committed && dx<=-DELETE_THRESHOLD){ committed=true; cardEl.classList.add("armed"); vibrate(10); }
+          else if(committed && dx>-DELETE_THRESHOLD){ committed=false; cardEl.classList.remove("armed"); }
+        }
+      }
       function onEnd(){ if(!dragging) return; dragging=false; const dx=currentX-startX; cardEl._swiping=false; setTimeout(()=>{cardEl._gestureMoving=false;},0);
         if(Math.abs(dx)<CLICK_OPEN_SHEET_DELTA){ reset(); return; }
         if(dx<=-DELETE_THRESHOLD){
@@ -887,14 +958,19 @@ infoBackdrop?.addEventListener("click", closeInfo);
     }));
 
     document.getElementById("resetBtn").addEventListener("click", () => {
-      if (confirm("Reset all counts? This cannot be undone.")) {
-        DATA = defaultData();
-        writeData(DATA);
-        refreshCards();
-        if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
-        toast("All data reset");
-        vibrate(20);
-      }
+      openConfirm({
+        title: "Reset all data?",
+        body: "This wipes every submission count. This cannot be undone.",
+        actionLabel: "Reset",
+        onConfirm: () => {
+          DATA = defaultData();
+          writeData(DATA);
+          refreshCards();
+          if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
+          toast("All data reset");
+          vibrate(20);
+        }
+      });
     });
 
     $("#exportBtn").addEventListener("click",()=>{
@@ -959,15 +1035,29 @@ SUBMISSIONS.forEach(k => {
       attachSwipeToDelete(card,key); attachSafeTap(card,key);
     }
 
+    const addSheet=$("#addSheet"); const addBackdrop=$("#addBackdrop"); const addNameInput=$("#addNameInput");
+    function openAddSheet(){
+      addNameInput.value="";
+      addSheet.classList.add("open"); addBackdrop.classList.add("open");
+      setTimeout(()=>addNameInput.focus(),150);
+    }
+    function closeAddSheet(){ addSheet.classList.remove("open"); addBackdrop.classList.remove("open"); }
+    addBackdrop.addEventListener("click", closeAddSheet);
+    $("#addCancelBtn").addEventListener("click", closeAddSheet);
+    addNameInput.addEventListener("keydown",(e)=>{ if(e.key==="Enter") addSubmissionFlow(); });
+    $("#addConfirmBtn").addEventListener("click", addSubmissionFlow);
+
     function addSubmissionFlow(){
-      const name=(prompt("Submission name (e.g., Triangle):")||"").trim();
+      const name=addNameInput.value.trim();
       if(!name) return;
-      let key=slugify(name); if(!key) return alert("That name doesn’t produce a valid key.");
+      let key=slugify(name);
+      if(!key){ toast("Enter a valid name"); vibrate(20); return; }
+      closeAddSheet();
       let base=key,i=2; while(SUBMISSIONS.includes(key)) key=`${base}_${i++}`;
-   SUBMISSIONS.push(key); LABELS[key]=name; ensureZeroed(key);
-DATA.labels ??= {};              // NEW
-DATA.labels[key] = name;         // NEW
-writeData(DATA); renderCard(key); refreshCards(); if(!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
+      SUBMISSIONS.push(key); LABELS[key]=name; ensureZeroed(key);
+      DATA.labels ??= {};
+      DATA.labels[key] = name;
+      writeData(DATA); renderCard(key); refreshCards(); if(!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
       toast(`Added "${name}"`); vibrate(12);
     }
 
@@ -979,7 +1069,7 @@ const addBtn  = document.getElementById("addBtn");
 const sortBtn = document.getElementById("sortBtn");
 
 // Bind only 'click' to avoid double fire (pointerup + click) on iOS
-addBtn?.addEventListener("click", addSubmissionFlow);
+addBtn?.addEventListener("click", openAddSheet);
 sortBtn?.addEventListener("click", sortNow);
 
 

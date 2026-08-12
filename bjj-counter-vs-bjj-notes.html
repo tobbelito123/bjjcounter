@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>How to Memorize BJJ Techniques Faster – Study Guide</title>
+  <title>BJJ Submissions Counter vs BJJ Notes – Which Tracker Fits You?</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0ea5e9" />
-  <meta name="description" content="Discover effective study methods to memorize Brazilian Jiu-Jitsu positions, sweeps, and submissions using active recall." />
-  <link rel="canonical" href="https://www.bjjcounter.com/how-to-memorize-bjj-techniques.html" />
+  <meta name="description" content="BJJ Submissions Counter vs BJJ Notes: a plain comparison of a free, no-account submission tally app against a full BJJ training journal app." />
+  <link rel="canonical" href="https://www.bjjcounter.com/bjj-counter-vs-bjj-notes.html" />
   <link rel="manifest" href="/manifest.webmanifest" />
   <link rel="apple-touch-icon" href="/icons/icon-192.png" />
 
-  <meta property="og:title" content="How to Memorize BJJ Techniques Faster – Study Guide" />
-  <meta property="og:description" content="Discover effective study methods to memorize Brazilian Jiu-Jitsu positions, sweeps, and submissions using active recall." />
-  <meta property="og:url" content="https://www.bjjcounter.com/how-to-memorize-bjj-techniques.html" />
+  <meta property="og:title" content="BJJ Submissions Counter vs BJJ Notes" />
+  <meta property="og:description" content="A plain comparison of a free, no-account submission tally app against a full BJJ training journal app." />
+  <meta property="og:url" content="https://www.bjjcounter.com/bjj-counter-vs-bjj-notes.html" />
   <meta property="og:image" content="https://www.bjjcounter.com/icons/icon-192.png" />
   <meta name="twitter:card" content="summary_large_image" />
 
@@ -30,12 +30,13 @@
     :root{
       --bg:#0b1020; --card:#121830; --card-2:#0f1428; --fg:#eaf1ff; --muted:#b7c4e1;
       --primary:#0ea5e9; --primary-2:#22d3ee; --ring:rgba(34,211,238,.35); --shadow:0 10px 30px rgba(2,6,23,.4);
+      --ok:#10b981;
     }
     @media (prefers-color-scheme: light){
       :root{ --bg:#f6f8ff; --card:#ffffff; --card-2:#f2f5ff; --fg:#0b1020; --muted:#475569; --shadow:0 8px 24px rgba(2,6,23,.08); }
     }
     .wrap{
-      max-width: 720px; margin: 0 auto; min-height: 100%;
+      max-width: 760px; margin: 0 auto; min-height: 100%;
       display: grid; grid-template-rows: auto 1fr auto;
       padding: 16px clamp(12px,4vw,20px) calc(16px + env(safe-area-inset-bottom)); gap: 14px;
     }
@@ -62,24 +63,29 @@
     h2{ font-size:16px; margin:10px 0 6px; }
     p{ margin:8px 0; line-height:1.5; color:var(--fg); }
     .muted{ color:var(--muted); }
-    ul{ margin:8px 0 8px 18px; }
+    .tagline{ color:var(--muted); font-size:13px; }
     footer{ color:var(--muted); font-size:12px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
     a{ color:var(--primary-2); text-decoration:underline; }
-    .tagline{ color:var(--muted); font-size:13px; }
     .cta{
       display:block; text-align:center; margin-top:6px; padding:12px 14px; border-radius:12px;
       background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18));
       box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35); color:var(--fg); font-weight:800; text-decoration:none;
     }
+    .tbl-wrap{ overflow-x:auto; }
+    table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+    th, td{ text-align:left; padding:10px 8px; border-bottom:1px solid rgba(148,163,184,.14); vertical-align:top; }
+    th{ color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.4px; }
+    td.yes{ color:var(--ok); font-weight:700; }
+    .fine{ font-size:11.5px; color:var(--muted); margin-top:10px; }
   </style>
 
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
     "@type":"Article",
-    "headline":"How to Memorize BJJ Techniques Faster",
-    "about":"Study methods for memorizing Brazilian Jiu-Jitsu positions, sweeps, and submissions",
-    "datePublished":"2026-06-08",
+    "headline":"BJJ Submissions Counter vs BJJ Notes",
+    "about":"Comparison between BJJ Submissions Counter and BJJ Notes, two Brazilian Jiu-Jitsu tracking apps",
+    "datePublished":"2026-08-12",
     "dateModified":"2026-08-12",
     "publisher":{"@type":"Organization","name":"BJJ Submissions Counter","url":"https://www.bjjcounter.com/"}
   }
@@ -96,26 +102,43 @@
 
     <main>
       <section class="card">
-        <h1>How to Memorize BJJ Techniques Faster</h1>
-        <p class="tagline">Brazilian Jiu-Jitsu involves hundreds of techniques, guards, and submissions. Remembering the exact steps for a complex sweep or a submission defense can be challenging without the right strategy.</p>
+        <h1>BJJ Submissions Counter vs BJJ Notes</h1>
+        <p class="tagline">One's a training journal, the other's a stopwatch for your submissions. Here's how to tell which one you actually need.</p>
 
-        <h2>Turn Training Logs into Flashcards</h2>
-        <p>Writing down your training logs is a great start, but reviewing them passively won't make them stick. The secret is converting your notes into test questions.</p>
-        <p>If you want to optimize your study time off the mats, you can <a href="https://www.swipesmrt.com" target="_blank" rel="noopener">convert your BJJ training logs into interactive AI quizzes on SwipeSmrt</a>. Upload a photo of your notebook or technique lists to generate custom flashcards in seconds.</p>
+        <p>BJJ Notes is a training-journal app: log sessions, set progress goals, get weekly recaps, and on some plans get "Coach Mode" feedback. It generally runs on a free account with optional paid tiers, and it's built for practitioners who want to reflect on their training in writing.</p>
+
+        <p>BJJ Submissions Counter skips the journaling entirely and focuses on one number that's oddly hard to track in your head: how many times you've actually finished each submission, and against which belt. No writing, no account, just tap the technique, tap the belt, and you're done.</p>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>&nbsp;</th><th>BJJ Submissions Counter</th><th>BJJ Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Core focus</td><td>Submission tally by opponent belt</td><td>Written training journal &amp; goals</td></tr>
+              <tr><td>Account required</td><td class="yes">No</td><td>Yes</td></tr>
+              <tr><td>Cost</td><td class="yes">Free</td><td>Free tier + paid upgrades</td></tr>
+              <tr><td>Works offline</td><td class="yes">Yes, installable PWA</td><td>Not specified by them</td></tr>
+              <tr><td>Input style</td><td class="yes">Tap technique → tap belt</td><td>Written entries</td></tr>
+              <tr><td>Best for</td><td>Fast in-the-moment tallying between rounds</td><td>Reflective journaling and long-term goal setting</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="fine">Feature details for BJJ Notes are based on their own public marketing pages as of 2026 and may have changed since. Check their site for current specifics.</p>
       </section>
 
       <section class="card">
-        <h2>Memorizing technique is half the battle. Track what's actually working</h2>
-        <p class="muted">Flashcards help the steps stick. <a href="/">BJJ Submissions Counter</a> tracks which of those techniques you're actually finishing live, and against which belt level, so you know which ones are worth keeping in the drilling rotation. It's free, there's no account to make, and it works offline.</p>
+        <h2>Different tools, different moments</h2>
+        <p class="muted">Journaling is great after class, when you've got time to sit down and reflect. But mid-roll, or right after class while you're packing your bag, you want something that takes two taps, not two paragraphs. That's the gap BJJ Submissions Counter fills. It's especially useful early in your BJJ journey, when you're still figuring out which techniques are actually working for your body versus which ones just feel cool in the drilling line.</p>
         <a class="cta" href="/">Open BJJ Submissions Counter →</a>
       </section>
 
       <section class="card">
         <h2>More guides</h2>
         <ul style="margin:8px 0 0 18px; line-height:1.9;">
+          <li><a href="/bjj-counter-vs-mattime.html">BJJ Submissions Counter vs MatTime</a></li>
           <li><a href="/bjj-glossary.html">BJJ Glossary: Terms &amp; Lingo Explained</a></li>
-          <li><a href="/bjj-rules-study-guide.html">IBJJF Rules Study Guide</a></li>
-          <li><a href="/bjj-counter-vs-bjj-notes.html">BJJ Submissions Counter vs BJJ Notes</a></li>
+          <li><a href="/jonah-hill-bjj-annihilate.html">Jonah Hill's "Annihilate" Moment &amp; What It Means for Beginners</a></li>
         </ul>
       </section>
     </main>

@@ -1,0 +1,23 @@
+# BJJ Submissions Counter
+
+> A free Brazilian Jiu-Jitsu submission tracker. No login or account required. Log submissions you land in live rolling, broken down by opponent belt level, right from your phone. Works offline as an installable PWA; all data stays on-device.
+
+## App
+
+- [BJJ Submissions Counter](https://www.bjjcounter.com/): The app itself. Free, no signup, works offline.
+- [Privacy Policy](https://www.bjjcounter.com/privacy.html): No data collection, no analytics, no ads. Data is stored locally in the browser only.
+
+## Guides
+
+- [BJJ Glossary](https://www.bjjcounter.com/bjj-glossary.html): Plain-English definitions of BJJ positions, submissions, actions, and mat lingo for beginners.
+- [IBJJF Rules Study Guide](https://www.bjjcounter.com/bjj-rules-study-guide.html): How to study and memorize competition rules, points, and penalties.
+- [How to Memorize BJJ Techniques Faster](https://www.bjjcounter.com/how-to-memorize-bjj-techniques.html): Study methods for retaining technique details.
+
+## Comparisons
+
+- [BJJ Submissions Counter vs MatTime](https://www.bjjcounter.com/bjj-counter-vs-mattime.html): How a free, no-account submission tally app differs from a full BJJ training-log app.
+- [BJJ Submissions Counter vs BJJ Notes](https://www.bjjcounter.com/bjj-counter-vs-bjj-notes.html): How a free, no-account submission tally app differs from a written training-journal app.
+
+## Articles
+
+- [Jonah Hill's "Annihilate" Moment](https://www.bjjcounter.com/jonah-hill-bjj-annihilate.html): Context behind a viral 2026 BJJ quote and why tracking small wins matters early in a BJJ journey.

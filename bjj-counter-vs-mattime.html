@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>BJJ Submissions Counter vs MatTime – Which Tracker Fits You?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <meta name="description" content="BJJ Submissions Counter vs MatTime: a plain comparison of a free, no-account submission tally app against a full BJJ training-log app with mat-hour tracking." />
+  <link rel="canonical" href="https://www.bjjcounter.com/bjj-counter-vs-mattime.html" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <meta property="og:title" content="BJJ Submissions Counter vs MatTime" />
+  <meta property="og:description" content="A plain comparison of a free, no-account submission tally app against a full BJJ training-log app." />
+  <meta property="og:url" content="https://www.bjjcounter.com/bjj-counter-vs-mattime.html" />
+  <meta property="og:image" content="https://www.bjjcounter.com/icons/icon-192.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      -webkit-font-smoothing: antialiased;
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-tap-highlight-color: transparent;
+    }
+    :root{
+      --bg:#0b1020; --card:#121830; --card-2:#0f1428; --fg:#eaf1ff; --muted:#b7c4e1;
+      --primary:#0ea5e9; --primary-2:#22d3ee; --ring:rgba(34,211,238,.35); --shadow:0 10px 30px rgba(2,6,23,.4);
+      --ok:#10b981;
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f6f8ff; --card:#ffffff; --card-2:#f2f5ff; --fg:#0b1020; --muted:#475569; --shadow:0 8px 24px rgba(2,6,23,.08); }
+    }
+    .wrap{
+      max-width: 760px; margin: 0 auto; min-height: 100%;
+      display: grid; grid-template-rows: auto 1fr auto;
+      padding: 16px clamp(12px,4vw,20px) calc(16px + env(safe-area-inset-bottom)); gap: 14px;
+    }
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 12px; background:linear-gradient(180deg, rgba(34,211,238,.06), transparent);
+      border-radius:16px;
+    }
+    .title{ font-weight:800; letter-spacing:.3px; font-size:20px; display:flex; align-items:center; gap:10px; }
+    .title .dot{ width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(40% 40% at 30% 30%, var(--primary-2), var(--primary));
+      box-shadow:0 0 18px var(--ring);
+    }
+    .actions { display:flex; gap:8px; align-items:center; }
+    .ghost { background:transparent; border:1px solid rgba(148,163,184,.25); color:var(--muted);
+      padding:8px 10px; border-radius:10px; font-size:13px; text-decoration:none;
+    }
+    main{ display:grid; gap:12px; }
+    .card{
+      background:var(--card); border-radius:16px; padding:16px; box-shadow:var(--shadow);
+      border:1px solid rgba(148,163,184,.12);
+    }
+    h1{ font-size:22px; margin:0 0 6px; }
+    h2{ font-size:16px; margin:10px 0 6px; }
+    p{ margin:8px 0; line-height:1.5; color:var(--fg); }
+    .muted{ color:var(--muted); }
+    .tagline{ color:var(--muted); font-size:13px; }
+    footer{ color:var(--muted); font-size:12px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    a{ color:var(--primary-2); text-decoration:underline; }
+    .cta{
+      display:block; text-align:center; margin-top:6px; padding:12px 14px; border-radius:12px;
+      background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18));
+      box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35); color:var(--fg); font-weight:800; text-decoration:none;
+    }
+    .tbl-wrap{ overflow-x:auto; }
+    table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+    th, td{ text-align:left; padding:10px 8px; border-bottom:1px solid rgba(148,163,184,.14); vertical-align:top; }
+    th{ color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.4px; }
+    td.yes{ color:var(--ok); font-weight:700; }
+    .fine{ font-size:11.5px; color:var(--muted); margin-top:10px; }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"BJJ Submissions Counter vs MatTime",
+    "about":"Comparison between BJJ Submissions Counter and MatTime, two Brazilian Jiu-Jitsu tracking apps",
+    "datePublished":"2026-08-12",
+    "dateModified":"2026-08-12",
+    "publisher":{"@type":"Organization","name":"BJJ Submissions Counter","url":"https://www.bjjcounter.com/"}
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title"><span class="dot"></span> BJJ Submissions Counter</div>
+      <div class="actions">
+        <a class="ghost" href="/">← Back to app</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h1>BJJ Submissions Counter vs MatTime</h1>
+        <p class="tagline">Both help you track your Brazilian Jiu-Jitsu journey, but they're built for different jobs. Here's the honest breakdown.</p>
+
+        <p>MatTime is a purpose-built BJJ companion app aimed at practitioners who want to log full training sessions, watch their mat-hour count climb toward the "10,000 hours" milestone, and track belt progression over the long haul. It generally works through an account so your data syncs and stays backed up.</p>
+
+        <p>BJJ Submissions Counter does one thing: it counts the submissions you actually land in live rolling, broken down by which belt you hit them against. No session logs, no mat-hour math, no account. You open the app, tap a technique, tap the belt of the person you tapped, and you're done. That's about it, which is the point if you just want to log something between rounds without breaking your flow.</p>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>&nbsp;</th><th>BJJ Submissions Counter</th><th>MatTime</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Core focus</td><td>Submission tally by opponent belt</td><td>Full training log &amp; mat-hour tracking</td></tr>
+              <tr><td>Account required</td><td class="yes">No</td><td>Yes</td></tr>
+              <tr><td>Cost</td><td class="yes">Free</td><td>Paid (see their site for current pricing)</td></tr>
+              <tr><td>Works offline</td><td class="yes">Yes, installable PWA</td><td>Not specified by them</td></tr>
+              <tr><td>Time to log an entry</td><td class="yes">~2 taps</td><td>Full session entry</td></tr>
+              <tr><td>Community / social features</td><td>No, private and on-device only</td><td>Yes</td></tr>
+              <tr><td>Best for</td><td>Quick, in-the-moment tallying, especially for beginners still figuring out what they're good at</td><td>Practitioners who want a complete long-term training journal</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="fine">Feature details for MatTime are based on their own public marketing pages as of 2026 and may have changed since. Check mattime.app for current specifics.</p>
+      </section>
+
+      <section class="card">
+        <h2>Why beginners often reach for BJJ Counter first</h2>
+        <p class="muted">When you're new, you don't yet know if you're going to stick with a full journaling habit, and a heavy app with sessions, streaks, and a login screen can be one more barrier between you and just training. BJJ Submissions Counter skips the setup entirely: no sign-up, no onboarding, just open it and start tapping. It answers one question that matters most early on: which submissions am I actually landing, and against who? That's the kind of thing that's easy to feel in the moment but surprisingly hard to remember accurately a few months later.</p>
+        <p class="muted">Nothing stops you from using both. A lot of people start with BJJ Counter for the light tally, then add a full journal app like MatTime once they know they're in it for the long run.</p>
+        <a class="cta" href="/">Open BJJ Submissions Counter →</a>
+      </section>
+
+      <section class="card">
+        <h2>More guides</h2>
+        <ul style="margin:8px 0 0 18px; line-height:1.9;">
+          <li><a href="/bjj-counter-vs-bjj-notes.html">BJJ Submissions Counter vs BJJ Notes</a></li>
+          <li><a href="/bjj-glossary.html">BJJ Glossary: Terms &amp; Lingo Explained</a></li>
+          <li><a href="/jonah-hill-bjj-annihilate.html">Jonah Hill's "Annihilate" Moment &amp; What It Means for Beginners</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <span>© BJJ Submissions Counter · Last updated 2026-08-12</span>
+      <a href="/">Open the app</a>
+    </footer>
+  </div>
+</body>
+</html>
