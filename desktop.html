@@ -34,7 +34,7 @@
       margin: 0 auto;
       padding: 24px clamp(20px,4vw,40px) 40px;
       display:grid;
-      grid-template-rows: auto 1fr auto;
+      grid-template-rows: auto auto 1fr auto;
       gap: 22px;
     }
     header{
@@ -95,6 +95,18 @@
       .hero{ grid-template-columns: 1fr; }
       .shot{ order:-1; }
     }
+
+    /* ------- Video demos ------- */
+    .videos h2{ font-size:20px; margin:0 0 14px; }
+    .video-grid{
+      display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 260px));
+      gap:20px; justify-content:center;
+    }
+    .video-card{
+      position:relative; width:100%; aspect-ratio: 9/16; border-radius:16px; overflow:hidden;
+      background:var(--card); border:1px solid rgba(148,163,184,.12); box-shadow: var(--shadow);
+    }
+    .video-card iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
   </style>
 </head>
 <body>
@@ -122,6 +134,18 @@
       <!-- Screenshot: replace src if your path/name differs -->
       <div class="shot">
         <img src="screenshot.png" alt="BJJ Submissions Counter app screenshot" loading="eager" />
+      </div>
+    </section>
+
+    <section class="videos">
+      <h2>See it in action</h2>
+      <div class="video-grid">
+        <div class="video-card">
+          <iframe src="https://www.youtube.com/embed/ZanI5RsA_LM" title="BJJ Submissions Counter demo" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div class="video-card">
+          <iframe src="https://www.youtube.com/embed/VIPfA0B4YBU" title="BJJ Submissions Logger demo" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
       </div>
     </section>
 
