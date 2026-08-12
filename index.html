@@ -325,6 +325,17 @@
     </div>
   </div>
 
+  <!-- Delete confirmation Sheet -->
+  <div class="sheet-backdrop" id="deleteBackdrop"></div>
+  <div class="sheet" id="deleteSheet" aria-modal="true" role="dialog" aria-labelledby="deleteTitle">
+    <h4 id="deleteTitle">Delete this submission?</h4>
+    <p class="muted" id="deleteBody">This removes it and its counts.</p>
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+      <button class="reset" id="deleteConfirmBtn">Delete</button>
+      <button class="ghost" id="deleteCancelBtn">Cancel</button>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div class="toast" id="toast">Saved</div>
 
@@ -672,7 +683,7 @@ vibrate(12);
       const steps = Math.floor(delta / 20);
       if (steps > 0) {
         meta.currentRank = Math.min(4, meta.currentRank + steps);
-        meta.lastUpgradeTotal += steps * 50;
+        meta.lastUpgradeTotal += steps * 20;
       }
       writeData(DATA);
     }
@@ -771,6 +782,36 @@ vibrate(12);
     function openSheet(sub){ pendingSubmission=sub; $("#sheetTitle").textContent=`Who did you hit ${LABELS[sub]} against?`; sheet.classList.add("open"); backdrop.classList.add("open"); }
     function closeSheet(){ sheet.classList.remove("open"); backdrop.classList.remove("open"); setTimeout(()=>{pendingSubmission=null;},150); }
     backdrop.addEventListener("click", closeSheet);
+
+    // --- Delete confirmation sheet (replaces blocking confirm() so it can't race touch/click handling) ---
+    const deleteSheet=$("#deleteSheet"); const deleteBackdrop=$("#deleteBackdrop");
+    let pendingDelete=null; // { key, cardEl }
+    function snapBack(cardEl){ const content=cardEl.querySelector(".content"); content.style.transform=""; content.style.opacity=""; cardEl.classList.remove("swiping"); }
+    function openDeleteConfirm(key,cardEl){
+      pendingDelete={key,cardEl};
+      $("#deleteBody").textContent=`Delete "${LABELS[key]||key}"? This removes it and its counts.`;
+      deleteSheet.classList.add("open"); deleteBackdrop.classList.add("open");
+    }
+    function closeDeleteConfirm(cancelled){
+      deleteSheet.classList.remove("open"); deleteBackdrop.classList.remove("open");
+      if (cancelled && pendingDelete) snapBack(pendingDelete.cardEl);
+      pendingDelete=null;
+    }
+    deleteBackdrop.addEventListener("click", () => closeDeleteConfirm(true));
+    $("#deleteCancelBtn").addEventListener("click", () => closeDeleteConfirm(true));
+    $("#deleteConfirmBtn").addEventListener("click", () => {
+      if (!pendingDelete) return;
+      const { key, cardEl } = pendingDelete;
+      const i=SUBMISSIONS.indexOf(key); if(i>=0) SUBMISSIONS.splice(i,1);
+      delete DATA.submissions[key];
+      writeData(DATA);
+      cardEl.remove();
+      if (!$("#view-stats").hasAttribute("hidden")) buildStats();
+      toast(`Deleted ${LABELS[key]||key}`);
+      vibrate(20);
+      deleteSheet.classList.remove("open"); deleteBackdrop.classList.remove("open");
+      pendingDelete=null;
+    });
 // --- Info sheet wiring (open via ℹ️ button, close by tapping backdrop) ---
 const infoSheet   = $("#infoSheet");
 const infoBackdrop= $("#infoBackdrop");
@@ -801,8 +842,8 @@ infoBackdrop?.addEventListener("click", closeInfo);
       function onEnd(){ if(!dragging) return; dragging=false; const dx=currentX-startX; cardEl._swiping=false; setTimeout(()=>{cardEl._gestureMoving=false;},0);
         if(Math.abs(dx)<CLICK_OPEN_SHEET_DELTA){ reset(); return; }
         if(dx<=-DELETE_THRESHOLD){
-          const ok=confirm(`Delete "${LABELS[key]||key}"? This removes it and its counts.`);
-          if(ok){ const i=SUBMISSIONS.indexOf(key); if(i>=0) SUBMISSIONS.splice(i,1); delete DATA.submissions[key]; writeData(DATA); cardEl.remove(); if(!$("#view-stats").hasAttribute("hidden")) buildStats(); toast(`Deleted ${LABELS[key]||key}`); vibrate(20); return; }
+          openDeleteConfirm(key, cardEl);
+          return; // leave the card revealed until the sheet resolves (confirm or cancel)
         }
         reset();
       }

@@ -1,5 +1,5 @@
 // sw.js
-const CACHE = "bjj-counter-v4"; // bump on each deploy
+const CACHE = "bjj-counter-v5"; // bump on each deploy
 const ASSETS = [
   "/",                       // root
   "/index.html",
