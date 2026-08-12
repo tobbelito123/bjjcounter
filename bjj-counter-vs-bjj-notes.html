@@ -77,6 +77,12 @@
     th{ color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.4px; }
     td.yes{ color:var(--ok); font-weight:700; }
     .fine{ font-size:11.5px; color:var(--muted); margin-top:10px; }
+    .vs-hero{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+    .vs-card{ flex:1; background:var(--card-2); border:1px solid rgba(148,163,184,0.16); border-radius:14px; padding:16px 10px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .vs-card svg{ width:26px; height:26px; color:var(--primary-2); margin-bottom:4px; }
+    .vs-card strong{ font-size:12.5px; }
+    .vs-card span{ font-size:11px; }
+    .vs-divider{ font-weight:800; font-size:12px; color:var(--muted); flex-shrink:0; }
   </style>
 
   <script type="application/ld+json">
@@ -102,6 +108,19 @@
 
     <main>
       <section class="card">
+        <div class="vs-hero">
+          <div class="vs-card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            <strong>BJJ Submissions Counter</strong>
+            <span class="muted">2 taps · free · no account</span>
+          </div>
+          <div class="vs-divider">VS</div>
+          <div class="vs-card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <strong>BJJ Notes</strong>
+            <span class="muted">Written training journal</span>
+          </div>
+        </div>
         <h1>BJJ Submissions Counter vs BJJ Notes</h1>
         <p class="tagline">One's a training journal, the other's a stopwatch for your submissions. Here's how to tell which one you actually need.</p>
 

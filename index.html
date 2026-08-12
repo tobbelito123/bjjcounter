@@ -89,6 +89,35 @@
       color: var(--muted); padding: 8px 10px; border-radius: 10px; font-size: 13px;
     }
 
+    /* Streak / momentum strip */
+    .stat-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-chip {
+      background: var(--card); border-radius: 14px; padding: 10px 14px; box-shadow: var(--shadow);
+      border: 1px solid rgba(148,163,184,0.12); display: flex; align-items: baseline; gap: 8px; justify-content: center;
+    }
+    .stat-chip .stat-num { font-weight: 800; font-size: 19px; letter-spacing: 0.2px; }
+    .stat-chip .stat-label { font-size: 11.5px; color: var(--muted); }
+
+    /* Belt journey bar (Stats tab) */
+    .journey-card { padding: 16px; }
+    .journey-bar { position: relative; height: 14px; border-radius: 10px; display: flex; margin-top: 22px; outline: 1px solid rgba(148,163,184,0.18); overflow: visible; }
+    .journey-seg { flex: 1; height: 100%; }
+    .journey-seg.white { background: linear-gradient(180deg, #fff, #e5e7eb); border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
+    .journey-seg.blue { background: linear-gradient(180deg, #3b82f6, #1e40af); }
+    .journey-seg.purple { background: linear-gradient(180deg, #a78bfa, #6d28d9); }
+    .journey-seg.brown { background: linear-gradient(180deg, #b45309, #7c2d12); }
+    .journey-seg.black { background: linear-gradient(180deg, #111827, #0b0b0b); border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
+    .journey-marker {
+      position: absolute; top: -26px; transform: translateX(-50%); left: 2%;
+      background: var(--fg); color: var(--bg); font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 8px; white-space: nowrap;
+      transition: left .3s ease;
+    }
+    .journey-marker::after {
+      content: ""; position: absolute; left: 50%; top: 100%; transform: translateX(-50%);
+      border: 5px solid transparent; border-top-color: var(--fg);
+    }
+    .journey-legend { display: flex; justify-content: space-between; margin-top: 8px; font-size: 10.5px; color: var(--muted); }
+
     /* Install banner */
     .install-banner {
       display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px;
@@ -210,7 +239,7 @@
       border: 1px solid rgba(34,211,238,0.35); box-shadow: var(--shadow);
       opacity: 0; transition: opacity .2s, transform .2s; font-size: 13px; pointer-events: none;
     }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
   </style>
 
 <!-- SEO Enhancements -->
@@ -257,6 +286,18 @@
       </div>
     </header>
 
+    <!-- Streak / momentum strip -->
+    <div class="stat-strip">
+      <div class="stat-chip">
+        <span class="stat-num" id="streakNum">0</span>
+        <span class="stat-label">day streak</span>
+      </div>
+      <div class="stat-chip">
+        <span class="stat-num" id="totalNumChip">0</span>
+        <span class="stat-label">total subs</span>
+      </div>
+    </div>
+
     <!-- Install / A2HS banner -->
     <div id="installBanner" class="install-banner" hidden>
       <div id="installText">
@@ -292,6 +333,18 @@
 
       <!-- Stats view -->
       <section id="view-stats" hidden role="tabpanel" aria-labelledby="tab-stats">
+        <div class="card journey-card">
+          <div class="stat-head"><h3>Your BJJ journey</h3><div class="muted" id="journeyStreakLabel">0-day streak</div></div>
+          <div class="journey-bar" id="journeyBar">
+            <div class="journey-seg white"></div>
+            <div class="journey-seg blue"></div>
+            <div class="journey-seg purple"></div>
+            <div class="journey-seg brown"></div>
+            <div class="journey-seg black"></div>
+            <div class="journey-marker" id="journeyMarker">You are here</div>
+          </div>
+          <div class="journey-legend"><span>White</span><span>Blue</span><span>Purple</span><span>Brown</span><span>Black</span></div>
+        </div>
         <div id="statsList" class="grid"></div>
       </section>
     </main>
@@ -486,7 +539,7 @@
 function defaultData() {
   const zero = { white:0, blue:0, purple:0, brown:0, black:0 };
   const meta = { currentRank: 0, lastUpgradeTotal: 0, maxOpponentRank: 0 };
-  const obj = { submissions: {}, labels: {} }; // NEW: labels bag
+  const obj = { submissions: {}, labels: {}, activityDates: [] }; // NEW: labels bag, streak dates
   for (const key of SUBMISSIONS) {
     obj.submissions[key] = { ...zero, _meta: { ...meta } };
     obj.labels[key] = LABELS[key]; // NEW
@@ -504,6 +557,7 @@ function defaultData() {
     // Ensure structure
     parsed.submissions ??= {};
     parsed.labels ??= {};
+    parsed.activityDates ??= [];
 
     // Seed labels for built-ins
     for (const s of SUBMISSIONS) {
@@ -645,6 +699,7 @@ SUBMISSIONS.forEach(k => {
 
 const importedTotal = totalAllFrom(obj);
 refreshCards();
+updateStreakUI();
 if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
 toast(`Imported your previous data (total: ${importedTotal})`);
 vibrate(12);
@@ -678,6 +733,52 @@ vibrate(12);
     // Belt rank for total: +1 rank every 100 moves, capped at black
     function totalRank() {
       return Math.min(4, Math.floor(totalAll() / 100));
+    }
+
+    // ------- Streak tracking -------
+    function todayKey(){ const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
+    function dateKeyMinusDays(n){ const d=new Date(); d.setDate(d.getDate()-n); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
+    function recordActivityToday(){
+      DATA.activityDates ??= [];
+      const t = todayKey();
+      if (!DATA.activityDates.includes(t)) {
+        DATA.activityDates.push(t);
+        if (DATA.activityDates.length > 400) DATA.activityDates = DATA.activityDates.slice(-400);
+        return true; // new day recorded
+      }
+      return false;
+    }
+    function currentStreak(){
+      const dates = new Set(DATA.activityDates || []);
+      let streak = 0;
+      let start = dates.has(todayKey()) ? 0 : (dates.has(dateKeyMinusDays(1)) ? 1 : -1);
+      if (start === -1) return 0;
+      for (let i = start; ; i++) {
+        if (dates.has(dateKeyMinusDays(i))) streak++; else break;
+      }
+      return streak;
+    }
+    const STREAK_MILESTONES = [3,7,14,30,60,100,200,365];
+    const TOTAL_MILESTONES = [10,25,50,100,250,500,1000];
+
+    function updateStreakUI(){
+      const streak = currentStreak();
+      const streakEl = document.getElementById("streakNum");
+      if (streakEl) streakEl.textContent = streak > 0 ? `🔥 ${streak}` : "0";
+      const totalEl = document.getElementById("totalNumChip");
+      if (totalEl) totalEl.textContent = totalAll();
+    }
+
+    function updateJourney(){
+      const total = totalAll();
+      const rank = totalRank(); // 0..4
+      const withinRankProgress = rank < 4 ? (total % 100) / 100 : 1;
+      let pct = ((rank + withinRankProgress) / 5) * 100;
+      pct = Math.max(2, Math.min(98, pct));
+      const marker = document.getElementById("journeyMarker");
+      if (marker) marker.style.left = pct + "%";
+      const label = document.getElementById("journeyStreakLabel");
+      if (label) label.textContent = `${currentStreak()}-day streak · ${total} total`;
     }
 
     function ensureMeta(sub) {
@@ -773,6 +874,7 @@ vibrate(12);
     }
 
     function buildStats(){
+      updateJourney();
       const list=$("#statsList"); list.innerHTML="";
       for (const s of sortedSubmissions()){
         const totals=DATA.submissions[s];
@@ -937,13 +1039,26 @@ infoBackdrop?.addEventListener("click", closeInfo);
         const belt=b.dataset.belt;
         if (!pendingSubmission) return;
         DATA.submissions[pendingSubmission][belt]+=1;
-        applyProgression(pendingSubmission,belt);
+        const isNewDay = recordActivityToday();
+        applyProgression(pendingSubmission,belt); // also persists DATA (incl. activityDates) via writeData
+        const streak = currentStreak();
+        const total = totalAll();
         // Force-update the migration mirrors right after each log
         saveMigrationMirror(DATA);
         refreshCards();
+        updateStreakUI();
         if (!$("#view-stats").hasAttribute("hidden")) buildStats();
-        toast(`+1 ${LABELS[pendingSubmission]} vs ${belt[0].toUpperCase()+belt.slice(1)} belt`);
-        vibrate(12);
+
+        if (isNewDay && STREAK_MILESTONES.includes(streak)) {
+          toast(`🔥 ${streak}-day streak! Keep it going.`);
+          vibrate([30,60,30,60,30]);
+        } else if (TOTAL_MILESTONES.includes(total)) {
+          toast(`🎉 ${total} submissions logged!`);
+          vibrate([30,60,30,60,30]);
+        } else {
+          toast(`+1 ${LABELS[pendingSubmission]} vs ${belt[0].toUpperCase()+belt.slice(1)} belt`);
+          vibrate(12);
+        }
         closeSheet();
       });
     });
@@ -966,6 +1081,7 @@ infoBackdrop?.addEventListener("click", closeInfo);
           DATA = defaultData();
           writeData(DATA);
           refreshCards();
+          updateStreakUI();
           if (!document.getElementById("view-stats").hasAttribute("hidden")) buildStats();
           toast("All data reset");
           vibrate(20);
@@ -1008,7 +1124,7 @@ SUBMISSIONS.forEach(k => {
 });
           writeData(DATA); 
           
-          refreshCards(); if(!$("#view-stats").hasAttribute("hidden")) buildStats(); toast("Import successful"); vibrate(16);
+          refreshCards(); updateStreakUI(); if(!$("#view-stats").hasAttribute("hidden")) buildStats(); toast("Import successful"); vibrate(16);
         }catch{ alert("Could not import that file."); } };
         reader.readAsText(file);
       };
@@ -1064,6 +1180,7 @@ SUBMISSIONS.forEach(k => {
     // Initial render
     SUBMISSIONS.forEach((key)=>{ if(!document.getElementById("count-"+key)){ ensureZeroed(key); renderCard(key);} });
     refreshCards();
+    updateStreakUI();
 // --- Header actions (Add / Sort) ---
 const addBtn  = document.getElementById("addBtn");
 const sortBtn = document.getElementById("sortBtn");
