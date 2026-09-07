@@ -17,6 +17,7 @@
 
 - [BJJ Submissions Counter vs MatTime](https://www.bjjcounter.com/bjj-counter-vs-mattime.html): How a free, no-account submission tally app differs from a full BJJ training-log app.
 - [BJJ Submissions Counter vs BJJ Notes](https://www.bjjcounter.com/bjj-counter-vs-bjj-notes.html): How a free, no-account submission tally app differs from a written training-journal app.
+- [BJJ Submissions Counter vs BJJBuddy](https://www.bjjcounter.com/bjj-counter-vs-bjjbuddy.html): How a free, no-account submission tally app differs from a paid, subscription-based BJJ training journal.
 
 ## Articles
 
