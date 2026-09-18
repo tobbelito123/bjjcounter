@@ -11,7 +11,7 @@ This keeps the backlog long-running without ever needing a human to refill it.
 
 ## Queue
 
-1. slug: `common-white-belt-mistakes` — status: pending
+1. slug: `common-white-belt-mistakes` — status: published: 2026-09-18
    Working title: "Common Mistakes White Belts Make (and How to Fix Them)"
    Type: Guide
    Angle: the usual early habits that slow progress (muscling technique, gripping too hard,
@@ -121,3 +121,4 @@ This keeps the backlog long-running without ever needing a human to refill it.
 - `bjj-counter-vs-bjj-notes` (Comparison)
 - `bjj-counter-vs-bjjbuddy` (Comparison)
 - `jonah-hill-bjj-annihilate` (Article)
+- `common-white-belt-mistakes` (Guide)
