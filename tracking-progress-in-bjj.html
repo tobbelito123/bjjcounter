@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Why Tracking Your BJJ Progress Actually Works</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <meta name="description" content="It's hard to feel like you're improving at BJJ when progress is slow and quiet. Here's why writing down what you land, and against whom, actually helps." />
+  <link rel="canonical" href="https://www.bjjcounter.com/tracking-progress-in-bjj.html" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <meta property="og:title" content="Why Tracking Your BJJ Progress Actually Works" />
+  <meta property="og:description" content="Progress in BJJ is slow and quiet. Here's why writing down what you land, and against whom, actually helps you see it." />
+  <meta property="og:url" content="https://www.bjjcounter.com/tracking-progress-in-bjj.html" />
+  <meta property="og:image" content="https://www.bjjcounter.com/icons/icon-192.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      -webkit-font-smoothing: antialiased;
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-tap-highlight-color: transparent;
+    }
+    :root{
+      --bg:#0b1020; --card:#121830; --card-2:#0f1428; --fg:#eaf1ff; --muted:#b7c4e1;
+      --primary:#0ea5e9; --primary-2:#22d3ee; --ring:rgba(34,211,238,.35); --shadow:0 10px 30px rgba(2,6,23,.4);
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f6f8ff; --card:#ffffff; --card-2:#f2f5ff; --fg:#0b1020; --muted:#475569; --shadow:0 8px 24px rgba(2,6,23,.08); }
+    }
+    .wrap{
+      max-width: 720px; margin: 0 auto; min-height: 100%;
+      display: grid; grid-template-rows: auto 1fr auto;
+      padding: 16px clamp(12px,4vw,20px) calc(16px + env(safe-area-inset-bottom)); gap: 14px;
+    }
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 12px; background:linear-gradient(180deg, rgba(34,211,238,.06), transparent);
+      border-radius:16px;
+    }
+    .title{ font-weight:800; letter-spacing:.3px; font-size:20px; display:flex; align-items:center; gap:10px; }
+    .title .dot{ width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(40% 40% at 30% 30%, var(--primary-2), var(--primary));
+      box-shadow:0 0 18px var(--ring);
+    }
+    .actions { display:flex; gap:8px; align-items:center; }
+    .ghost { background:transparent; border:1px solid rgba(148,163,184,.25); color:var(--muted);
+      padding:8px 10px; border-radius:10px; font-size:13px; text-decoration:none;
+    }
+    main{ display:grid; gap:12px; }
+    .card{
+      background:var(--card); border-radius:16px; padding:16px; box-shadow:var(--shadow);
+      border:1px solid rgba(148,163,184,.12);
+    }
+    h1{ font-size:22px; margin:0 0 6px; }
+    h2{ font-size:16px; margin:10px 0 6px; }
+    p{ margin:8px 0; line-height:1.5; color:var(--fg); }
+    .muted{ color:var(--muted); }
+    ul{ margin:8px 0 8px 18px; }
+    .icon-badge{ width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center; background:radial-gradient(60% 60% at 35% 30%, rgba(34,211,238,0.4), rgba(14,165,233,0.15)); border:1px solid rgba(14,165,233,0.3); margin-bottom:12px; }
+    .icon-badge svg{ width:26px; height:26px; color:var(--primary-2); }
+    footer{ color:var(--muted); font-size:12px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    a{ color:var(--primary-2); text-decoration:underline; }
+    .tagline{ color:var(--muted); font-size:13px; }
+    .cta{
+      display:block; text-align:center; margin-top:6px; padding:12px 14px; border-radius:12px;
+      background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18));
+      box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35); color:var(--fg); font-weight:800; text-decoration:none;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"Why Tracking Your BJJ Progress Actually Works",
+    "about":"Why keeping a record of submissions landed helps beginner Brazilian Jiu-Jitsu students see and stay motivated by their own progress",
+    "datePublished":"2026-09-25",
+    "dateModified":"2026-09-25",
+    "publisher":{"@type":"Organization","name":"BJJ Submissions Counter","url":"https://www.bjjcounter.com/"}
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title"><span class="dot"></span> BJJ Submissions Counter</div>
+      <div class="actions">
+        <a class="ghost" href="/">← Back to app</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <div class="icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8 12 14.7l-3-3L3.7 17"/></svg>
+        </div>
+        <h1>Why Tracking Your BJJ Progress Actually Works</h1>
+        <p class="tagline">Most of what makes you better at this sport happens too slowly to notice. Writing it down is the only way to actually see it.</p>
+
+        <h2>Your Memory Isn't Built for This</h2>
+        <p>Ask most white belts how their training is going and you'll get a shrug, or a story about the blue belt who folded them in half last Tuesday. That's not because nothing good happened that week. It's because a rough exchange sticks in your head a lot harder than the quiet win of finally stopping a pass you used to fall for every time. Left to memory alone, you end up grading months of training on whatever happened most recently and most dramatically, which is a terrible way to judge anything.</p>
+
+        <h2>What's Actually Worth Writing Down</h2>
+        <p>You don't need a spreadsheet with twelve columns. The two things that matter most are what you finished and who you finished it on. A triangle against a fellow white belt and a triangle against a purple belt are not the same data point, and lumping them together hides the fact that you're actually getting sharper against tougher resistance. Keep it that simple and you'll actually keep doing it, which matters more than any amount of detail you'd give up on after a week.</p>
+
+        <h2>The Pull of a Streak</h2>
+        <p>There's a reason habit apps lean so hard on streaks, and it works the same way on the mat. A running count of consecutive training days or weeks turns showing up into something you don't want to break, on the nights your bed sounds a lot more appealing than driving to the gym. It's a small trick, but it's an honest one. Nobody's grading you on it but you.</p>
+
+        <h2>A Log Isn't a Substitute for Coaching</h2>
+        <p>None of this replaces what a coach watching your position and posture can tell you. A tally of submissions won't catch a bad habit in your base or a grip you're relying on too much. What it's good for is the thing coaching sessions can't cover, which is the long view of your own trajectory. That's really the same idea behind the recent <a href="/jonah-hill-bjj-annihilate.html">Jonah Hill "annihilate" story</a>, where the real point buried under the viral clip was that a countable small win, even one nobody's filming, is worth more over time than trying to remember how far you've come.</p>
+      </section>
+
+      <section class="card">
+        <h2>Make the wins countable</h2>
+        <p class="muted"><a href="/">BJJ Submissions Counter</a> logs every submission you land, broken down by opponent belt level, and keeps a running streak so the slow weeks don't feel invisible. It's free, there's no account to make, and everything stays on your phone.</p>
+        <a class="cta" href="/">Open BJJ Submissions Counter →</a>
+      </section>
+
+      <section class="card">
+        <h2>More guides</h2>
+        <ul style="margin:8px 0 0 18px; line-height:1.9;">
+          <li><a href="/common-white-belt-mistakes.html">Common White Belt Mistakes (and How to Fix Them)</a></li>
+          <li><a href="/jonah-hill-bjj-annihilate.html">Jonah Hill's "Annihilate" Moment &amp; What It Means for Beginners</a></li>
+          <li><a href="/bjj-glossary.html">BJJ Glossary: Terms &amp; Lingo Explained</a></li>
+          <li><a href="/how-to-memorize-bjj-techniques.html">How to Memorize BJJ Techniques Faster</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <span>© BJJ Submissions Counter · Last updated 2026-09-25</span>
+      <a href="/">Open the app</a>
+    </footer>
+  </div>
+</body>
+</html>

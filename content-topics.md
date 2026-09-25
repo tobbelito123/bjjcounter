@@ -17,7 +17,7 @@ This keeps the backlog long-running without ever needing a human to refill it.
    Angle: the usual early habits that slow progress (muscling technique, gripping too hard,
    forgetting to breathe, chasing submissions instead of position) — practical, not preachy.
 
-2. slug: `tracking-progress-in-bjj` — status: pending
+2. slug: `tracking-progress-in-bjj` — status: published: 2026-09-25
    Working title: "Why Tracking Your Submissions Actually Helps You Improve"
    Type: Guide
    Angle: ties directly to the app's real feature set (per-submission counts by opponent belt,
@@ -122,3 +122,4 @@ This keeps the backlog long-running without ever needing a human to refill it.
 - `bjj-counter-vs-bjjbuddy` (Comparison)
 - `jonah-hill-bjj-annihilate` (Article)
 - `common-white-belt-mistakes` (Guide)
+- `tracking-progress-in-bjj` (Guide)
