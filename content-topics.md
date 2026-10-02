@@ -23,7 +23,7 @@ This keeps the backlog long-running without ever needing a human to refill it.
    Angle: ties directly to the app's real feature set (per-submission counts by opponent belt,
    streaks) — the general case for keeping any kind of training log, not just this app's.
 
-3. slug: `how-belt-promotions-actually-work` — status: pending
+3. slug: `how-belt-promotions-actually-work` — status: published: 2026-10-02
    Working title: "How BJJ Belt Promotions Actually Work"
    Type: Guide
    Angle: general, honest framing — promotion criteria vary a lot by academy/instructor, so

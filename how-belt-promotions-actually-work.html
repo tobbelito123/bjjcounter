@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>How BJJ Belt Promotions Actually Work</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <meta name="description" content="There's no universal rulebook for adult belt promotions in BJJ. Here's what actually drives the decision, and why the timeline looks different at every gym." />
+  <link rel="canonical" href="https://www.bjjcounter.com/how-belt-promotions-actually-work.html" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <meta property="og:title" content="How BJJ Belt Promotions Actually Work" />
+  <meta property="og:description" content="There's no universal rulebook for adult belt promotions. Here's what actually drives the decision at most gyms." />
+  <meta property="og:url" content="https://www.bjjcounter.com/how-belt-promotions-actually-work.html" />
+  <meta property="og:image" content="https://www.bjjcounter.com/icons/icon-192.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      -webkit-font-smoothing: antialiased;
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-tap-highlight-color: transparent;
+    }
+    :root{
+      --bg:#0b1020; --card:#121830; --card-2:#0f1428; --fg:#eaf1ff; --muted:#b7c4e1;
+      --primary:#0ea5e9; --primary-2:#22d3ee; --ring:rgba(34,211,238,.35); --shadow:0 10px 30px rgba(2,6,23,.4);
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f6f8ff; --card:#ffffff; --card-2:#f2f5ff; --fg:#0b1020; --muted:#475569; --shadow:0 8px 24px rgba(2,6,23,.08); }
+    }
+    .wrap{
+      max-width: 720px; margin: 0 auto; min-height: 100%;
+      display: grid; grid-template-rows: auto 1fr auto;
+      padding: 16px clamp(12px,4vw,20px) calc(16px + env(safe-area-inset-bottom)); gap: 14px;
+    }
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 12px; background:linear-gradient(180deg, rgba(34,211,238,.06), transparent);
+      border-radius:16px;
+    }
+    .title{ font-weight:800; letter-spacing:.3px; font-size:20px; display:flex; align-items:center; gap:10px; }
+    .title .dot{ width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(40% 40% at 30% 30%, var(--primary-2), var(--primary));
+      box-shadow:0 0 18px var(--ring);
+    }
+    .actions { display:flex; gap:8px; align-items:center; }
+    .ghost { background:transparent; border:1px solid rgba(148,163,184,.25); color:var(--muted);
+      padding:8px 10px; border-radius:10px; font-size:13px; text-decoration:none;
+    }
+    main{ display:grid; gap:12px; }
+    .card{
+      background:var(--card); border-radius:16px; padding:16px; box-shadow:var(--shadow);
+      border:1px solid rgba(148,163,184,.12);
+    }
+    h1{ font-size:22px; margin:0 0 6px; }
+    h2{ font-size:16px; margin:10px 0 6px; }
+    p{ margin:8px 0; line-height:1.5; color:var(--fg); }
+    .muted{ color:var(--muted); }
+    ul{ margin:8px 0 8px 18px; }
+    .icon-badge{ width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center; background:radial-gradient(60% 60% at 35% 30%, rgba(34,211,238,0.4), rgba(14,165,233,0.15)); border:1px solid rgba(14,165,233,0.3); margin-bottom:12px; }
+    .icon-badge svg{ width:26px; height:26px; color:var(--primary-2); }
+    footer{ color:var(--muted); font-size:12px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    a{ color:var(--primary-2); text-decoration:underline; }
+    .tagline{ color:var(--muted); font-size:13px; }
+    .cta{
+      display:block; text-align:center; margin-top:6px; padding:12px 14px; border-radius:12px;
+      background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18));
+      box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35); color:var(--fg); font-weight:800; text-decoration:none;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"How BJJ Belt Promotions Actually Work",
+    "about":"How adult Brazilian Jiu-Jitsu belt promotions typically get decided, and why the process varies by academy",
+    "datePublished":"2026-10-02",
+    "dateModified":"2026-10-02",
+    "publisher":{"@type":"Organization","name":"BJJ Submissions Counter","url":"https://www.bjjcounter.com/"}
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title"><span class="dot"></span> BJJ Submissions Counter</div>
+      <div class="actions">
+        <a class="ghost" href="/">← Back to app</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <div class="icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.5 13.5 7 22l5-3 5 3-1.5-8.5"/></svg>
+        </div>
+        <h1>How BJJ Belt Promotions Actually Work</h1>
+        <p class="tagline">There's no governing body stamping your card, no required stripe count, and no fixed clock. That's confusing at first, but once you understand why, it stops being frustrating.</p>
+
+        <h2>There's No Universal Rulebook for Adults</h2>
+        <p>Kids' BJJ has some formal age and time guidelines attached to it in certain federations. Adult belts don't work that way. There's no single body that certifies a black belt the way a licensing board certifies a doctor. Your promotion comes down to your own instructor's judgment, and instructors vary a lot in how they apply it. One gym might hand out stripes every few months like clockwork. Another might go a year without mentioning belts at all. Neither is wrong. It just means comparing your timeline to someone training at a different school is comparing two different systems, not the same race run at different speeds.</p>
+
+        <h2>Mat Time Is the Floor, Not the Whole Story</h2>
+        <p>Showing up matters, a lot, but it's not sufficient on its own. An instructor watching you roll twice a week for three years is going to see something different than someone who trains the same three years but misses half of every month. Consistency compounds in a way that's hard to fake and hard to shortcut. Still, plenty of people put in the hours and stall out at the same rank for a while. Time on the mat earns you the chance to be evaluated. It doesn't automatically win the evaluation.</p>
+
+        <h2>Can You Actually Do It Against Resistance</h2>
+        <p>The real test most instructors are watching for isn't whether you can explain a technique or drill it slowly with a cooperative partner. It's whether it shows up when someone is actually trying to stop you. A blue belt candidate who can only pull off a sweep when their partner lets them isn't there yet, no matter how many times they've drilled it. This is part of why the gap between two blue belts can look enormous. The belt reflects a floor of live, resisted competence, not a specific move list, and that floor looks different depending on body type, athleticism, and how often someone actually gets to roll with tougher partners.</p>
+
+        <h2>Instructor Judgment Is the Actual Mechanism</h2>
+        <p>However it's dressed up with stripes or informal checklists, promotion ultimately comes down to one person's read on your game over time. That's not a flaw in the system, it's the whole system. A coach who's watched you for two years has information no test could capture: how you handle getting smashed, whether you help newer students, whether your ego gets in the way of tapping early. If your gym's promotion pace feels opaque, the most useful thing you can do is just ask your coach directly what they want to see from you next, rather than guessing from the sideline or comparing stripe counts with people training somewhere else entirely.</p>
+
+        <h2>Don't Let the Belt Become the Metric</h2>
+        <p>Chasing the next belt as the goal tends to backfire, because the timeline genuinely isn't yours to control. What is yours to control is everything underneath it: whether you showed up this week, whether you fixed the thing your coach pointed out last month, whether today's roll looked different from six months ago. Those are the things worth paying attention to day to day. The belt eventually catches up to the work. It just doesn't move on a schedule you get to set.</p>
+      </section>
+
+      <section class="card">
+        <h2>Track the work, not just the belt</h2>
+        <p class="muted">If the belt timeline is out of your hands, the submissions you're landing along the way aren't. <a href="/">BJJ Submissions Counter</a> logs every submission by the opponent's belt level and keeps a day streak, so you can see your own trajectory instead of guessing at it. It's free, there's no account to make, and it works offline. For the vocabulary behind terms like stripe and roll, the <a href="/bjj-glossary.html">BJJ glossary</a> covers belts and progression in plain English.</p>
+        <a class="cta" href="/">Open BJJ Submissions Counter →</a>
+      </section>
+
+      <section class="card">
+        <h2>More guides</h2>
+        <ul style="margin:8px 0 0 18px; line-height:1.9;">
+          <li><a href="/bjj-glossary.html">BJJ Glossary: Terms &amp; Lingo Explained</a></li>
+          <li><a href="/common-white-belt-mistakes.html">Common White Belt Mistakes (and How to Fix Them)</a></li>
+          <li><a href="/tracking-progress-in-bjj.html">Why Tracking Your BJJ Progress Actually Works</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <span>© BJJ Submissions Counter · Last updated 2026-10-02</span>
+      <a href="/">Open the app</a>
+    </footer>
+  </div>
+</body>
+</html>
