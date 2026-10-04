@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
   <url>
     <loc>https://www.bjjcounter.com/</loc>
     <lastmod>2025-09-17</lastmod>
@@ -77,5 +77,53 @@
     <lastmod>2026-10-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.bjjcounter.com/videos.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.bjjcounter.com/videos/log-bjj-submissions-in-two-taps.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <video:video>
+      <video:thumbnail_loc>https://www.bjjcounter.com/videos/img/log-bjj-submissions-in-two-taps.jpg</video:thumbnail_loc>
+      <video:title>Log your BJJ submissions in two taps</video:title>
+      <video:description>A 30-second demo of BJJ Submissions Counter: tap the move, tap the belt you got it on, and your total and day streak update. No account needed.</video:description>
+      <video:player_loc>https://www.youtube.com/embed/9rBfW2WHtOI</video:player_loc>
+      <video:duration>30</video:duration>
+      <video:publication_date>2026-10-05T12:00:00+02:00</video:publication_date>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://www.bjjcounter.com/videos/which-submissions-work-for-you.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <video:video>
+      <video:thumbnail_loc>https://www.bjjcounter.com/videos/img/which-submissions-work-for-you.jpg</video:thumbnail_loc>
+      <video:title>Which submissions actually work for you?</video:title>
+      <video:description>Sort your most used subs to the top and see who you hit them on in the Stats tab. A 30-second walkthrough with eight weeks of example logs.</video:description>
+      <video:player_loc>https://www.youtube.com/embed/EUFVP0y6DYU</video:player_loc>
+      <video:duration>32</video:duration>
+      <video:publication_date>2026-10-05T12:00:00+02:00</video:publication_date>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://www.bjjcounter.com/videos/free-bjj-tracker-in-your-browser.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <video:video>
+      <video:thumbnail_loc>https://www.bjjcounter.com/videos/img/free-bjj-tracker-in-your-browser.jpg</video:thumbnail_loc>
+      <video:title>A free BJJ tracker that runs in your browser</video:title>
+      <video:description>No app store and no download: open bjjcounter.com, add your own moves, and put it on your home screen. It works offline too. A 40-second demo.</video:description>
+      <video:player_loc>https://www.youtube.com/embed/maz77TwA_u8</video:player_loc>
+      <video:duration>40</video:duration>
+      <video:publication_date>2026-10-05T12:00:00+02:00</video:publication_date>
+    </video:video>
   </url>
 </urlset>

@@ -25,3 +25,10 @@
 ## Articles
 
 - [Jonah Hill's "Annihilate" Moment](https://www.bjjcounter.com/jonah-hill-bjj-annihilate.html): Context behind a viral 2026 BJJ quote and why tracking small wins matters early in a BJJ journey.
+
+## Videos
+
+- [Video guides](https://www.bjjcounter.com/videos.html): Short demos of the app, each under a minute.
+- [Log your BJJ submissions in two taps](https://www.bjjcounter.com/videos/log-bjj-submissions-in-two-taps.html): A 30-second demo of BJJ Submissions Counter: tap the move, tap the belt you got it on, and your total and day streak update. No account needed.
+- [Which submissions actually work for you?](https://www.bjjcounter.com/videos/which-submissions-work-for-you.html): Sort your most used subs to the top and see who you hit them on in the Stats tab. A 30-second walkthrough with eight weeks of example logs.
+- [A free BJJ tracker that runs in your browser](https://www.bjjcounter.com/videos/free-bjj-tracker-in-your-browser.html): No app store and no download: open bjjcounter.com, add your own moves, and put it on your home screen. It works offline too. A 40-second demo.
