@@ -213,14 +213,14 @@
     .stat-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
     .stat-head h3 { margin: 0; font-size: 15px; }
     .stat-head .total { font-weight: 800; }
-    .bar { height: 12px; border-radius: 10px; display: grid; grid-auto-flow: column; overflow: hidden; margin-top: 10px; outline: 1px solid rgba(148,163,184,0.18); }
-    .seg { height: 100%; }
+    .bar { height: 12px; border-radius: 10px; display: flex; overflow: hidden; margin-top: 10px; outline: 1px solid rgba(148,163,184,0.18); }
+    .seg { height: 100%; flex: none; }
     .seg.white { background: linear-gradient(180deg, #fff, #e5e7eb); }
     .seg.blue { background: linear-gradient(180deg, #3b82f6, #1e40af); }
     .seg.purple { background: linear-gradient(180deg, #a78bfa, #6d28d9); }
     .seg.brown { background: linear-gradient(180deg, #b45309, #7c2d12); }
     .seg.black { background: linear-gradient(180deg, #111827, #0b0b0b); }
-    .legend { margin-top: 10px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; font-size: 12px; color: var(--muted); }
+    .legend { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); }
     .chip { display: flex; gap: 6px; align-items: center; }
     .dot { width: 10px; height: 10px; border-radius: 999px; }
     .dot.white { background: #fff; outline: 1px solid #cbd5e1; }
