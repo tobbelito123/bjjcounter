@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Open Guard vs Closed Guard: The Basics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <meta name="description" content="What closed guard actually locks down, what open guard covers, and why knowing the difference makes your next BJJ class easier to follow." />
+  <link rel="canonical" href="https://www.bjjcounter.com/open-guard-vs-closed-guard-basics.html" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <meta property="og:title" content="Open Guard vs Closed Guard: The Basics" />
+  <meta property="og:description" content="What closed guard locks down, what open guard covers, and why the difference matters once you're rolling." />
+  <meta property="og:url" content="https://www.bjjcounter.com/open-guard-vs-closed-guard-basics.html" />
+  <meta property="og:image" content="https://www.bjjcounter.com/icons/icon-192.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      -webkit-font-smoothing: antialiased;
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-tap-highlight-color: transparent;
+    }
+    :root{
+      --bg:#0b1020; --card:#121830; --card-2:#0f1428; --fg:#eaf1ff; --muted:#b7c4e1;
+      --primary:#0ea5e9; --primary-2:#22d3ee; --ring:rgba(34,211,238,.35); --shadow:0 10px 30px rgba(2,6,23,.4);
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f6f8ff; --card:#ffffff; --card-2:#f2f5ff; --fg:#0b1020; --muted:#475569; --shadow:0 8px 24px rgba(2,6,23,.08); }
+    }
+    .wrap{
+      max-width: 720px; margin: 0 auto; min-height: 100%;
+      display: grid; grid-template-rows: auto 1fr auto;
+      padding: 16px clamp(12px,4vw,20px) calc(16px + env(safe-area-inset-bottom)); gap: 14px;
+    }
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 12px; background:linear-gradient(180deg, rgba(34,211,238,.06), transparent);
+      border-radius:16px;
+    }
+    .title{ font-weight:800; letter-spacing:.3px; font-size:20px; display:flex; align-items:center; gap:10px; }
+    .title .dot{ width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(40% 40% at 30% 30%, var(--primary-2), var(--primary));
+      box-shadow:0 0 18px var(--ring);
+    }
+    .actions { display:flex; gap:8px; align-items:center; }
+    .ghost { background:transparent; border:1px solid rgba(148,163,184,.25); color:var(--muted);
+      padding:8px 10px; border-radius:10px; font-size:13px; text-decoration:none;
+    }
+    main{ display:grid; gap:12px; }
+    .card{
+      background:var(--card); border-radius:16px; padding:16px; box-shadow:var(--shadow);
+      border:1px solid rgba(148,163,184,.12);
+    }
+    h1{ font-size:22px; margin:0 0 6px; }
+    h2{ font-size:16px; margin:10px 0 6px; }
+    p{ margin:8px 0; line-height:1.5; color:var(--fg); }
+    .muted{ color:var(--muted); }
+    ul{ margin:8px 0 8px 18px; }
+    .icon-badge{ width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center; background:radial-gradient(60% 60% at 35% 30%, rgba(34,211,238,0.4), rgba(14,165,233,0.15)); border:1px solid rgba(14,165,233,0.3); margin-bottom:12px; }
+    .icon-badge svg{ width:26px; height:26px; color:var(--primary-2); }
+    footer{ color:var(--muted); font-size:12px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    a{ color:var(--primary-2); text-decoration:underline; }
+    .tagline{ color:var(--muted); font-size:13px; }
+    .cta{
+      display:block; text-align:center; margin-top:6px; padding:12px 14px; border-radius:12px;
+      background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18));
+      box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35); color:var(--fg); font-weight:800; text-decoration:none;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"Open Guard vs Closed Guard: The Basics",
+    "about":"The difference between closed guard and the open guard family in Brazilian Jiu-Jitsu, explained for beginners",
+    "datePublished":"2026-10-09",
+    "dateModified":"2026-10-09",
+    "publisher":{"@type":"Organization","name":"BJJ Submissions Counter","url":"https://www.bjjcounter.com/"}
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title"><span class="dot"></span> BJJ Submissions Counter</div>
+      <div class="actions">
+        <a class="ghost" href="/">← Back to app</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <div class="icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.5"/><path d="M6 21c0-5 2-8 6-8s6 3 6 8"/><path d="M9 13l-3 4M15 13l3 4"/></svg>
+        </div>
+        <h1>Open Guard vs Closed Guard: The Basics</h1>
+        <p class="tagline">Your instructor says "pass my guard" and you nod like you know what that means. Here's the actual split between the two guard families, so the next class makes more sense.</p>
+
+        <h2>Closed Guard Is the Starting Point</h2>
+        <p>Closed guard is what most people picture first: you're on your back, your opponent is kneeling or standing between your legs, and your ankles are locked behind their back. That lock is the whole point. It keeps your opponent close, stops them from standing up and walking away, and buys you time to work. Most schools teach it early because it forces you to learn the core idea of guard, which is controlling someone with your legs instead of your arms, before adding any extra moving parts. From closed guard you can set up a long list of classic attacks: armbars, triangles, kimuras, guillotines, and sweeps that flip you on top. Its weakness is just as simple as its strength. Once your opponent learns to break the lock open, which every blue belt eventually does, you're out of it and need a plan for what comes next.</p>
+
+        <h2>Open Guard Isn't One Position</h2>
+        <p>This is where people get tripped up. "Open guard" doesn't name a single technique the way closed guard does. It's an umbrella term for every guard where your ankles aren't locked around your opponent's back. Butterfly guard, De La Riva, spider guard, X-guard, lasso, reverse De La Riva: all of it is open guard. The common thread across all of them is that you're using your feet and shins to control your opponent's hips, legs, or arms from a distance instead of locking them in close. That gives you more ways to sweep and more angles to attack from, but it also demands more from you. Nothing is locked, so your feet and hands are working constantly just to keep the position from collapsing the moment your opponent shifts their weight.</p>
+
+        <h2>Why the Split Is Worth Knowing</h2>
+        <p>A lot of curriculums are built around this grouping without saying so out loud. When a coach says a sweep "works from any open guard," they mean the underlying mechanic transfers across butterfly, De La Riva, and the rest, even though the leg positions look different. Knowing that open guard is a category, not a single guard, stops you from wondering why last week's spider guard sweep and this week's X-guard sweep feel so similar. The pace differs too. Closed guard tends to be slower and more deliberate since the lock is doing some of the work for you. Open guard rewards constant small adjustments and tends to move faster, which is also why it shows up so much in no-gi, where there's no fabric to grip and hold anything still.</p>
+
+        <h2>Which One Should You Learn First</h2>
+        <p>There's no single rule here, and gyms genuinely differ on it. Plenty of schools start white belts in closed guard because the lock gives you a stable place to learn hip movement and posture control before anything else is moving. Other gyms lean into open guard concepts earlier, especially if they teach a lot of no-gi, since that's what students will actually be living in once the gi comes off. Neither approach is wrong. If your gym's order looks different from a video you watched online, that's not a sign anyone is doing it badly, just a different path to the same place.</p>
+      </section>
+
+      <section class="card">
+        <h2>Know the position, then track the finish</h2>
+        <p class="muted">Once a guard position actually makes sense, the next step is noticing which attacks from it keep working for you. <a href="/">BJJ Submissions Counter</a> logs every submission by the opponent's belt level and keeps a day streak, so you can see which guard-based attacks are actually paying off over time. It's free, no account needed, and works offline. If other terms from this page are still fuzzy, like sweep or pass, the <a href="/bjj-glossary.html">BJJ glossary</a> covers them in plain English.</p>
+        <a class="cta" href="/">Open BJJ Submissions Counter →</a>
+      </section>
+
+      <section class="card">
+        <h2>More guides</h2>
+        <ul style="margin:8px 0 0 18px; line-height:1.9;">
+          <li><a href="/bjj-glossary.html">BJJ Glossary: Terms &amp; Lingo Explained</a></li>
+          <li><a href="/common-white-belt-mistakes.html">Common White Belt Mistakes (and How to Fix Them)</a></li>
+          <li><a href="/how-belt-promotions-actually-work.html">How BJJ Belt Promotions Actually Work</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <span>© BJJ Submissions Counter · Last updated 2026-10-09</span>
+      <a href="/">Open the app</a>
+    </footer>
+  </div>
+</body>
+</html>

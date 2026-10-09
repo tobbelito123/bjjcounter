@@ -31,7 +31,7 @@ This keeps the backlog long-running without ever needing a human to refill it.
    judgment) without claiming a universal rulebook or specific stripe/time requirements that
    don't exist across all schools.
 
-4. slug: `open-guard-vs-closed-guard-basics` — status: pending
+4. slug: `open-guard-vs-closed-guard-basics` — status: published: 2026-10-09
    Working title: "Open Guard vs Closed Guard: The Basics"
    Type: Guide
    Angle: plain-English explainer of the two guard families for people still nodding along
@@ -123,3 +123,5 @@ This keeps the backlog long-running without ever needing a human to refill it.
 - `jonah-hill-bjj-annihilate` (Article)
 - `common-white-belt-mistakes` (Guide)
 - `tracking-progress-in-bjj` (Guide)
+- `how-belt-promotions-actually-work` (Guide)
+- `open-guard-vs-closed-guard-basics` (Guide)
