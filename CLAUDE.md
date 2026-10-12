@@ -47,6 +47,7 @@ via `prefers-color-scheme`, same `.wrap`/`header`/`.card` pattern), same header 
 - `<meta name="description">` — natural length (~150-160 chars), reads like a person wrote it.
 - `<link rel="canonical">` and `og:url` — `https://www.bjjcounter.com/<slug>.html`.
 - `og:title` / `og:description`.
+- A `BreadcrumbList` JSON-LD block before `</head>`: Home (`https://www.bjjcounter.com/`) › the page's H1 and URL.
 - The `Article` JSON-LD block (see `bjj-counter-vs-bjjbuddy.html` for the shape): `headline`,
   `datePublished` = `dateModified` = today's date.
 - Body content (see style rules below), plus the 2 internal links from step 5.
