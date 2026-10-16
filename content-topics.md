@@ -37,7 +37,7 @@ This keeps the backlog long-running without ever needing a human to refill it.
    Angle: plain-English explainer of the two guard families for people still nodding along
    without understanding, same audience as the existing glossary page.
 
-5. slug: `how-often-should-beginners-train` — status: pending
+5. slug: `how-often-should-beginners-train` — status: published: 2026-10-16
    Working title: "How Often Should Beginners Train BJJ?"
    Type: Guide
    Angle: practical frequency/recovery guidance for new students balancing enthusiasm against
@@ -125,3 +125,4 @@ This keeps the backlog long-running without ever needing a human to refill it.
 - `tracking-progress-in-bjj` (Guide)
 - `how-belt-promotions-actually-work` (Guide)
 - `open-guard-vs-closed-guard-basics` (Guide)
+- `how-often-should-beginners-train` (Guide)
