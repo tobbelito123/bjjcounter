@@ -92,13 +92,13 @@
   </url>
   <url>
     <loc>https://www.bjjcounter.com/videos.html</loc>
-    <lastmod>2026-10-05</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.bjjcounter.com/videos/log-bjj-submissions-in-two-taps.html</loc>
-    <lastmod>2026-10-05</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <video:video>
@@ -112,7 +112,7 @@
   </url>
   <url>
     <loc>https://www.bjjcounter.com/videos/which-submissions-work-for-you.html</loc>
-    <lastmod>2026-10-05</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <video:video>
@@ -126,7 +126,7 @@
   </url>
   <url>
     <loc>https://www.bjjcounter.com/videos/free-bjj-tracker-in-your-browser.html</loc>
-    <lastmod>2026-10-05</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <video:video>
@@ -136,6 +136,48 @@
       <video:player_loc>https://www.youtube.com/embed/maz77TwA_u8</video:player_loc>
       <video:duration>40</video:duration>
       <video:publication_date>2026-10-05T12:00:00+02:00</video:publication_date>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://www.bjjcounter.com/videos/day-7-bjj-streak.html</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <video:video>
+      <video:thumbnail_loc>https://www.bjjcounter.com/videos/img/day-7-bjj-streak.jpg</video:thumbnail_loc>
+      <video:title>Day 7 on the mats: don&#x27;t break the streak</video:title>
+      <video:description>Six days logged in a row, and the first sub today makes it seven. A 29-second look at the day streak in BJJ Submissions Counter.</video:description>
+      <video:player_loc>https://www.youtube.com/embed/iVAyANx5CWo</video:player_loc>
+      <video:duration>29</video:duration>
+      <video:publication_date>2026-10-18T12:00:00+02:00</video:publication_date>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://www.bjjcounter.com/videos/bjj-terms-quiz.html</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <video:video>
+      <video:thumbnail_loc>https://www.bjjcounter.com/videos/img/bjj-terms-quiz.jpg</video:thumbnail_loc>
+      <video:title>BJJ terms quiz: omoplata, Ezekiel, kimura</video:title>
+      <video:description>Three BJJ terms, three seconds each: the omoplata, the Ezekiel choke and where the kimura got its name. A 50-second quiz from the BJJ glossary.</video:description>
+      <video:player_loc>https://www.youtube.com/embed/xDIPtnxtjg4</video:player_loc>
+      <video:duration>50</video:duration>
+      <video:publication_date>2026-10-18T12:00:00+02:00</video:publication_date>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://www.bjjcounter.com/videos/white-belt-mistakes.html</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <video:video>
+      <video:thumbnail_loc>https://www.bjjcounter.com/videos/img/white-belt-mistakes.jpg</video:thumbnail_loc>
+      <video:title>3 mistakes almost every white belt makes</video:title>
+      <video:description>Muscling through, death grips and hunting submissions from bad spots. Three common white belt mistakes in 37 seconds, and how to fix each one.</video:description>
+      <video:player_loc>https://www.youtube.com/embed/0tMz40HddZA</video:player_loc>
+      <video:duration>37</video:duration>
+      <video:publication_date>2026-10-18T12:00:00+02:00</video:publication_date>
     </video:video>
   </url>
 </urlset>
