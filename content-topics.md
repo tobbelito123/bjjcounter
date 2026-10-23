@@ -43,7 +43,7 @@ This keeps the backlog long-running without ever needing a human to refill it.
    Angle: practical frequency/recovery guidance for new students balancing enthusiasm against
    burnout and injury risk, general advice not medical.
 
-6. slug: `dealing-with-bjj-plateaus` — status: pending
+6. slug: `dealing-with-bjj-plateaus` — status: published: 2026-10-23
    Working title: "What to Do When You Hit a BJJ Plateau"
    Type: Guide
    Angle: the common feeling of stalling out after the first few months, and concrete things
@@ -126,3 +126,4 @@ This keeps the backlog long-running without ever needing a human to refill it.
 - `how-belt-promotions-actually-work` (Guide)
 - `open-guard-vs-closed-guard-basics` (Guide)
 - `how-often-should-beginners-train` (Guide)
+- `dealing-with-bjj-plateaus` (Guide)
