@@ -50,7 +50,7 @@ This keeps the backlog long-running without ever needing a human to refill it.
    that actually move the needle (filming rolls, narrowing focus to 1-2 techniques, tracking
    small wins instead of just submissions).
 
-7. slug: `bjj-mat-etiquette-for-beginners` — status: pending
+7. slug: `bjj-mat-etiquette-for-beginners` — status: published: 2026-10-30
    Working title: "BJJ Mat Etiquette Nobody Explains to Beginners"
    Type: Guide
    Angle: the unwritten rules (bowing in, asking before rolling with someone much higher rank,
@@ -127,3 +127,4 @@ This keeps the backlog long-running without ever needing a human to refill it.
 - `open-guard-vs-closed-guard-basics` (Guide)
 - `how-often-should-beginners-train` (Guide)
 - `dealing-with-bjj-plateaus` (Guide)
+- `bjj-mat-etiquette-for-beginners` (Guide)
