@@ -57,7 +57,7 @@ This keeps the backlog long-running without ever needing a human to refill it.
    hygiene, tapping early, not coaching your partner mid-roll) that make a new student feel
    less lost in their first weeks.
 
-8. slug: `submission-chains-and-combos` — status: pending
+8. slug: `submission-chains-and-combos` — status: published: 2026-11-06
    Working title: "Submission Chains: Linking Attacks Instead of Hunting One"
    Type: Guide
    Angle: the concept of flowing from one attack to the next when the first is defended,
@@ -128,3 +128,4 @@ This keeps the backlog long-running without ever needing a human to refill it.
 - `how-often-should-beginners-train` (Guide)
 - `dealing-with-bjj-plateaus` (Guide)
 - `bjj-mat-etiquette-for-beginners` (Guide)
+- `submission-chains-and-combos` (Guide)

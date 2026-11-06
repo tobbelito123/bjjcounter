@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>BJJ Submission Chains: Linking Attacks Instead of One</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <meta name="description" content="Most white belts hunt a single submission and reset when it's defended. Here's how to chain attacks instead, so a stuffed armbar flows into a triangle or a back take." />
+  <link rel="canonical" href="https://www.bjjcounter.com/submission-chains-and-combos.html" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <meta property="og:title" content="BJJ Submission Chains: Linking Attacks Instead of One" />
+  <meta property="og:description" content="Why hunting a single submission keeps failing, and how to link attacks together so a defended move sets up the next one." />
+  <meta property="og:url" content="https://www.bjjcounter.com/submission-chains-and-combos.html" />
+  <meta property="og:image" content="https://www.bjjcounter.com/icons/icon-192.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      -webkit-font-smoothing: antialiased;
+      color: var(--fg);
+      background: var(--bg);
+      -webkit-tap-highlight-color: transparent;
+    }
+    :root{
+      --bg:#0b1020; --card:#121830; --card-2:#0f1428; --fg:#eaf1ff; --muted:#b7c4e1;
+      --primary:#0ea5e9; --primary-2:#22d3ee; --ring:rgba(34,211,238,.35); --shadow:0 10px 30px rgba(2,6,23,.4);
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f6f8ff; --card:#ffffff; --card-2:#f2f5ff; --fg:#0b1020; --muted:#475569; --shadow:0 8px 24px rgba(2,6,23,.08); }
+    }
+    .wrap{
+      max-width: 720px; margin: 0 auto; min-height: 100%;
+      display: grid; grid-template-rows: auto 1fr auto;
+      padding: 16px clamp(12px,4vw,20px) calc(16px + env(safe-area-inset-bottom)); gap: 14px;
+    }
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 12px; background:linear-gradient(180deg, rgba(34,211,238,.06), transparent);
+      border-radius:16px;
+    }
+    .title{ font-weight:800; letter-spacing:.3px; font-size:20px; display:flex; align-items:center; gap:10px; }
+    .title .dot{ width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(40% 40% at 30% 30%, var(--primary-2), var(--primary));
+      box-shadow:0 0 18px var(--ring);
+    }
+    .actions { display:flex; gap:8px; align-items:center; }
+    .ghost { background:transparent; border:1px solid rgba(148,163,184,.25); color:var(--muted);
+      padding:8px 10px; border-radius:10px; font-size:13px; text-decoration:none;
+    }
+    main{ display:grid; gap:12px; }
+    .card{
+      background:var(--card); border-radius:16px; padding:16px; box-shadow:var(--shadow);
+      border:1px solid rgba(148,163,184,.12);
+    }
+    h1{ font-size:22px; margin:0 0 6px; }
+    h2{ font-size:16px; margin:10px 0 6px; }
+    p{ margin:8px 0; line-height:1.5; color:var(--fg); }
+    .muted{ color:var(--muted); }
+    ul{ margin:8px 0 8px 18px; }
+    .icon-badge{ width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center; background:radial-gradient(60% 60% at 35% 30%, rgba(34,211,238,0.4), rgba(14,165,233,0.15)); border:1px solid rgba(14,165,233,0.3); margin-bottom:12px; }
+    .icon-badge svg{ width:26px; height:26px; color:var(--primary-2); }
+    footer{ color:var(--muted); font-size:12px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    a{ color:var(--primary-2); text-decoration:underline; }
+    .tagline{ color:var(--muted); font-size:13px; }
+    .cta{
+      display:block; text-align:center; margin-top:6px; padding:12px 14px; border-radius:12px;
+      background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(14,165,233,0.18));
+      box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35); color:var(--fg); font-weight:800; text-decoration:none;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"BJJ Submission Chains: Linking Attacks Instead of One",
+    "about":"Linking submission attacks together in Brazilian Jiu-Jitsu instead of resetting after a single defended attempt",
+    "datePublished":"2026-11-06",
+    "dateModified":"2026-11-06",
+    "publisher":{"@type":"Organization","name":"BJJ Submissions Counter","url":"https://www.bjjcounter.com/"}
+  }
+  </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.bjjcounter.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "BJJ Submission Chains: Linking Attacks Instead of One",
+      "item": "https://www.bjjcounter.com/submission-chains-and-combos.html"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title"><span class="dot"></span> BJJ Submissions Counter</div>
+      <div class="actions">
+        <a class="ghost" href="/">← Back to app</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <div class="icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l1.93-1.93a5 5 0 0 0-7.07-7.07L10.5 5.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-1.93 1.93a5 5 0 0 0 7.07 7.07L13.5 18.5"/></svg>
+        </div>
+        <h1>Submission Chains: Linking Attacks Instead of One</h1>
+        <p class="tagline">Most white belts pick one submission, get stuffed, and go back to neutral. Good grapplers don't reset, they treat the defense as the setup for the next attack.</p>
+
+        <h2>Why Hunting One Submission Falls Apart</h2>
+        <p>A single submission is easy to see coming once you've trained a while. The moment someone feels their arm getting isolated, their whole body answers that one threat: they pull the elbow in, roll toward it, whatever stops the specific thing happening to them right now. If that's the only attack you had, the exchange is over and you're back to square one, often in a worse spot than before you started. The defense itself usually opens something else up, but only if you were already looking for it.</p>
+
+        <h2>Chains Are Just Reading the Defense</h2>
+        <p>A chain isn't a scripted combo you memorize and fire off in order. It's closer to a habit of noticing what your opponent's escape gives away and being ready to take it. Defending an armbar from closed guard commonly means turning the trapped hand and posting, which can open a triangle on the same arm. Defending the triangle by stacking you often opens an omoplata on that same shoulder. None of these are guaranteed, and a well-trained partner can shut down each one in turn, but the point is you're never left with nothing once move one fails.</p>
+
+        <h2>A Few Common Chains Worth Knowing</h2>
+        <p>From mount, a stuffed armbar attempt that gets the arm trapped against the body often converts cleanly into an Americana instead, since both attack the same shoulder from slightly different angles. From the back, a defended rear naked choke where the opponent tucks their chin and fights the arm frequently opens a transition to an armbar on the far arm, because the hand they use to defend the choke is the one that becomes available. From guard, a swept-away triangle attempt that gets stacked can often roll straight into a sweep instead of a submission, since stacking pressure is easy to redirect once you know it's coming. None of these are universal, your opponent's size, base, and experience change what actually works, and a <a href="/bjj-glossary.html">glossary of the terms involved</a> helps if any of those names are still new to you.</p>
+
+        <h2>How to Actually Build This Habit</h2>
+        <p>Chains aren't something you can force by memorizing a flowchart. They come from drilling one attack enough times that you start to feel, not think, how your partner typically escapes it. Once that escape is predictable, ask your partner or coach what the standard follow-up is for that exact reaction, and drill the pair together instead of the first move alone. Rolling with a "just these two moves" rule for a few rounds works better than trying to force a long chain from day one. Start with one link. The second and third tend to show up on their own once the first one is automatic.</p>
+      </section>
+
+      <section class="card">
+        <h2>Track which chains actually land</h2>
+        <p class="muted"><a href="/">BJJ Submissions Counter</a> logs every submission you finish, broken down by opponent belt level, so you can see which attacks and follow-ups actually hold up live instead of just in drilling. It's free, there's no account to make, and it works offline.</p>
+        <a class="cta" href="/">Open BJJ Submissions Counter →</a>
+      </section>
+
+      <section class="card">
+        <h2>More guides</h2>
+        <ul style="margin:8px 0 0 18px; line-height:1.9;">
+          <li><a href="/bjj-glossary.html">BJJ Glossary: Terms &amp; Lingo Explained</a></li>
+          <li><a href="/common-white-belt-mistakes.html">Common White Belt Mistakes (and How to Fix Them)</a></li>
+          <li><a href="/dealing-with-bjj-plateaus.html">What to Do When You Hit a BJJ Plateau</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <span>© BJJ Submissions Counter · Last updated 2026-11-06</span>
+      <a href="/">Open the app</a>
+    </footer>
+  </div>
+</body>
+</html>
